@@ -1,0 +1,5543 @@
+{
+  "A001OP": {
+    "name": "OPPO Reno3",
+    "regions": []
+  },
+  "A002OP": {
+    "name": "OPPO Reno3 A",
+    "regions": []
+  },
+  "A101OP": {
+    "name": "OPPO Reno5 A",
+    "regions": []
+  },
+  "A102OP": {
+    "name": "OPPO A55s",
+    "regions": []
+  },
+  "A201OP": {
+    "name": "OPPO Reno7 A",
+    "regions": []
+  },
+  "A301OP": {
+    "name": "OPPO Reno9 A",
+    "regions": []
+  },
+  "A303OP": {
+    "name": "OPPO A79",
+    "regions": []
+  },
+  "A402OP": {
+    "name": "OPPO A3",
+    "regions": []
+  },
+  "A502OP": {
+    "name": "OPPO A5 5G",
+    "regions": []
+  },
+  "AC2001": {
+    "name": "OnePlus Nord",
+    "regions": [
+      "IN"
+    ]
+  },
+  "AC2003": {
+    "name": "OnePlus Nord",
+    "regions": [
+      "EU",
+      "GL"
+    ]
+  },
+  "BE2011": {
+    "name": "OnePlus Nord N100",
+    "regions": [
+      "NA"
+    ]
+  },
+  "BE2012": {
+    "name": "OnePlus Nord N100",
+    "regions": [
+      "NA"
+    ]
+  },
+  "BE2013": {
+    "name": "OnePlus Nord N100",
+    "regions": [
+      "GL"
+    ]
+  },
+  "BE2015": {
+    "name": "OnePlus Nord N100",
+    "regions": []
+  },
+  "BE2025": {
+    "name": "OnePlus Nord N10",
+    "regions": []
+  },
+  "BE2026": {
+    "name": "OnePlus Nord N10",
+    "regions": [
+      "NA"
+    ]
+  },
+  "BE2028": {
+    "name": "OnePlus Nord N10",
+    "regions": [
+      "NA"
+    ]
+  },
+  "BE2029": {
+    "name": "OnePlus Nord N10",
+    "regions": [
+      "EU",
+      "GL"
+    ]
+  },
+  "CPH1701": {
+    "name": "OPPO A57",
+    "regions": []
+  },
+  "CPH1803": {
+    "name": "OPPO A3s",
+    "regions": []
+  },
+  "CPH1805": {
+    "name": "OPPO A3s",
+    "regions": []
+  },
+  "CPH1809": {
+    "name": "OPPO A5",
+    "regions": []
+  },
+  "CPH1819": {
+    "name": "OPPO F7",
+    "regions": []
+  },
+  "CPH1821": {
+    "name": "OPPO F7",
+    "regions": []
+  },
+  "CPH1823": {
+    "name": "OPPO F9",
+    "regions": []
+  },
+  "CPH1825": {
+    "name": "OPPO F9",
+    "regions": []
+  },
+  "CPH1831": {
+    "name": "OPPO R15 Pro",
+    "regions": []
+  },
+  "CPH1833": {
+    "name": "OPPO R15 Pro",
+    "regions": []
+  },
+  "CPH1835": {
+    "name": "OPPO R15",
+    "regions": []
+  },
+  "CPH1837": {
+    "name": "OPPO A3",
+    "regions": []
+  },
+  "CPH1851": {
+    "name": "OPPO AX5",
+    "regions": []
+  },
+  "CPH1853": {
+    "name": "OPPO A3s",
+    "regions": []
+  },
+  "CPH1859": {
+    "name": "OPPO F7 Youth",
+    "regions": []
+  },
+  "CPH1861": {
+    "name": "realme 1",
+    "regions": []
+  },
+  "CPH1871": {
+    "name": "OPPO Find X",
+    "regions": []
+  },
+  "CPH1875": {
+    "name": "OPPO Find X",
+    "regions": []
+  },
+  "CPH1877": {
+    "name": "OPPO R17 Pro",
+    "regions": []
+  },
+  "CPH1879": {
+    "name": "OPPO R17",
+    "regions": []
+  },
+  "CPH1881": {
+    "name": "OPPO F9",
+    "regions": []
+  },
+  "CPH1893": {
+    "name": "OPPO R17 Neo",
+    "regions": []
+  },
+  "CPH1893RU": {
+    "name": "OPPO R17 Neo",
+    "regions": []
+  },
+  "CPH1901": {
+    "name": "OPPO A7",
+    "regions": []
+  },
+  "CPH1903": {
+    "name": "OPPO AX7",
+    "regions": []
+  },
+  "CPH1905": {
+    "name": "OPPO A7",
+    "regions": []
+  },
+  "CPH1907": {
+    "name": "OPPO Reno2",
+    "regions": []
+  },
+  "CPH1909": {
+    "name": "OPPO A5s",
+    "regions": []
+  },
+  "CPH1909RU": {
+    "name": "OPPO A5s",
+    "regions": []
+  },
+  "CPH1911": {
+    "name": "OPPO F11",
+    "regions": []
+  },
+  "CPH1912": {
+    "name": "OPPO A5s",
+    "regions": []
+  },
+  "CPH1917": {
+    "name": "OPPO Reno",
+    "regions": []
+  },
+  "CPH1919": {
+    "name": "OPPO Reno 10x Zoom",
+    "regions": []
+  },
+  "CPH1920": {
+    "name": "OPPO AX5s",
+    "regions": []
+  },
+  "CPH1921": {
+    "name": "OPPO Reno 5G",
+    "regions": []
+  },
+  "CPH1923": {
+    "name": "OPPO A1k",
+    "regions": []
+  },
+  "CPH1923RU": {
+    "name": "OPPO A1k",
+    "regions": []
+  },
+  "CPH1931": {
+    "name": "OPPO A5 2020",
+    "regions": []
+  },
+  "CPH1933": {
+    "name": "OPPO A5 2020",
+    "regions": []
+  },
+  "CPH1937": {
+    "name": "OPPO A9 2020",
+    "regions": []
+  },
+  "CPH1938": {
+    "name": "OPPO A9",
+    "regions": []
+  },
+  "CPH1941": {
+    "name": "OPPO A9 2020",
+    "regions": []
+  },
+  "CPH1943": {
+    "name": "OPPO A5 2020",
+    "regions": []
+  },
+  "CPH1945": {
+    "name": "OPPO Reno2 Z",
+    "regions": []
+  },
+  "CPH1951": {
+    "name": "OPPO Reno2 Z",
+    "regions": []
+  },
+  "CPH1951RU": {
+    "name": "OPPO Reno2 Z",
+    "regions": []
+  },
+  "CPH1955": {
+    "name": "OPPO K3",
+    "regions": []
+  },
+  "CPH1969": {
+    "name": "OPPO F11 Pro",
+    "regions": []
+  },
+  "CPH1979": {
+    "name": "OPPO Reno Z",
+    "regions": []
+  },
+  "CPH1983": {
+    "name": "OPPO Reno A",
+    "regions": []
+  },
+  "CPH1987": {
+    "name": "OPPO F11 Pro",
+    "regions": []
+  },
+  "CPH1989": {
+    "name": "OPPO Reno2 F",
+    "regions": []
+  },
+  "CPH2001": {
+    "name": "OPPO F15",
+    "regions": []
+  },
+  "CPH2005": {
+    "name": "OPPO Find X2 Lite",
+    "regions": []
+  },
+  "CPH2009": {
+    "name": "OPPO Find X2 Neo",
+    "regions": []
+  },
+  "CPH2013": {
+    "name": "OPPO Reno3 A",
+    "regions": []
+  },
+  "CPH2015": {
+    "name": "OPPO A31",
+    "regions": []
+  },
+  "CPH2021": {
+    "name": "OPPO A91",
+    "regions": []
+  },
+  "CPH2023": {
+    "name": "OPPO Find X2",
+    "regions": []
+  },
+  "CPH2025": {
+    "name": "OPPO Find X2 Pro",
+    "regions": []
+  },
+  "CPH2031": {
+    "name": "OPPO A31",
+    "regions": []
+  },
+  "CPH2035": {
+    "name": "OPPO Reno3 Pro",
+    "regions": [
+      "GL"
+    ]
+  },
+  "CPH2036": {
+    "name": "OPPO Reno3 Pro",
+    "regions": [
+      "GL"
+    ]
+  },
+  "CPH2037": {
+    "name": "OPPO Reno3 Pro",
+    "regions": [
+      "GL"
+    ]
+  },
+  "CPH2043": {
+    "name": "OPPO Reno3",
+    "regions": []
+  },
+  "CPH2059": {
+    "name": "OPPO A92",
+    "regions": []
+  },
+  "CPH2061": {
+    "name": "OPPO A52",
+    "regions": []
+  },
+  "CPH2065": {
+    "name": "OPPO Reno4 Z",
+    "regions": []
+  },
+  "CPH2067": {
+    "name": "OPPO A72",
+    "regions": []
+  },
+  "CPH2069": {
+    "name": "OPPO A52",
+    "regions": []
+  },
+  "CPH2071": {
+    "name": "OPPO A11k",
+    "regions": []
+  },
+  "CPH2073": {
+    "name": "OPPO A31",
+    "regions": []
+  },
+  "CPH2077": {
+    "name": "OPPO A12",
+    "regions": []
+  },
+  "CPH2081": {
+    "name": "OPPO A31",
+    "regions": []
+  },
+  "CPH2083": {
+    "name": "OPPO A11k",
+    "regions": []
+  },
+  "CPH2089": {
+    "name": "OPPO Reno4 Pro",
+    "regions": []
+  },
+  "CPH2091": {
+    "name": "OPPO Reno4",
+    "regions": []
+  },
+  "CPH2095": {
+    "name": "OPPO F17",
+    "regions": []
+  },
+  "CPH2099": {
+    "name": "OPPO A73",
+    "regions": []
+  },
+  "CPH2109": {
+    "name": "OPPO Reno4 Pro",
+    "regions": []
+  },
+  "CPH2113": {
+    "name": "OPPO Reno4",
+    "regions": []
+  },
+  "CPH2119": {
+    "name": "OPPO Reno4 Lite",
+    "regions": []
+  },
+  "CPH2121": {
+    "name": "OPPO A93",
+    "regions": []
+  },
+  "CPH2123": {
+    "name": "OPPO A93",
+    "regions": []
+  },
+  "CPH2125": {
+    "name": "OPPO Reno4 Lite",
+    "regions": []
+  },
+  "CPH2127": {
+    "name": "OPPO A33",
+    "regions": []
+  },
+  "CPH2131": {
+    "name": "OPPO A53",
+    "regions": []
+  },
+  "CPH2133": {
+    "name": "OPPO A53",
+    "regions": []
+  },
+  "CPH2135": {
+    "name": "OPPO A53s",
+    "regions": []
+  },
+  "CPH2137": {
+    "name": "OPPO A33",
+    "regions": []
+  },
+  "CPH2139": {
+    "name": "OPPO A53",
+    "regions": []
+  },
+  "CPH2145": {
+    "name": "OPPO Find X3 Lite",
+    "regions": []
+  },
+  "CPH2159": {
+    "name": "OPPO Reno5",
+    "regions": []
+  },
+  "CPH2161": {
+    "name": "OPPO A73",
+    "regions": []
+  },
+  "CPH2173": {
+    "name": "OPPO Find X3 Pro",
+    "regions": []
+  },
+  "CPH2179": {
+    "name": "OPPO A15s",
+    "regions": []
+  },
+  "CPH2185": {
+    "name": "OPPO A15",
+    "regions": []
+  },
+  "CPH2195": {
+    "name": "OPPO A54",
+    "regions": []
+  },
+  "CPH2197": {
+    "name": "OPPO F19",
+    "regions": []
+  },
+  "CPH2199": {
+    "name": "OPPO Reno5 A",
+    "regions": []
+  },
+  "CPH2201": {
+    "name": "OPPO Reno5 Pro",
+    "regions": []
+  },
+  "CPH2203": {
+    "name": "OPPO A94",
+    "regions": []
+  },
+  "CPH2205": {
+    "name": "OPPO Reno5 Lite",
+    "regions": []
+  },
+  "CPH2207": {
+    "name": "OPPO Find X3 Neo",
+    "regions": []
+  },
+  "CPH2209": {
+    "name": "OPPO Reno4 F",
+    "regions": []
+  },
+  "CPH2211": {
+    "name": "OPPO Reno5 Z",
+    "regions": []
+  },
+  "CPH2213": {
+    "name": "OPPO Reno5 Z",
+    "regions": []
+  },
+  "CPH2217": {
+    "name": "OPPO Reno5 F",
+    "regions": []
+  },
+  "CPH2219": {
+    "name": "OPPO F19",
+    "regions": []
+  },
+  "CPH2223": {
+    "name": "OPPO F19s",
+    "regions": []
+  },
+  "CPH2235": {
+    "name": "OPPO Reno6",
+    "regions": []
+  },
+  "CPH2237": {
+    "name": "OPPO Reno6 Z",
+    "regions": []
+  },
+  "CPH2239": {
+    "name": "OPPO A54",
+    "regions": []
+  },
+  "CPH2247": {
+    "name": "OPPO Reno6 Pro",
+    "regions": []
+  },
+  "CPH2249": {
+    "name": "OPPO Reno6 Pro",
+    "regions": []
+  },
+  "CPH2251": {
+    "name": "OPPO Reno6",
+    "regions": []
+  },
+  "CPH2263": {
+    "name": "OPPO A74",
+    "regions": []
+  },
+  "CPH2269": {
+    "name": "OPPO A16",
+    "regions": []
+  },
+  "CPH2271": {
+    "name": "OPPO A16s",
+    "regions": []
+  },
+  "CPH2273": {
+    "name": "OPPO A54s",
+    "regions": []
+  },
+  "CPH2275": {
+    "name": "OPPO A16",
+    "regions": []
+  },
+  "CPH2285": {
+    "name": "OPPO F19 Pro",
+    "regions": []
+  },
+  "CPH2293": {
+    "name": "OPPO Reno7 Pro",
+    "regions": []
+  },
+  "CPH2303": {
+    "name": "OPPO A54",
+    "regions": []
+  },
+  "CPH2305": {
+    "name": "OPPO Find X5 Pro",
+    "regions": []
+  },
+  "CPH2307": {
+    "name": "OPPO Find X5",
+    "regions": []
+  },
+  "CPH2309": {
+    "name": "OPPO A55s",
+    "regions": []
+  },
+  "CPH2321": {
+    "name": "OPPO A53s",
+    "regions": []
+  },
+  "CPH2325": {
+    "name": "OPPO A55",
+    "regions": []
+  },
+  "CPH2333": {
+    "name": "OPPO A96",
+    "regions": []
+  },
+  "CPH2339": {
+    "name": "OPPO A77",
+    "regions": []
+  },
+  "CPH2341": {
+    "name": "OPPO F21 Pro",
+    "regions": []
+  },
+  "CPH2343": {
+    "name": "OPPO Reno7 Z / OPPO Reno7 Lite / OPPO Reno8 Lite",
+    "regions": []
+  },
+  "CPH2349": {
+    "name": "OPPO A16k",
+    "regions": []
+  },
+  "CPH2351": {
+    "name": "OPPO A16k",
+    "regions": []
+  },
+  "CPH2353": {
+    "name": "OPPO Reno7 A",
+    "regions": []
+  },
+  "CPH2357": {
+    "name": "OPPO Reno8 Pro",
+    "regions": []
+  },
+  "CPH2359": {
+    "name": "OPPO Reno8",
+    "regions": []
+  },
+  "CPH2363": {
+    "name": "OPPO Reno7",
+    "regions": []
+  },
+  "CPH2365": {
+    "name": "OPPO Reno6 Lite",
+    "regions": []
+  },
+  "CPH2371": {
+    "name": "OPPO Find X5 Lite",
+    "regions": []
+  },
+  "CPH2373": {
+    "name": "OPPO K10",
+    "regions": []
+  },
+  "CPH2375": {
+    "name": "OPPO A76",
+    "regions": []
+  },
+  "CPH2381": {
+    "name": "OnePlus Nord CE 2 Lite",
+    "regions": [
+      "IN"
+    ]
+  },
+  "CPH2385": {
+    "name": "OPPO A57s",
+    "regions": []
+  },
+  "CPH2387": {
+    "name": "OPPO A57",
+    "regions": []
+  },
+  "CPH2389": {
+    "name": "OnePlus Nord N300",
+    "regions": []
+  },
+  "CPH2399": {
+    "name": "OnePlus Nord 2T",
+    "regions": [
+      "GL"
+    ]
+  },
+  "CPH2401": {
+    "name": "OnePlus Nord 2T",
+    "regions": [
+      "IN"
+    ]
+  },
+  "CPH2407": {
+    "name": "OPPO A57",
+    "regions": []
+  },
+  "CPH2409": {
+    "name": "OnePlus Nord CE 2 Lite",
+    "regions": [
+      "EU",
+      "GL"
+    ]
+  },
+  "CPH2411": {
+    "name": "OnePlus 10R / OnePlus Ace",
+    "regions": [
+      "IN"
+    ]
+  },
+  "CPH2413": {
+    "name": "OnePlus 10T / OnePlus Ace Pro",
+    "regions": [
+      "IN"
+    ]
+  },
+  "CPH2415": {
+    "name": "OnePlus 10T / OnePlus Ace Pro",
+    "regions": [
+      "EU",
+      "GL"
+    ]
+  },
+  "CPH2417": {
+    "name": "OnePlus 10T / OnePlus Ace Pro",
+    "regions": [
+      "NA"
+    ]
+  },
+  "CPH2419": {
+    "name": "OnePlus 10T / OnePlus Ace Pro",
+    "regions": [
+      "NA"
+    ]
+  },
+  "CPH2421": {
+    "name": "OPPO A16e",
+    "regions": []
+  },
+  "CPH2423": {
+    "name": "OnePlus 10R / OnePlus Ace",
+    "regions": [
+      "IN"
+    ]
+  },
+  "CPH2437": {
+    "name": "OPPO Find N2 Flip",
+    "regions": []
+  },
+  "CPH2439": {
+    "name": "OPPO Find N2",
+    "regions": []
+  },
+  "CPH2447": {
+    "name": "OnePlus 11",
+    "regions": [
+      "IN"
+    ]
+  },
+  "CPH2449": {
+    "name": "OnePlus 11",
+    "regions": [
+      "EU",
+      "GL"
+    ]
+  },
+  "CPH2451": {
+    "name": "OnePlus 11",
+    "regions": [
+      "NA"
+    ]
+  },
+  "CPH2455": {
+    "name": "OPPO F21s Pro",
+    "regions": []
+  },
+  "CPH2457": {
+    "name": "OPPO Reno8 Z",
+    "regions": []
+  },
+  "CPH2459": {
+    "name": "OnePlus Nord N20",
+    "regions": []
+  },
+  "CPH2461": {
+    "name": "OPPO Reno8",
+    "regions": []
+  },
+  "CPH2465": {
+    "name": "OnePlus Nord CE 3 Lite / OnePlus Nord N30",
+    "regions": [
+      "GL"
+    ]
+  },
+  "CPH2467": {
+    "name": "OnePlus Nord CE 3 Lite / OnePlus Nord N30",
+    "regions": [
+      "IN"
+    ]
+  },
+  "CPH2469": {
+    "name": "OnePlus Nord N20 SE",
+    "regions": []
+  },
+  "CPH2471": {
+    "name": "OPPO A17k",
+    "regions": []
+  },
+  "CPH2473": {
+    "name": "OPPO A77s",
+    "regions": []
+  },
+  "CPH2477": {
+    "name": "OPPO A17",
+    "regions": []
+  },
+  "CPH2481": {
+    "name": "OPPO Reno8 T",
+    "regions": []
+  },
+  "CPH2483": {
+    "name": "OPPO A78",
+    "regions": []
+  },
+  "CPH2487": {
+    "name": "OnePlus 11R / OnePlus Ace 2",
+    "regions": [
+      "IN"
+    ]
+  },
+  "CPH2491": {
+    "name": "OnePlus Ace 2V / OnePlus Nord 3",
+    "regions": [
+      "IN"
+    ]
+  },
+  "CPH2493": {
+    "name": "OnePlus Ace 2V / OnePlus Nord 3",
+    "regions": [
+      "EU"
+    ]
+  },
+  "CPH2495": {
+    "name": "OPPO A78",
+    "regions": []
+  },
+  "CPH2499": {
+    "name": "OPPO Find N3",
+    "regions": []
+  },
+  "CPH2505": {
+    "name": "OPPO Reno8 T",
+    "regions": []
+  },
+  "CPH2513": {
+    "name": "OnePlus Nord CE 3 Lite / OnePlus Nord N30",
+    "regions": [
+      "NA"
+    ]
+  },
+  "CPH2515": {
+    "name": "OnePlus Nord CE 3 Lite / OnePlus Nord N30",
+    "regions": [
+      "NA"
+    ]
+  },
+  "CPH2519": {
+    "name": "OPPO Find N3 Flip",
+    "regions": []
+  },
+  "CPH2521": {
+    "name": "OPPO Reno10 Pro+",
+    "regions": []
+  },
+  "CPH2523": {
+    "name": "OPPO Reno9 A",
+    "regions": []
+  },
+  "CPH2525": {
+    "name": "OPPO Reno10 Pro",
+    "regions": []
+  },
+  "CPH2527": {
+    "name": "OPPO F23",
+    "regions": []
+  },
+  "CPH2529": {
+    "name": "OPPO A98",
+    "regions": []
+  },
+  "CPH2531": {
+    "name": "OPPO Reno10",
+    "regions": []
+  },
+  "CPH2541": {
+    "name": "OPPO Reno10 Pro",
+    "regions": [
+      "GL"
+    ]
+  },
+  "CPH2551": {
+    "name": "OnePlus Open (`hedwig`) (~`xueying-9`~)",
+    "regions": [
+      "EU",
+      "IN"
+    ]
+  },
+  "CPH2553": {
+    "name": "OPPO A79",
+    "regions": []
+  },
+  "CPH2557": {
+    "name": "OPPO A79",
+    "regions": []
+  },
+  "CPH2565": {
+    "name": "OPPO A78",
+    "regions": []
+  },
+  "CPH2569": {
+    "name": "OnePlus Nord CE 3",
+    "regions": [
+      "IN"
+    ]
+  },
+  "CPH2573": {
+    "name": "OnePlus 12",
+    "regions": [
+      "IN"
+    ]
+  },
+  "CPH2577": {
+    "name": "OPPO A58",
+    "regions": []
+  },
+  "CPH2579": {
+    "name": "OPPO A38",
+    "regions": []
+  },
+  "CPH2581": {
+    "name": "OnePlus 12",
+    "regions": [
+      "EU",
+      "GL"
+    ]
+  },
+  "CPH2583": {
+    "name": "OnePlus 12",
+    "regions": [
+      "NA"
+    ]
+  },
+  "CPH2585": {
+    "name": "OnePlus Ace 3 / OnePlus 12R (`aston`) / OnePlus Ace 3 Genshin Impact Edition / OnePlus 12R Genshin Impact Edition",
+    "regions": [
+      "IN"
+    ]
+  },
+  "CPH2591": {
+    "name": "OPPO A18",
+    "regions": []
+  },
+  "CPH2599": {
+    "name": "OPPO Reno11",
+    "regions": []
+  },
+  "CPH2603": {
+    "name": "OPPO Reno11 F / OPPO Reno11 A",
+    "regions": []
+  },
+  "CPH2605": {
+    "name": "OnePlus Nord N30 SE",
+    "regions": [
+      "EU"
+    ]
+  },
+  "CPH2607": {
+    "name": "OPPO Reno11 Pro",
+    "regions": []
+  },
+  "CPH2609": {
+    "name": "OnePlus Ace 3 / OnePlus 12R (`aston`) / OnePlus Ace 3 Genshin Impact Edition / OnePlus 12R Genshin Impact Edition",
+    "regions": [
+      "EU",
+      "GL"
+    ]
+  },
+  "CPH2611": {
+    "name": "OnePlus Ace 3 / OnePlus 12R (`aston`) / OnePlus Ace 3 Genshin Impact Edition / OnePlus 12R Genshin Impact Edition",
+    "regions": [
+      "NA"
+    ]
+  },
+  "CPH2613": {
+    "name": "OnePlus Nord CE 4",
+    "regions": [
+      "IN"
+    ]
+  },
+  "CPH2617": {
+    "name": "OPPO A59",
+    "regions": []
+  },
+  "CPH2619": {
+    "name": "OnePlus Nord CE 4 Lite",
+    "regions": [
+      "IN"
+    ]
+  },
+  "CPH2621": {
+    "name": "OnePlus Nord CE 4 Lite",
+    "regions": [
+      "EU",
+      "GL"
+    ]
+  },
+  "CPH2625": {
+    "name": "OPPO Reno12 (`omega`)",
+    "regions": []
+  },
+  "CPH2629": {
+    "name": "OPPO Reno12 Pro (`omega`)",
+    "regions": []
+  },
+  "CPH2631": {
+    "name": "OPPO A60",
+    "regions": []
+  },
+  "CPH2637": {
+    "name": "OPPO Reno12 F / OPPO Reno12 FS (`omega`)",
+    "regions": []
+  },
+  "CPH2639": {
+    "name": "OPPO A3",
+    "regions": []
+  },
+  "CPH2641": {
+    "name": "OPPO A3x",
+    "regions": []
+  },
+  "CPH2643": {
+    "name": "OPPO F27 Pro+",
+    "regions": []
+  },
+  "CPH2645": {
+    "name": "OnePlus Ace 5 / OnePlus 13R",
+    "regions": [
+      "EU",
+      "GL"
+    ]
+  },
+  "CPH2647": {
+    "name": "OnePlus Ace 5 / OnePlus 13R",
+    "regions": [
+      "NA"
+    ]
+  },
+  "CPH2649": {
+    "name": "OnePlus 13",
+    "regions": [
+      "IN"
+    ]
+  },
+  "CPH2651": {
+    "name": "OPPO Find X8",
+    "regions": [
+      "IN"
+    ]
+  },
+  "CPH2653": {
+    "name": "OnePlus 13",
+    "regions": [
+      "EU",
+      "GL"
+    ]
+  },
+  "CPH2655": {
+    "name": "OnePlus 13",
+    "regions": [
+      "NA"
+    ]
+  },
+  "CPH2659": {
+    "name": "OPPO Find X8 Pro",
+    "regions": [
+      "EU",
+      "IN"
+    ]
+  },
+  "CPH2661": {
+    "name": "OnePlus Nord 4",
+    "regions": [
+      "IN"
+    ]
+  },
+  "CPH2663": {
+    "name": "OnePlus Nord 4",
+    "regions": [
+      "EU",
+      "GL"
+    ]
+  },
+  "CPH2665": {
+    "name": "OPPO A3 Pro",
+    "regions": []
+  },
+  "CPH2667": {
+    "name": "OPPO K12x",
+    "regions": []
+  },
+  "CPH2669": {
+    "name": "OPPO A3",
+    "regions": []
+  },
+  "CPH2671": {
+    "name": "OPPO Find N5",
+    "regions": []
+  },
+  "CPH2681": {
+    "name": "OPPO A3x",
+    "regions": []
+  },
+  "CPH2683": {
+    "name": "OPPO A3",
+    "regions": []
+  },
+  "CPH2689": {
+    "name": "OPPO Reno13 (`milkyway`)",
+    "regions": []
+  },
+  "CPH2691": {
+    "name": "OnePlus Ace 5 / OnePlus 13R",
+    "regions": [
+      "IN"
+    ]
+  },
+  "CPH2695": {
+    "name": "OPPO A5 Pro",
+    "regions": []
+  },
+  "CPH2697": {
+    "name": "OPPO Reno13 Pro (`milkyway`)",
+    "regions": []
+  },
+  "CPH2699": {
+    "name": "OPPO Reno13 F / OPPO Reno13 FS / OPPO Reno13 A (`milkyway`)",
+    "regions": []
+  },
+  "CPH2701": {
+    "name": "OPPO Reno13 F / OPPO Reno13 FS / OPPO Reno13 A (`milkyway`)",
+    "regions": []
+  },
+  "CPH2705": {
+    "name": "OPPO F29 Pro",
+    "regions": []
+  },
+  "CPH2707": {
+    "name": "OnePlus Nord 5",
+    "regions": [
+      "IN"
+    ]
+  },
+  "CPH2709": {
+    "name": "OnePlus Nord 5",
+    "regions": [
+      "GL",
+      "EU"
+    ]
+  },
+  "CPH2711": {
+    "name": "OPPO A5 Pro",
+    "regions": []
+  },
+  "CPH2717": {
+    "name": "OnePlus Nord CE 5",
+    "regions": [
+      "IN"
+    ]
+  },
+  "CPH2719": {
+    "name": "OnePlus Nord CE 5",
+    "regions": [
+      "GL",
+      "EU"
+    ]
+  },
+  "CPH2721": {
+    "name": "OPPO F29",
+    "regions": []
+  },
+  "CPH2723": {
+    "name": "OnePlus 13T / OnePlus 13s",
+    "regions": [
+      "IN"
+    ]
+  },
+  "CPH2725": {
+    "name": "OPPO A5x",
+    "regions": []
+  },
+  "CPH2727": {
+    "name": "OPPO A5 / OPPO A5m",
+    "regions": []
+  },
+  "CPH2729": {
+    "name": "OPPO K13",
+    "regions": []
+  },
+  "CPH2731": {
+    "name": "OPPO K13 Turbo Pro",
+    "regions": []
+  },
+  "CPH2733": {
+    "name": "OPPO A5x",
+    "regions": []
+  },
+  "CPH2735": {
+    "name": "OPPO A5 5G",
+    "regions": []
+  },
+  "CPH2737": {
+    "name": "OPPO Reno14 (`zhuque`)",
+    "regions": []
+  },
+  "CPH2739": {
+    "name": "OPPO Reno14 Pro (`zhuque`)",
+    "regions": []
+  },
+  "CPH2743": {
+    "name": "OPPO Reno14 F / OPPO Reno14 FS (`zhuque`)",
+    "regions": []
+  },
+  "CPH2745": {
+    "name": "OnePlus 15",
+    "regions": [
+      "IN"
+    ]
+  },
+  "CPH2747": {
+    "name": "OnePlus 15",
+    "regions": [
+      "EU",
+      "GL"
+    ]
+  },
+  "CPH2749": {
+    "name": "OnePlus 15",
+    "regions": [
+      "NA"
+    ]
+  },
+  "CPH2751": {
+    "name": "OPPO A5 5G",
+    "regions": []
+  },
+  "CPH2753": {
+    "name": "OPPO K13x",
+    "regions": []
+  },
+  "CPH2755": {
+    "name": "OPPO A5i Pro",
+    "regions": []
+  },
+  "CPH2757": {
+    "name": "OPPO F31 Pro+",
+    "regions": []
+  },
+  "CPH2761": {
+    "name": "OPPO K13 Turbo",
+    "regions": []
+  },
+  "CPH2763": {
+    "name": "OPPO F31 Pro",
+    "regions": []
+  },
+  "CPH2765": {
+    "name": "OPPO Find N6",
+    "regions": []
+  },
+  "CPH2767": {
+    "name": "OnePlus Ace 6T / OnePlus 15R",
+    "regions": [
+      "IN"
+    ]
+  },
+  "CPH2769": {
+    "name": "OnePlus Ace 6T / OnePlus 15R",
+    "regions": [
+      "EU",
+      "GL"
+    ]
+  },
+  "CPH2771": {
+    "name": "OnePlus Ace 6T / OnePlus 15R",
+    "regions": [
+      "NA"
+    ]
+  },
+  "CPH2773": {
+    "name": "OPPO A5i",
+    "regions": []
+  },
+  "CPH2777": {
+    "name": "OPPO F33",
+    "regions": []
+  },
+  "CPH2781": {
+    "name": "OPPO F31",
+    "regions": []
+  },
+  "CPH2783": {
+    "name": "OPPO A6x",
+    "regions": [
+      "GL"
+    ]
+  },
+  "CPH2785": {
+    "name": "OPPO A6",
+    "regions": [
+      "IN"
+    ]
+  },
+  "CPH2789": {
+    "name": "OPPO A6s",
+    "regions": [
+      "GL"
+    ]
+  },
+  "CPH2791": {
+    "name": "OPPO Find X9 Pro",
+    "regions": [
+      "EU",
+      "IN"
+    ]
+  },
+  "CPH2793": {
+    "name": "OnePlus Turbo 6 / OnePlus Nord 6",
+    "regions": [
+      "IN"
+    ]
+  },
+  "CPH2795": {
+    "name": "OnePlus Turbo 6 / OnePlus Nord 6",
+    "regions": [
+      "GL"
+    ]
+  },
+  "CPH2797": {
+    "name": "OPPO Find X9",
+    "regions": [
+      "EU",
+      "IN"
+    ]
+  },
+  "CPH2799": {
+    "name": "OPPO A6 Pro",
+    "regions": []
+  },
+  "CPH2801": {
+    "name": "OPPO Reno15 F / OPPO Reno15 FS / OPPO Reno15c / OPPO Reno15 A",
+    "regions": []
+  },
+  "CPH2805": {
+    "name": "OnePlus Turbo 6V / OnePlus Nord CE 6",
+    "regions": [
+      "IN"
+    ]
+  },
+  "CPH2807": {
+    "name": "OnePlus Turbo 6V / OnePlus Nord CE 6",
+    "regions": [
+      "GL"
+    ]
+  },
+  "CPH2811": {
+    "name": "OPPO Reno15 Pro / OPPO Reno15 Pro Max",
+    "regions": []
+  },
+  "CPH2813": {
+    "name": "OPPO Reno15 Pro / OPPO Reno15 Pro Mini",
+    "regions": []
+  },
+  "CPH2815": {
+    "name": "OPPO A6s",
+    "regions": []
+  },
+  "CPH2817": {
+    "name": "OPPO A6",
+    "regions": []
+  },
+  "CPH2819": {
+    "name": "OPPO A6x",
+    "regions": []
+  },
+  "CPH2821": {
+    "name": "OPPO A5i Pro",
+    "regions": []
+  },
+  "CPH2823": {
+    "name": "OPPO A6x",
+    "regions": [
+      "IN"
+    ]
+  },
+  "CPH2825": {
+    "name": "OPPO Reno15",
+    "regions": []
+  },
+  "CPH2827": {
+    "name": "OPPO A6 Pro",
+    "regions": [
+      "IN"
+    ]
+  },
+  "CPH2831": {
+    "name": "OPPO A6",
+    "regions": [
+      "GL"
+    ]
+  },
+  "CPH2835": {
+    "name": "OPPO F33 Pro",
+    "regions": []
+  },
+  "CPH2841": {
+    "name": "OPPO Find X9 Ultra",
+    "regions": []
+  },
+  "CPH2847": {
+    "name": "OPPO A6t",
+    "regions": []
+  },
+  "CPH2849": {
+    "name": "OPPO A6t Pro",
+    "regions": []
+  },
+  "CPH2851": {
+    "name": "OPPO A6t Pro",
+    "regions": []
+  },
+  "CPH2853": {
+    "name": "OPPO A6t",
+    "regions": []
+  },
+  "CPH2869": {
+    "name": "OPPO K14",
+    "regions": []
+  },
+  "CPH2871": {
+    "name": "OPPO K14x",
+    "regions": []
+  },
+  "CPH2873": {
+    "name": "OPPO Find X9s",
+    "regions": []
+  },
+  "CPH2889": {
+    "name": "OPPO A6s",
+    "regions": [
+      "IN"
+    ]
+  },
+  "CPH2895": {
+    "name": "OPPO A6c",
+    "regions": []
+  },
+  "CPH2943": {
+    "name": "OnePlus Nord CE 6 Lite",
+    "regions": [
+      "IN"
+    ]
+  },
+  "CPH3669": {
+    "name": "OPPO A60",
+    "regions": []
+  },
+  "DE2117": {
+    "name": "OnePlus Nord N200",
+    "regions": [
+      "NA"
+    ]
+  },
+  "DE2118": {
+    "name": "OnePlus Nord N200",
+    "regions": [
+      "NA"
+    ]
+  },
+  "DN2101": {
+    "name": "OnePlus Nord 2",
+    "regions": [
+      "IN"
+    ]
+  },
+  "DN2103": {
+    "name": "OnePlus Nord 2",
+    "regions": [
+      "EU"
+    ]
+  },
+  "EB2101": {
+    "name": "OnePlus Nord CE",
+    "regions": [
+      "IN"
+    ]
+  },
+  "EB2103": {
+    "name": "OnePlus Nord CE",
+    "regions": [
+      "EU",
+      "GL"
+    ]
+  },
+  "GM1900": {
+    "name": "OnePlus 7",
+    "regions": [
+      "CN"
+    ]
+  },
+  "GM1901": {
+    "name": "OnePlus 7",
+    "regions": [
+      "IN"
+    ]
+  },
+  "GM1903": {
+    "name": "OnePlus 7",
+    "regions": [
+      "EU"
+    ]
+  },
+  "GM1905": {
+    "name": "OnePlus 7",
+    "regions": [
+      "NA",
+      "GL"
+    ]
+  },
+  "GM1910": {
+    "name": "OnePlus 7 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "GM1911": {
+    "name": "OnePlus 7 Pro",
+    "regions": [
+      "IN"
+    ]
+  },
+  "GM1913": {
+    "name": "OnePlus 7 Pro",
+    "regions": [
+      "EU"
+    ]
+  },
+  "GM1915": {
+    "name": "OnePlus 7 Pro",
+    "regions": [
+      "NA",
+      "GL"
+    ]
+  },
+  "GM1917": {
+    "name": "OnePlus 7 Pro",
+    "regions": [
+      "NA"
+    ]
+  },
+  "GM1920": {
+    "name": "OnePlus 7 Pro 5G",
+    "regions": [
+      "EU"
+    ]
+  },
+  "GM1925": {
+    "name": "OnePlus 7 Pro 5G",
+    "regions": []
+  },
+  "GN2200": {
+    "name": "OnePlus Nord N20",
+    "regions": []
+  },
+  "HD1900": {
+    "name": "OnePlus 7T",
+    "regions": [
+      "CN"
+    ]
+  },
+  "HD1901": {
+    "name": "OnePlus 7T",
+    "regions": [
+      "IN"
+    ]
+  },
+  "HD1903": {
+    "name": "OnePlus 7T",
+    "regions": [
+      "EU"
+    ]
+  },
+  "HD1905": {
+    "name": "OnePlus 7T",
+    "regions": [
+      "NA",
+      "GL"
+    ]
+  },
+  "HD1907": {
+    "name": "OnePlus 7T",
+    "regions": [
+      "NA"
+    ]
+  },
+  "HD1910": {
+    "name": "OnePlus 7T Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "HD1911": {
+    "name": "OnePlus 7T Pro",
+    "regions": [
+      "IN"
+    ]
+  },
+  "HD1913": {
+    "name": "OnePlus 7T Pro",
+    "regions": [
+      "EU",
+      "GL"
+    ]
+  },
+  "HD1925": {
+    "name": "OnePlus 7T Pro 5G",
+    "regions": [
+      "NA"
+    ]
+  },
+  "IN2010": {
+    "name": "OnePlus 8",
+    "regions": [
+      "CN"
+    ]
+  },
+  "IN2011": {
+    "name": "OnePlus 8",
+    "regions": [
+      "IN"
+    ]
+  },
+  "IN2013": {
+    "name": "OnePlus 8",
+    "regions": [
+      "EU"
+    ]
+  },
+  "IN2015": {
+    "name": "OnePlus 8",
+    "regions": [
+      "NA",
+      "GL"
+    ]
+  },
+  "IN2017": {
+    "name": "OnePlus 8",
+    "regions": [
+      "NA"
+    ]
+  },
+  "IN2019": {
+    "name": "OnePlus 8",
+    "regions": []
+  },
+  "IN2020": {
+    "name": "OnePlus 8 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "IN2021": {
+    "name": "OnePlus 8 Pro",
+    "regions": [
+      "IN"
+    ]
+  },
+  "IN2023": {
+    "name": "OnePlus 8 Pro",
+    "regions": [
+      "EU"
+    ]
+  },
+  "IN2025": {
+    "name": "OnePlus 8 Pro",
+    "regions": [
+      "NA",
+      "GL"
+    ]
+  },
+  "IV2201": {
+    "name": "OnePlus Nord CE 2",
+    "regions": [
+      "IN"
+    ]
+  },
+  "KB2000": {
+    "name": "OnePlus 8T",
+    "regions": [
+      "CN"
+    ]
+  },
+  "KB2001": {
+    "name": "OnePlus 8T",
+    "regions": [
+      "IN"
+    ]
+  },
+  "KB2003": {
+    "name": "OnePlus 8T",
+    "regions": [
+      "EU"
+    ]
+  },
+  "KB2005": {
+    "name": "OnePlus 8T",
+    "regions": [
+      "NA",
+      "GL"
+    ]
+  },
+  "KB2007": {
+    "name": "OnePlus 8T+",
+    "regions": [
+      "NA"
+    ]
+  },
+  "LE2100": {
+    "name": "OnePlus 9R",
+    "regions": [
+      "CN"
+    ]
+  },
+  "LE2101": {
+    "name": "OnePlus 9R",
+    "regions": [
+      "IN"
+    ]
+  },
+  "LE2110": {
+    "name": "OnePlus 9",
+    "regions": [
+      "CN"
+    ]
+  },
+  "LE2111": {
+    "name": "OnePlus 9",
+    "regions": [
+      "IN"
+    ]
+  },
+  "LE2113": {
+    "name": "OnePlus 9",
+    "regions": [
+      "EU"
+    ]
+  },
+  "LE2115": {
+    "name": "OnePlus 9",
+    "regions": [
+      "NA",
+      "GL"
+    ]
+  },
+  "LE2117": {
+    "name": "OnePlus 9",
+    "regions": [
+      "NA"
+    ]
+  },
+  "LE2119": {
+    "name": "OnePlus 9",
+    "regions": []
+  },
+  "LE2120": {
+    "name": "OnePlus 9 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "LE2121": {
+    "name": "OnePlus 9 Pro",
+    "regions": [
+      "IN"
+    ]
+  },
+  "LE2123": {
+    "name": "OnePlus 9 Pro",
+    "regions": [
+      "EU"
+    ]
+  },
+  "LE2125": {
+    "name": "OnePlus 9 Pro",
+    "regions": [
+      "NA",
+      "GL"
+    ]
+  },
+  "LE2127": {
+    "name": "OnePlus 9 Pro",
+    "regions": [
+      "NA"
+    ]
+  },
+  "MT2110": {
+    "name": "OnePlus 9RT",
+    "regions": [
+      "CN"
+    ]
+  },
+  "MT2111": {
+    "name": "OnePlus 9RT",
+    "regions": [
+      "IN"
+    ]
+  },
+  "NE2210": {
+    "name": "OnePlus 10 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "NE2211": {
+    "name": "OnePlus 10 Pro",
+    "regions": [
+      "IN"
+    ]
+  },
+  "NE2213": {
+    "name": "OnePlus 10 Pro",
+    "regions": [
+      "EU",
+      "GL",
+      "IN"
+    ]
+  },
+  "NE2215": {
+    "name": "OnePlus 10 Pro",
+    "regions": [
+      "NA"
+    ]
+  },
+  "NE2217": {
+    "name": "OnePlus 10 Pro",
+    "regions": [
+      "NA"
+    ]
+  },
+  "OB19B1": {
+    "name": "OPPO Band",
+    "regions": []
+  },
+  "OB19B3": {
+    "name": "OPPO Band",
+    "regions": [
+      "CN"
+    ]
+  },
+  "OB19O0": {
+    "name": "OPPO Band",
+    "regions": [
+      "CN"
+    ]
+  },
+  "OB19O1": {
+    "name": "OPPO Band",
+    "regions": [
+      "CN"
+    ]
+  },
+  "OB19O2": {
+    "name": "OPPO Band",
+    "regions": [
+      "CN"
+    ]
+  },
+  "OB19O3": {
+    "name": "OPPO Band",
+    "regions": []
+  },
+  "OB19O7": {
+    "name": "OPPO Band",
+    "regions": [
+      "CN"
+    ]
+  },
+  "OB19O8": {
+    "name": "OPPO Band",
+    "regions": [
+      "CN"
+    ]
+  },
+  "OBB211": {
+    "name": "OPPO Band 2",
+    "regions": [
+      "CN"
+    ]
+  },
+  "OBB213": {
+    "name": "OPPO Band 2",
+    "regions": [
+      "CN"
+    ]
+  },
+  "OBBE215": {
+    "name": "OPPO Band 2",
+    "regions": [
+      "GL"
+    ]
+  },
+  "ONE A0001": {
+    "name": "OnePlus One",
+    "regions": [
+      "CN",
+      "GL"
+    ]
+  },
+  "ONE A1001": {
+    "name": "OnePlus One",
+    "regions": [
+      "CN"
+    ]
+  },
+  "ONE A2001": {
+    "name": "OnePlus 2",
+    "regions": [
+      "CN"
+    ]
+  },
+  "ONE A2003": {
+    "name": "OnePlus 2",
+    "regions": [
+      "GL"
+    ]
+  },
+  "ONE A2005": {
+    "name": "OnePlus 2",
+    "regions": [
+      "NA"
+    ]
+  },
+  "ONE E1000": {
+    "name": "OnePlus X",
+    "regions": [
+      "CN"
+    ]
+  },
+  "ONE E1001": {
+    "name": "OnePlus X",
+    "regions": [
+      "CN"
+    ]
+  },
+  "ONE E1003": {
+    "name": "OnePlus X",
+    "regions": [
+      "GL"
+    ]
+  },
+  "ONE E1005": {
+    "name": "OnePlus X",
+    "regions": [
+      "NA"
+    ]
+  },
+  "ONEPLUS A3000": {
+    "name": "OnePlus 3",
+    "regions": [
+      "NA",
+      "CN"
+    ]
+  },
+  "ONEPLUS A3003": {
+    "name": "OnePlus 3",
+    "regions": [
+      "GL"
+    ]
+  },
+  "ONEPLUS A3010": {
+    "name": "OnePlus 3T",
+    "regions": [
+      "CN"
+    ]
+  },
+  "ONEPLUS A3013": {
+    "name": "OnePlus 3T",
+    "regions": [
+      "GL"
+    ]
+  },
+  "ONEPLUS A5000": {
+    "name": "OnePlus 5",
+    "regions": []
+  },
+  "ONEPLUS A5010": {
+    "name": "OnePlus 5T",
+    "regions": []
+  },
+  "ONEPLUS A6000": {
+    "name": "OnePlus 6",
+    "regions": [
+      "CN"
+    ]
+  },
+  "ONEPLUS A6003": {
+    "name": "OnePlus 6",
+    "regions": [
+      "GL"
+    ]
+  },
+  "ONEPLUS A6010": {
+    "name": "OnePlus 6T",
+    "regions": [
+      "CN"
+    ]
+  },
+  "ONEPLUS A6013": {
+    "name": "OnePlus 6T",
+    "regions": [
+      "GL"
+    ]
+  },
+  "OPBBE221": {
+    "name": "OnePlus Nord Watch",
+    "regions": []
+  },
+  "OPD2101": {
+    "name": "OPPO Pad",
+    "regions": [
+      "CN"
+    ]
+  },
+  "OPD2102": {
+    "name": "OPPO Pad Air",
+    "regions": [
+      "CN"
+    ]
+  },
+  "OPD2102A": {
+    "name": "OPPO Pad Air",
+    "regions": []
+  },
+  "OPD2201": {
+    "name": "OPPO Pad 2",
+    "regions": [
+      "CN"
+    ]
+  },
+  "OPD2202": {
+    "name": "OPPO Pad 2",
+    "regions": []
+  },
+  "OPD2203": {
+    "name": "OnePlus Pad (2023)",
+    "regions": [
+      "GL"
+    ]
+  },
+  "OPD2301": {
+    "name": "OPPO Pad Air2",
+    "regions": [
+      "CN"
+    ]
+  },
+  "OPD2302": {
+    "name": "OPPO Pad Neo",
+    "regions": []
+  },
+  "OPD2303": {
+    "name": "OPPO Pad Neo",
+    "regions": []
+  },
+  "OPD2304": {
+    "name": "OnePlus Pad Go",
+    "regions": []
+  },
+  "OPD2305": {
+    "name": "OnePlus Pad Go",
+    "regions": []
+  },
+  "OPD2401": {
+    "name": "OPPO Pad 3 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "OPD2402": {
+    "name": "OPPO Pad 3 Pro",
+    "regions": []
+  },
+  "OPD2403": {
+    "name": "OnePlus Pad 2 (2024) / OnePlus Pad Pro (`rainbow`) (~`caihong-o`~)",
+    "regions": [
+      "GL",
+      "EU",
+      "IN"
+    ]
+  },
+  "OPD2404": {
+    "name": "OnePlus Pad 2 (2024) / OnePlus Pad Pro (`rainbow`) (~`caihong-o`~)",
+    "regions": [
+      "CN"
+    ]
+  },
+  "OPD2405": {
+    "name": "OPPO Pad 3",
+    "regions": [
+      "CN"
+    ]
+  },
+  "OPD2406": {
+    "name": "OPPO Pad 3",
+    "regions": []
+  },
+  "OPD2407": {
+    "name": "OnePlus Pad (2024)",
+    "regions": [
+      "CN"
+    ]
+  },
+  "OPD2409": {
+    "name": "OPPO Pad 4 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "OPD2413": {
+    "name": "OnePlus Pad 3 / OnePlus Pad 2 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "OPD2415": {
+    "name": "OnePlus Pad 3 / OnePlus Pad 2 Pro",
+    "regions": [
+      "GL",
+      "EU",
+      "IN"
+    ]
+  },
+  "OPD2417": {
+    "name": "OPPO Pad SE",
+    "regions": [
+      "CN"
+    ]
+  },
+  "OPD2419": {
+    "name": "OPPO Pad SE",
+    "regions": []
+  },
+  "OPD2420": {
+    "name": "OPPO Pad SE",
+    "regions": []
+  },
+  "OPD2480": {
+    "name": "OnePlus Pad Lite",
+    "regions": [
+      "EU",
+      "GL"
+    ]
+  },
+  "OPD2481": {
+    "name": "OnePlus Pad Lite",
+    "regions": []
+  },
+  "OPD2501": {
+    "name": "OPPO Pad Air5",
+    "regions": [
+      "CN"
+    ]
+  },
+  "OPD2502": {
+    "name": "OPPO Pad 5",
+    "regions": []
+  },
+  "OPD2503": {
+    "name": "OPPO Pad 5",
+    "regions": []
+  },
+  "OPD2504": {
+    "name": "OnePlus Pad Go 2",
+    "regions": [
+      "EU",
+      "GL"
+    ]
+  },
+  "OPD2505": {
+    "name": "OnePlus Pad Go 2",
+    "regions": []
+  },
+  "OPD2506": {
+    "name": "OPPO Pad 5",
+    "regions": [
+      "CN"
+    ]
+  },
+  "OPD2508": {
+    "name": "OnePlus Pad 2 (2025)",
+    "regions": [
+      "CN"
+    ]
+  },
+  "OPD2511": {
+    "name": "OPPO Pad 5 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "OPD2514": {
+    "name": "OnePlus Pad 4",
+    "regions": [
+      "GL"
+    ]
+  },
+  "OPD2515": {
+    "name": "OPPO Pad Mini",
+    "regions": [
+      "CN"
+    ]
+  },
+  "OPG01": {
+    "name": "OPPO Find X2 Pro",
+    "regions": [
+      "GL"
+    ]
+  },
+  "OPG02": {
+    "name": "OPPO A54",
+    "regions": [
+      "GL"
+    ]
+  },
+  "OPG03": {
+    "name": "OPPO Find X3 Pro",
+    "regions": [
+      "GL"
+    ]
+  },
+  "OPG04": {
+    "name": "OPPO Reno7 A",
+    "regions": [
+      "GL"
+    ]
+  },
+  "OPG07": {
+    "name": "OPPO Find X9",
+    "regions": [
+      "GL"
+    ]
+  },
+  "OPWE242": {
+    "name": "OnePlus Watch 3 (`chili`)",
+    "regions": [
+      "GL"
+    ]
+  },
+  "OPWW234": {
+    "name": "OnePlus Watch 2R / OnePlus Watch 2 China",
+    "regions": [
+      "CN"
+    ]
+  },
+  "OPWWE231": {
+    "name": "OnePlus Watch 2",
+    "regions": [
+      "GL"
+    ]
+  },
+  "OPWWE234": {
+    "name": "OnePlus Watch 2R / OnePlus Watch 2 China",
+    "regions": []
+  },
+  "OPWWE251": {
+    "name": "OnePlus Watch 3 (`chili`)",
+    "regions": [
+      "GL"
+    ]
+  },
+  "OPWWE261": {
+    "name": "OnePlus Watch 4",
+    "regions": [
+      "GL"
+    ]
+  },
+  "OR19R1": {
+    "name": "OPPO Watch RX",
+    "regions": [
+      "CN"
+    ]
+  },
+  "OW19W1": {
+    "name": "OPPO Watch",
+    "regions": [
+      "CN"
+    ]
+  },
+  "OW19W12": {
+    "name": "OPPO Watch (LTE)",
+    "regions": []
+  },
+  "OW19W2": {
+    "name": "OPPO Watch",
+    "regions": [
+      "CN"
+    ]
+  },
+  "OW19W3": {
+    "name": "OPPO Watch",
+    "regions": [
+      "CN"
+    ]
+  },
+  "OW19W6": {
+    "name": "OPPO Watch (Wi-Fi)",
+    "regions": []
+  },
+  "OW19W8": {
+    "name": "OPPO Watch (Wi-Fi)",
+    "regions": []
+  },
+  "OW20W1": {
+    "name": "OPPO Watch 2",
+    "regions": [
+      "CN"
+    ]
+  },
+  "OW20W2": {
+    "name": "OPPO Watch 2",
+    "regions": [
+      "CN"
+    ]
+  },
+  "OW20W3": {
+    "name": "OPPO Watch 2",
+    "regions": [
+      "CN"
+    ]
+  },
+  "OWW202": {
+    "name": "OPPO Watch 2",
+    "regions": [
+      "CN"
+    ]
+  },
+  "OWW206": {
+    "name": "OPPO Watch Free",
+    "regions": [
+      "CN"
+    ]
+  },
+  "OWW208": {
+    "name": "OPPO Watch Free",
+    "regions": [
+      "CN"
+    ]
+  },
+  "OWW211": {
+    "name": "OPPO Watch 3 / OPPO Watch SE",
+    "regions": [
+      "CN"
+    ]
+  },
+  "OWW212": {
+    "name": "OPPO Watch 3 / OPPO Watch SE",
+    "regions": [
+      "CN"
+    ]
+  },
+  "OWW213": {
+    "name": "OPPO Watch 3 / OPPO Watch SE",
+    "regions": [
+      "CN"
+    ]
+  },
+  "OWW221": {
+    "name": "OPPO Watch 4 Pro (`comet`)",
+    "regions": [
+      "CN"
+    ]
+  },
+  "OWW231": {
+    "name": "OPPO Watch X (`star`)",
+    "regions": [
+      "CN"
+    ]
+  },
+  "OWW235": {
+    "name": "OPPO Watch Sport",
+    "regions": [
+      "CN"
+    ]
+  },
+  "OWW242": {
+    "name": "OPPO Watch X2 Mini",
+    "regions": [
+      "CN"
+    ]
+  },
+  "OWW251": {
+    "name": "OPPO Watch X2 (`starriver`)",
+    "regions": [
+      "CN"
+    ]
+  },
+  "OWW261": {
+    "name": "OPPO Watch X3",
+    "regions": [
+      "CN"
+    ]
+  },
+  "OWW262": {
+    "name": "OPPO Watch S",
+    "regions": [
+      "CN"
+    ]
+  },
+  "OWW263": {
+    "name": "OPPO Watch X3 Mini",
+    "regions": [
+      "CN"
+    ]
+  },
+  "OWWE201": {
+    "name": "OPPO Watch Free",
+    "regions": []
+  },
+  "OWWE231": {
+    "name": "OPPO Watch X",
+    "regions": []
+  },
+  "OWWE242": {
+    "name": "OPPO Watch X2 Mini",
+    "regions": []
+  },
+  "OWWE251": {
+    "name": "OPPO Watch X2 (`starriver`) (`starrivere`)",
+    "regions": []
+  },
+  "OWWE261": {
+    "name": "OPPO Watch X3",
+    "regions": []
+  },
+  "OWWE262": {
+    "name": "OPPO Watch S",
+    "regions": []
+  },
+  "PAAM00": {
+    "name": "OPPO R15 梦镜版",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PAAT00": {
+    "name": "OPPO R15 梦镜版",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PACM00": {
+    "name": "OPPO R15",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PACT00": {
+    "name": "OPPO R15",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PADM00": {
+    "name": "OPPO A3",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PADT00": {
+    "name": "OPPO A3",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PAFM00": {
+    "name": "OPPO Find X",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PAFT00": {
+    "name": "OPPO Find X",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PAFT10": {
+    "name": "OPPO Find X",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PAHM00": {
+    "name": "OPPO Find X",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PBAM00": {
+    "name": "OPPO A5",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PBAT00": {
+    "name": "OPPO A5",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PBBM00": {
+    "name": "OPPO A7x",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PBBM30": {
+    "name": "OPPO A5",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PBBT00": {
+    "name": "OPPO A7x",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PBBT30": {
+    "name": "OPPO A5",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PBCM10": {
+    "name": "OPPO R15x",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PBCM30": {
+    "name": "OPPO K1",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PBCT10": {
+    "name": "OPPO R15x",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PBDM00": {
+    "name": "OPPO R17 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PBDT00": {
+    "name": "OPPO R17 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PBEM00": {
+    "name": "OPPO R17",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PBET00": {
+    "name": "OPPO R17",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PBFM00": {
+    "name": "OPPO A7",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PBFT00": {
+    "name": "OPPO A7",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PCAM00": {
+    "name": "OPPO Reno",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PCAM10": {
+    "name": "OPPO A9",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PCAT00": {
+    "name": "OPPO Reno",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PCAT10": {
+    "name": "OPPO A9",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PCCM00": {
+    "name": "OPPO Reno 10 倍变焦版",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PCCT00": {
+    "name": "OPPO Reno 10 倍变焦版",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PCDM00": {
+    "name": "OPPO A7n",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PCDM10": {
+    "name": "OPPO Reno Z",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PCDT00": {
+    "name": "OPPO A7n",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PCDT10": {
+    "name": "OPPO Reno Z",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PCEM00": {
+    "name": "OPPO A9x",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PCET00": {
+    "name": "OPPO A9x",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PCGM00": {
+    "name": "OPPO K3",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PCGT00": {
+    "name": "OPPO K3",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PCHM00": {
+    "name": "OPPO A11n",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PCHM10": {
+    "name": "OPPO A11",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PCHM30": {
+    "name": "OPPO A11x",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PCHT00": {
+    "name": "OPPO A11n",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PCHT10": {
+    "name": "OPPO A11",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PCHT30": {
+    "name": "OPPO A11x",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PCKM00": {
+    "name": "OPPO Reno2",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PCKM80": {
+    "name": "OPPO Reno2 Z",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PCKT00": {
+    "name": "OPPO Reno2",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PCKT80": {
+    "name": "OPPO Reno2 Z",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PCLM10": {
+    "name": "OPPO Reno Ace",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PCLM50": {
+    "name": "OPPO Reno3 元气版",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PCNM00": {
+    "name": "OPPO K5",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PCNT00": {
+    "name": "OPPO K5",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PCPM00": {
+    "name": "OPPO A91",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PCPT00": {
+    "name": "OPPO A91",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PCRM00": {
+    "name": "OPPO Reno3 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PCRT00": {
+    "name": "OPPO Reno3 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PCRT01": {
+    "name": "OPPO Reno3 元气版",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PDAM10": {
+    "name": "OPPO A52",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PDAT10": {
+    "name": "OPPO A52",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PDBM00": {
+    "name": "OPPO A8",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PDBT00": {
+    "name": "OPPO A8",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PDCM00": {
+    "name": "OPPO Reno3",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PDCT00": {
+    "name": "OPPO Reno3",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PDEM10": {
+    "name": "OPPO Find X2",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PDEM30": {
+    "name": "OPPO Find X2 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PDET10": {
+    "name": "OPPO Find X2",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PDHM00": {
+    "name": "OPPO Ace2",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PDKM00": {
+    "name": "OPPO A92s",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PDKT00": {
+    "name": "OPPO A92s",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PDNM00": {
+    "name": "OPPO Reno4 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PDNT00": {
+    "name": "OPPO Reno4 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PDPM00": {
+    "name": "OPPO Reno4",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PDPT00": {
+    "name": "OPPO Reno4",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PDRM00": {
+    "name": "OPPO Reno5 Pro+",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PDSM00": {
+    "name": "OPPO Reno5 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PDST00": {
+    "name": "OPPO Reno5 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PDVM00": {
+    "name": "OPPO A11s",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PDYM10": {
+    "name": "OPPO A72n",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PDYM20": {
+    "name": "OPPO A72",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PDYT20": {
+    "name": "OPPO A72",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PEAM00": {
+    "name": "OPPO Reno4 SE",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PEAT00": {
+    "name": "OPPO Reno4 SE",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PECM20": {
+    "name": "OPPO A53",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PECM30": {
+    "name": "OPPO A53",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PECT30": {
+    "name": "OPPO A53",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PEDM00": {
+    "name": "OPPO Find X3",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PEEM00": {
+    "name": "OPPO Find X3 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PEFM00": {
+    "name": "OPPO A35",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PEGM00": {
+    "name": "OPPO Reno5",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PEGM10": {
+    "name": "OPPO Reno5 K",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PEGT00": {
+    "name": "OPPO Reno5",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PEGT10": {
+    "name": "OPPO Reno5 K",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PEHM00": {
+    "name": "OPPO A93",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PEHT00": {
+    "name": "OPPO A93",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PELM00": {
+    "name": "OPPO A95",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PEMM00": {
+    "name": "OPPO A55",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PEMM20": {
+    "name": "OPPO A55",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PEMT00": {
+    "name": "OPPO A55",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PEMT20": {
+    "name": "OPPO A55",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PENM00": {
+    "name": "OPPO Reno6 Pro+",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PEPM00": {
+    "name": "OPPO Reno6 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PEQM00": {
+    "name": "OPPO Reno6",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PERM00": {
+    "name": "OPPO K7x",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PERM10": {
+    "name": "OPPO K9s (`walle`) / OPPO K10 活力版",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PESM10": {
+    "name": "OPPO A36",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PEUM00": {
+    "name": "OPPO Find N",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PEXM00": {
+    "name": "OPPO K9",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PEYM00": {
+    "name": "OPPO K9 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PFCM00": {
+    "name": "OPPO Reno7 SE",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PFDM00": {
+    "name": "OPPO Reno7 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PFEM10": {
+    "name": "OPPO Find X5 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PFFM10": {
+    "name": "OPPO Find X5",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PFFM20": {
+    "name": "OPPO Find X5 Pro 天玑版",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PFGM00": {
+    "name": "OPPO A93s",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PFJM10": {
+    "name": "OPPO Reno7",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PFTM10": {
+    "name": "OPPO A97",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PFTM20": {
+    "name": "OPPO A56s",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PFUM10": {
+    "name": "OPPO A96",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PFVM10": {
+    "name": "OPPO A56",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PFZM10": {
+    "name": "OPPO Reno8 Pro+",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PGAM10": {
+    "name": "OPPO Reno8 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PGBM10": {
+    "name": "OPPO Reno8",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PGCM10": {
+    "name": "OPPO K9x",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PGEM10": {
+    "name": "OPPO Find X6 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PGFM10": {
+    "name": "OPPO Find X6",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PGGM10": {
+    "name": "OPPO K10x",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PGIM10": {
+    "name": "OPPO K10 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PGJM10": {
+    "name": "OPPO K10",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PGKM10": {
+    "name": "OnePlus 10R / OnePlus Ace",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PGP110": {
+    "name": "OnePlus 10T / OnePlus Ace Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PGT110": {
+    "name": "OPPO Find N2 Flip",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PGU110": {
+    "name": "OPPO Find N2",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PGW110": {
+    "name": "OPPO Reno9 Pro+",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PGX110": {
+    "name": "OPPO Reno9 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PGZ110": {
+    "name": "OnePlus Ace Race",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PHA120": {
+    "name": "OPPO A96",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PHB110": {
+    "name": "OnePlus 11",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PHF110": {
+    "name": "OPPO K11x",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PHJ110": {
+    "name": "OPPO A58",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PHK110": {
+    "name": "OnePlus 11R / OnePlus Ace 2",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PHM110": {
+    "name": "OPPO Reno9",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PHN110": {
+    "name": "OPPO Find N3",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PHP110": {
+    "name": "OnePlus Ace 2V / OnePlus Nord 3",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PHQ110": {
+    "name": "OPPO A1 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PHS110": {
+    "name": "OPPO A1",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PHT110": {
+    "name": "OPPO Find N3 Flip",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PHU110": {
+    "name": "OPPO Reno10 Pro+",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PHV110": {
+    "name": "OPPO Reno10 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PHW110": {
+    "name": "OPPO Reno10",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PHY110": {
+    "name": "OPPO Find X7 Ultra",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PHY120": {
+    "name": "OPPO Find X7 Ultra",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PHZ110": {
+    "name": "OPPO Find X7",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PJA110": {
+    "name": "OnePlus Ace 2 Pro (`xigua`) / OnePlus Ace 2 Pro Genshin Impact",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PJB110": {
+    "name": "OPPO A1s / OPPO A2",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PJC110": {
+    "name": "OPPO K11",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PJD110": {
+    "name": "OnePlus 12",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PJE110": {
+    "name": "OnePlus Ace 3 / OnePlus 12R (`aston`) / OnePlus Ace 3 Genshin Impact Edition / OnePlus 12R Genshin Impact Edition",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PJF110": {
+    "name": "OnePlus Ace 3V",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PJG110": {
+    "name": "OPPO A2 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PJH110": {
+    "name": "OPPO Reno11",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PJJ110": {
+    "name": "OPPO Reno11 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PJR110": {
+    "name": "OPPO K12",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PJS110": {
+    "name": "OPPO A2x",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PJT110": {
+    "name": "OPPO K12x",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PJU110": {
+    "name": "OPPO A1i / OPPO A2m",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PJV110": {
+    "name": "OPPO Reno12 (`omega`)",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PJW110": {
+    "name": "OPPO Reno12 Pro (`omega`)",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PJX110": {
+    "name": "OnePlus Ace 3 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PJY110": {
+    "name": "OPPO A3 Pro / OPPO A5 Plus",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PJZ110": {
+    "name": "OnePlus 13",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PKA110": {
+    "name": "OPPO A3 / OPPO A3i Plus",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PKB110": {
+    "name": "OPPO Find X8",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PKC110": {
+    "name": "OPPO Find X8 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PKC130": {
+    "name": "OPPO Find X8 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PKD110": {
+    "name": "OPPO A3 活力版",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PKD120": {
+    "name": "OPPO A3m",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PKD130": {
+    "name": "OPPO A3x",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PKG110": {
+    "name": "OnePlus Ace 5 / OnePlus 13R",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PKH110": {
+    "name": "OPPO Find N5",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PKH120": {
+    "name": "OPPO Find N5",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PKJ110": {
+    "name": "OPPO Find X8 Ultra",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PKK110": {
+    "name": "OPPO Reno13 Pro (`milkyway`)",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PKL110": {
+    "name": "OPPO A3i",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PKM110": {
+    "name": "OPPO Reno13 (`milkyway`)",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PKP110": {
+    "name": "OPPO A5 Pro (`alpha`)",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PKQ110": {
+    "name": "OPPO A5 / OPPO A6 Plus",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PKR110": {
+    "name": "OnePlus Ace 5 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PKS110": {
+    "name": "OPPO K12 Plus",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PKT110": {
+    "name": "OPPO Find X8s",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PKU110": {
+    "name": "OPPO Find X8 Ultra",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PKV110": {
+    "name": "OPPO A5 活力版",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PKW110": {
+    "name": "OPPO A5x / OPPO A5m",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PKW120": {
+    "name": "OPPO A6i",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PKX110": {
+    "name": "OnePlus 13T / OnePlus 13s",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PKZ110": {
+    "name": "OPPO Reno14 Pro (`zhuque`)",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PLA110": {
+    "name": "OPPO Reno14 (`zhuque`)",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PLB110": {
+    "name": "OPPO Find X8s+",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PLC110": {
+    "name": "OnePlus Ace 5 Ultra",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PLD110": {
+    "name": "OPPO K12s",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PLE110": {
+    "name": "OPPO K13 Turbo Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PLF110": {
+    "name": "OnePlus Ace 5 Race",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PLG110": {
+    "name": "OPPO Find X9 Pro",
+    "regions": [
+      "CN",
+      "IN"
+    ]
+  },
+  "PLG120": {
+    "name": "OPPO Find X9 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PLJ110": {
+    "name": "OPPO Find X9",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PLK110": {
+    "name": "OnePlus 15",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PLL110": {
+    "name": "OPPO A6 GT / OPPO A6 Max / OPPO A6l",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PLM110": {
+    "name": "OPPO K13 Turbo",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PLN110": {
+    "name": "OPPO A6 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PLP110": {
+    "name": "OPPO Find N6",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PLP120": {
+    "name": "OPPO Find N6",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PLQ110": {
+    "name": "OnePlus Ace 6",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PLR110": {
+    "name": "OnePlus Ace 6T / OnePlus 15R",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PLS120": {
+    "name": "OPPO A6",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PLT120": {
+    "name": "OPPO A6s / OPPO A6i+ / OPPO A6k",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PLT130": {
+    "name": "OPPO A6v",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PLT140": {
+    "name": "OPPO A6x",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PLU110": {
+    "name": "OnePlus Turbo 6 / OnePlus Nord 6",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PLV110": {
+    "name": "OPPO Reno15 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PLW110": {
+    "name": "OPPO Reno15",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PLY110": {
+    "name": "OnePlus Turbo 6V / OnePlus Nord CE 6",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PLZ110": {
+    "name": "OnePlus 15T",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PMA110": {
+    "name": "OPPO Find X9 Ultra",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PMA120": {
+    "name": "OPPO Find X9 Ultra",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PMB110": {
+    "name": "OnePlus Ace 6 Ultra",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PMC110": {
+    "name": "OPPO A6c",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PMD110": {
+    "name": "OPPO Reno15c",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PME110": {
+    "name": "OPPO Find X9s Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PMG110": {
+    "name": "OPPO K15 Pro+",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PMH110": {
+    "name": "OPPO K15 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "PMT110": {
+    "name": "OPPO A6s Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMP2102": {
+    "name": "realme Pad",
+    "regions": []
+  },
+  "RMP2103": {
+    "name": "realme Pad",
+    "regions": []
+  },
+  "RMP2105": {
+    "name": "realme Pad mini",
+    "regions": []
+  },
+  "RMP2106": {
+    "name": "realme Pad mini",
+    "regions": []
+  },
+  "RMP2107": {
+    "name": "realme Pad X",
+    "regions": []
+  },
+  "RMP2108": {
+    "name": "realme Pad X",
+    "regions": []
+  },
+  "RMP2204": {
+    "name": "realme Pad 2",
+    "regions": []
+  },
+  "RMP2205": {
+    "name": "realme Pad 2",
+    "regions": []
+  },
+  "RMP2402": {
+    "name": "realme Pad 2 Lite",
+    "regions": []
+  },
+  "RMP2501": {
+    "name": "realme Pad 3",
+    "regions": []
+  },
+  "RMP2502": {
+    "name": "realme Pad 3",
+    "regions": []
+  },
+  "RMX1801": {
+    "name": "realme 2 Pro",
+    "regions": []
+  },
+  "RMX1805": {
+    "name": "realme 2",
+    "regions": []
+  },
+  "RMX1821": {
+    "name": "realme 3",
+    "regions": []
+  },
+  "RMX1822": {
+    "name": "realme 3",
+    "regions": []
+  },
+  "RMX1825": {
+    "name": "realme 3",
+    "regions": []
+  },
+  "RMX1827": {
+    "name": "realme 3i",
+    "regions": []
+  },
+  "RMX1831": {
+    "name": "realme U1",
+    "regions": []
+  },
+  "RMX1833": {
+    "name": "realme U1",
+    "regions": []
+  },
+  "RMX1851": {
+    "name": "realme 3 Pro",
+    "regions": []
+  },
+  "RMX1853": {
+    "name": "realme 3 Pro",
+    "regions": []
+  },
+  "RMX1901": {
+    "name": "realme X",
+    "regions": []
+  },
+  "RMX1911": {
+    "name": "realme 5",
+    "regions": []
+  },
+  "RMX1915": {
+    "name": "realme 5",
+    "regions": []
+  },
+  "RMX1919": {
+    "name": "realme 5",
+    "regions": []
+  },
+  "RMX1921": {
+    "name": "realme XT",
+    "regions": [
+      "GL"
+    ]
+  },
+  "RMX1922": {
+    "name": "realme XT",
+    "regions": [
+      "IN"
+    ]
+  },
+  "RMX1925": {
+    "name": "realme 5",
+    "regions": []
+  },
+  "RMX1926": {
+    "name": "realme 5",
+    "regions": []
+  },
+  "RMX1927": {
+    "name": "realme 5",
+    "regions": []
+  },
+  "RMX1931": {
+    "name": "realme X2 Pro",
+    "regions": []
+  },
+  "RMX1941": {
+    "name": "realme C2",
+    "regions": []
+  },
+  "RMX1942": {
+    "name": "realme C2",
+    "regions": []
+  },
+  "RMX1943": {
+    "name": "realme C2",
+    "regions": []
+  },
+  "RMX1945": {
+    "name": "realme C2",
+    "regions": []
+  },
+  "RMX1946": {
+    "name": "realme C2",
+    "regions": []
+  },
+  "RMX1971": {
+    "name": "realme 5 Pro",
+    "regions": []
+  },
+  "RMX1973": {
+    "name": "realme 5 Pro",
+    "regions": []
+  },
+  "RMX1991": {
+    "name": "realme X2",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX1992": {
+    "name": "realme X2",
+    "regions": [
+      "IN"
+    ]
+  },
+  "RMX1993": {
+    "name": "realme X2",
+    "regions": [
+      "GL"
+    ]
+  },
+  "RMX2001": {
+    "name": "realme 6",
+    "regions": []
+  },
+  "RMX2002": {
+    "name": "realme 6s",
+    "regions": [
+      "GL"
+    ]
+  },
+  "RMX2003": {
+    "name": "realme 6",
+    "regions": []
+  },
+  "RMX2020": {
+    "name": "realme C3",
+    "regions": [
+      "GL"
+    ]
+  },
+  "RMX2021": {
+    "name": "realme C3",
+    "regions": [
+      "GL"
+    ]
+  },
+  "RMX2022": {
+    "name": "realme C3",
+    "regions": [
+      "GL"
+    ]
+  },
+  "RMX2025": {
+    "name": "realme X50",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX2027": {
+    "name": "realme C3",
+    "regions": [
+      "IN"
+    ]
+  },
+  "RMX2030": {
+    "name": "realme 5i",
+    "regions": []
+  },
+  "RMX2031": {
+    "name": "realme 5i",
+    "regions": []
+  },
+  "RMX2032": {
+    "name": "realme 5i",
+    "regions": []
+  },
+  "RMX2040": {
+    "name": "realme 6i",
+    "regions": []
+  },
+  "RMX2041": {
+    "name": "realme 6i",
+    "regions": [
+      "GL"
+    ]
+  },
+  "RMX2042": {
+    "name": "realme 6i",
+    "regions": [
+      "GL"
+    ]
+  },
+  "RMX2050": {
+    "name": "realme Narzo 20A",
+    "regions": []
+  },
+  "RMX2051": {
+    "name": "realme X50",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX2052": {
+    "name": "realme X50t",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX2061": {
+    "name": "realme 6 Pro",
+    "regions": []
+  },
+  "RMX2063": {
+    "name": "realme 6 Pro",
+    "regions": []
+  },
+  "RMX2071": {
+    "name": "realme X50 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX2072": {
+    "name": "realme X50 Pro 玩家版",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX2075": {
+    "name": "realme X50 Pro",
+    "regions": [
+      "GL"
+    ]
+  },
+  "RMX2076": {
+    "name": "realme X50 Pro",
+    "regions": [
+      "IN"
+    ]
+  },
+  "RMX2081": {
+    "name": "realme X3",
+    "regions": [
+      "IN"
+    ]
+  },
+  "RMX2083": {
+    "name": "realme X3",
+    "regions": [
+      "GL"
+    ]
+  },
+  "RMX2085": {
+    "name": "realme X3 SuperZoom",
+    "regions": [
+      "IN"
+    ]
+  },
+  "RMX2086": {
+    "name": "realme X3 SuperZoom",
+    "regions": [
+      "GL"
+    ]
+  },
+  "RMX2101": {
+    "name": "realme C17",
+    "regions": []
+  },
+  "RMX2103": {
+    "name": "realme 7i",
+    "regions": [
+      "IN"
+    ]
+  },
+  "RMX2104": {
+    "name": "realme 7i",
+    "regions": [
+      "IN"
+    ]
+  },
+  "RMX2111": {
+    "name": "realme 7 5G",
+    "regions": []
+  },
+  "RMX2112": {
+    "name": "realme V5",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX2117": {
+    "name": "realme Narzo 30 Pro",
+    "regions": []
+  },
+  "RMX2121": {
+    "name": "realme X7 Pro",
+    "regions": []
+  },
+  "RMX2141": {
+    "name": "realme X50m",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX2142": {
+    "name": "realme X50m",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX2144": {
+    "name": "realme X50",
+    "regions": [
+      "GL"
+    ]
+  },
+  "RMX2151": {
+    "name": "realme 7",
+    "regions": [
+      "IN"
+    ]
+  },
+  "RMX2155": {
+    "name": "realme 7",
+    "regions": [
+      "GL"
+    ]
+  },
+  "RMX2156": {
+    "name": "realme Narzo 30",
+    "regions": []
+  },
+  "RMX2161": {
+    "name": "realme Narzo 20 Pro",
+    "regions": [
+      "IN"
+    ]
+  },
+  "RMX2163": {
+    "name": "realme Narzo 20 Pro",
+    "regions": [
+      "GL"
+    ]
+  },
+  "RMX2170": {
+    "name": "realme 7 Pro",
+    "regions": []
+  },
+  "RMX2173": {
+    "name": "realme Q2 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX2176": {
+    "name": "realme X7",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX2180": {
+    "name": "realme C15",
+    "regions": []
+  },
+  "RMX2181": {
+    "name": "realme C15",
+    "regions": []
+  },
+  "RMX2183": {
+    "name": "realme C15",
+    "regions": []
+  },
+  "RMX2184": {
+    "name": "realme C12",
+    "regions": []
+  },
+  "RMX2185": {
+    "name": "realme C11",
+    "regions": []
+  },
+  "RMX2186": {
+    "name": "realme C11",
+    "regions": []
+  },
+  "RMX2189": {
+    "name": "realme C12",
+    "regions": []
+  },
+  "RMX2191": {
+    "name": "realme Narzo 20",
+    "regions": [
+      "GL"
+    ]
+  },
+  "RMX2193": {
+    "name": "realme 7i",
+    "regions": [
+      "GL"
+    ]
+  },
+  "RMX2195": {
+    "name": "realme C15 Qualcomm Edition",
+    "regions": []
+  },
+  "RMX2200": {
+    "name": "realme Q2i",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX2201": {
+    "name": "realme V3",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX2202": {
+    "name": "realme GT",
+    "regions": []
+  },
+  "RMX2205": {
+    "name": "realme Q3 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3031": {
+    "name": "realme X7 Max",
+    "regions": []
+  },
+  "RMX3041": {
+    "name": "realme V13",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3042": {
+    "name": "realme Q3i",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3043": {
+    "name": "realme V13",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3061": {
+    "name": "realme C20",
+    "regions": []
+  },
+  "RMX3063": {
+    "name": "realme C20",
+    "regions": []
+  },
+  "RMX3081": {
+    "name": "realme 8 Pro",
+    "regions": []
+  },
+  "RMX3085": {
+    "name": "realme 8",
+    "regions": []
+  },
+  "RMX3092": {
+    "name": "realme X7",
+    "regions": [
+      "IN"
+    ]
+  },
+  "RMX3093": {
+    "name": "realme V15",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3115": {
+    "name": "realme X7 Pro 至尊版",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3116": {
+    "name": "realme X7 Pro 至尊版",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3121": {
+    "name": "realme V11",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3122": {
+    "name": "realme V11",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3125": {
+    "name": "realme V11s",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3142": {
+    "name": "realme Q3 Pro 狂欢版",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3151": {
+    "name": "realme 8i",
+    "regions": []
+  },
+  "RMX3161": {
+    "name": "realme Q3",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3171": {
+    "name": "realme Narzo 30A",
+    "regions": []
+  },
+  "RMX3191": {
+    "name": "realme C25",
+    "regions": []
+  },
+  "RMX3193": {
+    "name": "realme C25",
+    "regions": []
+  },
+  "RMX3195": {
+    "name": "realme C25s",
+    "regions": []
+  },
+  "RMX3197": {
+    "name": "realme C25s",
+    "regions": []
+  },
+  "RMX3201": {
+    "name": "realme C21",
+    "regions": []
+  },
+  "RMX3202": {
+    "name": "realme C21",
+    "regions": []
+  },
+  "RMX3203": {
+    "name": "realme C21",
+    "regions": []
+  },
+  "RMX3231": {
+    "name": "realme C11 2021",
+    "regions": []
+  },
+  "RMX3235": {
+    "name": "realme Narzo 50i",
+    "regions": [
+      "GL"
+    ]
+  },
+  "RMX3241": {
+    "name": "realme 8 5G",
+    "regions": []
+  },
+  "RMX3242": {
+    "name": "realme Narzo 30 5G",
+    "regions": []
+  },
+  "RMX3261": {
+    "name": "realme C21Y",
+    "regions": []
+  },
+  "RMX3262": {
+    "name": "realme C21Y",
+    "regions": []
+  },
+  "RMX3263": {
+    "name": "realme C21Y",
+    "regions": []
+  },
+  "RMX3265": {
+    "name": "realme C25Y",
+    "regions": []
+  },
+  "RMX3269": {
+    "name": "realme C25Y",
+    "regions": []
+  },
+  "RMX3286": {
+    "name": "realme Narzo 50",
+    "regions": []
+  },
+  "RMX3300": {
+    "name": "realme GT2 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3301": {
+    "name": "realme GT 2 Pro",
+    "regions": []
+  },
+  "RMX3310": {
+    "name": "realme GT2",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3311": {
+    "name": "realme GT 2",
+    "regions": []
+  },
+  "RMX3312": {
+    "name": "realme GT 2",
+    "regions": []
+  },
+  "RMX3350": {
+    "name": "realme GT Neo 闪速版",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3357": {
+    "name": "realme GT Neo2T",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3360": {
+    "name": "realme GT Master Edition",
+    "regions": []
+  },
+  "RMX3361": {
+    "name": "realme GT 大师版",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3363": {
+    "name": "realme GT Master Edition",
+    "regions": []
+  },
+  "RMX3366": {
+    "name": "realme GT 大师探索版",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3370": {
+    "name": "realme GT NEO 2",
+    "regions": []
+  },
+  "RMX3371": {
+    "name": "realme GT NEO 3T",
+    "regions": []
+  },
+  "RMX3372": {
+    "name": "realme Q5 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3381": {
+    "name": "realme 8s 5G",
+    "regions": []
+  },
+  "RMX3388": {
+    "name": "realme 9 5G",
+    "regions": [
+      "IN"
+    ]
+  },
+  "RMX3392": {
+    "name": "realme 9 Pro+ 5G",
+    "regions": [
+      "IN"
+    ]
+  },
+  "RMX3393": {
+    "name": "realme 9 Pro+ 5G",
+    "regions": [
+      "GL"
+    ]
+  },
+  "RMX3395": {
+    "name": "realme Narzo 50 Pro",
+    "regions": [
+      "IN"
+    ]
+  },
+  "RMX3396": {
+    "name": "realme Narzo 50 Pro",
+    "regions": [
+      "GL"
+    ]
+  },
+  "RMX3430": {
+    "name": "realme Narzo 50A",
+    "regions": []
+  },
+  "RMX3461": {
+    "name": "realme 9 5G Speed Edition",
+    "regions": [
+      "IN"
+    ]
+  },
+  "RMX3462": {
+    "name": "realme Q3t",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3471": {
+    "name": "realme 9 Pro 5G",
+    "regions": [
+      "IN"
+    ]
+  },
+  "RMX3472": {
+    "name": "realme 9 Pro 5G",
+    "regions": [
+      "GL"
+    ]
+  },
+  "RMX3474": {
+    "name": "realme 9 5G",
+    "regions": []
+  },
+  "RMX3475": {
+    "name": "realme V25",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3478": {
+    "name": "realme Q5",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3491": {
+    "name": "realme 9i",
+    "regions": [
+      "GL",
+      "IN"
+    ]
+  },
+  "RMX3492": {
+    "name": "realme 9i",
+    "regions": []
+  },
+  "RMX3493": {
+    "name": "realme 9i",
+    "regions": []
+  },
+  "RMX3501": {
+    "name": "realme C31",
+    "regions": []
+  },
+  "RMX3502": {
+    "name": "realme C31",
+    "regions": []
+  },
+  "RMX3503": {
+    "name": "realme C31",
+    "regions": []
+  },
+  "RMX3506": {
+    "name": "realme Narzo 50i Prime",
+    "regions": []
+  },
+  "RMX3511": {
+    "name": "realme C35",
+    "regions": []
+  },
+  "RMX3512": {
+    "name": "realme C35",
+    "regions": []
+  },
+  "RMX3513": {
+    "name": "realme C35",
+    "regions": []
+  },
+  "RMX3516": {
+    "name": "realme Narzo 50A Prime",
+    "regions": []
+  },
+  "RMX3517": {
+    "name": "realme Narzo 50A Prime",
+    "regions": []
+  },
+  "RMX3521": {
+    "name": "realme 9",
+    "regions": []
+  },
+  "RMX3551": {
+    "name": "realme GT2 大师探索版",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3560": {
+    "name": "realme GT Neo3",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3561": {
+    "name": "realme GT NEO 3",
+    "regions": []
+  },
+  "RMX3562": {
+    "name": "realme GT Neo3 150W",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3563": {
+    "name": "realme GT NEO 3 150W",
+    "regions": []
+  },
+  "RMX3571": {
+    "name": "realme Narzo 50 5G",
+    "regions": [
+      "IN"
+    ]
+  },
+  "RMX3572": {
+    "name": "realme Narzo 50 5G",
+    "regions": [
+      "GL"
+    ]
+  },
+  "RMX3574": {
+    "name": "realme Q5i",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3576": {
+    "name": "realme V23i",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3581": {
+    "name": "realme C30",
+    "regions": []
+  },
+  "RMX3610": {
+    "name": "realme V20",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3611": {
+    "name": "realme V20",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3612": {
+    "name": "realme 9i 5G",
+    "regions": []
+  },
+  "RMX3615": {
+    "name": "realme 10",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3616": {
+    "name": "realme Q5x",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3617": {
+    "name": "realme 10s",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3618": {
+    "name": "realme V30t",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3619": {
+    "name": "realme V30",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3623": {
+    "name": "realme C30",
+    "regions": []
+  },
+  "RMX3624": {
+    "name": "realme C33",
+    "regions": []
+  },
+  "RMX3627": {
+    "name": "realme C33 2023",
+    "regions": []
+  },
+  "RMX3630": {
+    "name": "realme 10",
+    "regions": []
+  },
+  "RMX3636": {
+    "name": "realme 11",
+    "regions": []
+  },
+  "RMX3660": {
+    "name": "realme 10 Pro 5G",
+    "regions": [
+      "IN"
+    ]
+  },
+  "RMX3661": {
+    "name": "realme 10 Pro 5G",
+    "regions": [
+      "GL"
+    ]
+  },
+  "RMX3663": {
+    "name": "realme 10 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3686": {
+    "name": "realme 10 Pro+ 5G",
+    "regions": []
+  },
+  "RMX3687": {
+    "name": "realme 10 Pro+",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3690": {
+    "name": "realme C30s",
+    "regions": []
+  },
+  "RMX3700": {
+    "name": "realme GT Neo5 SE",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3701": {
+    "name": "realme GT Neo5 SE",
+    "regions": []
+  },
+  "RMX3706": {
+    "name": "realme GT Neo5",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3708": {
+    "name": "realme GT Neo5 240W",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3709": {
+    "name": "realme GT 3",
+    "regions": []
+  },
+  "RMX3710": {
+    "name": "realme C55",
+    "regions": []
+  },
+  "RMX3740": {
+    "name": "realme 11 Pro+",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3741": {
+    "name": "realme 11 Pro+ 5G",
+    "regions": []
+  },
+  "RMX3750": {
+    "name": "realme Narzo 60",
+    "regions": []
+  },
+  "RMX3751": {
+    "name": "realme 11",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3760": {
+    "name": "realme C53",
+    "regions": [
+      "GL"
+    ]
+  },
+  "RMX3761": {
+    "name": "realme Narzo N53",
+    "regions": []
+  },
+  "RMX3762": {
+    "name": "realme C53",
+    "regions": [
+      "IN"
+    ]
+  },
+  "RMX3765": {
+    "name": "realme C51s",
+    "regions": []
+  },
+  "RMX3770": {
+    "name": "realme 11 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3771": {
+    "name": "realme 11 Pro 5G",
+    "regions": []
+  },
+  "RMX3780": {
+    "name": "realme 11 5G",
+    "regions": []
+  },
+  "RMX3781": {
+    "name": "realme V50s",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3782": {
+    "name": "realme C67",
+    "regions": []
+  },
+  "RMX3783": {
+    "name": "realme V50",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3785": {
+    "name": "realme 11x 5G",
+    "regions": []
+  },
+  "RMX3800": {
+    "name": "realme GT6",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3820": {
+    "name": "realme GT2 大师探索版",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3823": {
+    "name": "realme GT5 240W",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3830": {
+    "name": "realme C51",
+    "regions": []
+  },
+  "RMX3834": {
+    "name": "realme C60",
+    "regions": []
+  },
+  "RMX3840": {
+    "name": "realme 12 Pro+ 5G",
+    "regions": []
+  },
+  "RMX3841": {
+    "name": "realme 12 Pro+",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3842": {
+    "name": "realme 12 Pro 5G",
+    "regions": []
+  },
+  "RMX3843": {
+    "name": "realme 12 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3844": {
+    "name": "realme P1 Pro",
+    "regions": []
+  },
+  "RMX3850": {
+    "name": "realme GT Neo6 SE",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3851": {
+    "name": "realme GT 6",
+    "regions": []
+  },
+  "RMX3852": {
+    "name": "realme GT Neo6",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3853": {
+    "name": "realme GT 6T",
+    "regions": []
+  },
+  "RMX3867": {
+    "name": "realme 12+ 5G",
+    "regions": []
+  },
+  "RMX3868": {
+    "name": "realme NARZO 70 Pro",
+    "regions": []
+  },
+  "RMX3869": {
+    "name": "realme NARZO 70",
+    "regions": []
+  },
+  "RMX3870": {
+    "name": "realme P1",
+    "regions": []
+  },
+  "RMX3871": {
+    "name": "realme 12",
+    "regions": []
+  },
+  "RMX3888": {
+    "name": "realme GT5 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3890": {
+    "name": "realme C67",
+    "regions": []
+  },
+  "RMX3910": {
+    "name": "realme C65",
+    "regions": []
+  },
+  "RMX3920": {
+    "name": "realme 13 Pro+",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3921": {
+    "name": "realme 13 Pro+ 5G",
+    "regions": []
+  },
+  "RMX3930": {
+    "name": "realme C61",
+    "regions": [
+      "GL"
+    ]
+  },
+  "RMX3933": {
+    "name": "realme C61",
+    "regions": [
+      "IN"
+    ]
+  },
+  "RMX3938": {
+    "name": "realme Note 60x",
+    "regions": []
+  },
+  "RMX3939": {
+    "name": "realme C61",
+    "regions": [
+      "GL"
+    ]
+  },
+  "RMX3940": {
+    "name": "realme 14x 5G",
+    "regions": [
+      "IN"
+    ]
+  },
+  "RMX3941": {
+    "name": "realme C75",
+    "regions": []
+  },
+  "RMX3943": {
+    "name": "realme 14x 5G",
+    "regions": [
+      "GL"
+    ]
+  },
+  "RMX3944": {
+    "name": "realme P3x",
+    "regions": []
+  },
+  "RMX3945": {
+    "name": "realme C73",
+    "regions": []
+  },
+  "RMX3946": {
+    "name": "realme V70",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3948": {
+    "name": "realme V70s",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3950": {
+    "name": "realme C63",
+    "regions": []
+  },
+  "RMX3951": {
+    "name": "realme 13 5G",
+    "regions": []
+  },
+  "RMX3952": {
+    "name": "realme 13",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3953": {
+    "name": "realme V60 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3963": {
+    "name": "realme C75",
+    "regions": [
+      "GL"
+    ]
+  },
+  "RMX3987": {
+    "name": "realme P2 Pro",
+    "regions": []
+  },
+  "RMX3989": {
+    "name": "realme 13 Pro 至尊版",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3990": {
+    "name": "realme 13 Pro 5G / realme 14 Pro Lite 5G",
+    "regions": []
+  },
+  "RMX3992": {
+    "name": "realme 12",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3993": {
+    "name": "realme 12x",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3995": {
+    "name": "realme V60",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3996": {
+    "name": "realme V60s",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX3997": {
+    "name": "realme C65",
+    "regions": []
+  },
+  "RMX3998": {
+    "name": "realme 12x 5G",
+    "regions": []
+  },
+  "RMX3999": {
+    "name": "realme 12 5G",
+    "regions": []
+  },
+  "RMX5000": {
+    "name": "realme 13+ 5G",
+    "regions": []
+  },
+  "RMX5002": {
+    "name": "realme 13 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX5003": {
+    "name": "realme NARZO 70 Turbo",
+    "regions": []
+  },
+  "RMX5004": {
+    "name": "realme P1 Speed",
+    "regions": []
+  },
+  "RMX5010": {
+    "name": "realme GT7 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX5011": {
+    "name": "realme GT 7 Pro",
+    "regions": [
+      "EU",
+      "IN"
+    ]
+  },
+  "RMX5020": {
+    "name": "realme C75x",
+    "regions": []
+  },
+  "RMX5030": {
+    "name": "realme P3 Ultra",
+    "regions": []
+  },
+  "RMX5031": {
+    "name": "realme P3 Ultra",
+    "regions": []
+  },
+  "RMX5032": {
+    "name": "realme P3 Pro",
+    "regions": []
+  },
+  "RMX5033": {
+    "name": "realme NARZO 80 Pro",
+    "regions": []
+  },
+  "RMX5050": {
+    "name": "realme 14 Pro+",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX5051": {
+    "name": "realme 14 Pro+ 5G",
+    "regions": [
+      "IN"
+    ]
+  },
+  "RMX5054": {
+    "name": "realme 14 Pro+ 5G",
+    "regions": [
+      "GL"
+    ]
+  },
+  "RMX5055": {
+    "name": "realme 14 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX5056": {
+    "name": "realme 14 Pro 5G",
+    "regions": [
+      "IN"
+    ]
+  },
+  "RMX5057": {
+    "name": "realme 14 Pro 5G",
+    "regions": [
+      "GL"
+    ]
+  },
+  "RMX5060": {
+    "name": "realme Neo7",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX5061": {
+    "name": "realme GT 7",
+    "regions": []
+  },
+  "RMX5062": {
+    "name": "realme Neo7 Turbo",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX5070": {
+    "name": "realme 14 5G",
+    "regions": [
+      "GL"
+    ]
+  },
+  "RMX5071": {
+    "name": "realme Neo7x",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX5074": {
+    "name": "realme 14T 5G",
+    "regions": [
+      "GL"
+    ]
+  },
+  "RMX5075": {
+    "name": "realme 14",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX5078": {
+    "name": "realme 14T 5G",
+    "regions": [
+      "IN"
+    ]
+  },
+  "RMX5079": {
+    "name": "realme P3",
+    "regions": []
+  },
+  "RMX5080": {
+    "name": "realme Neo7 SE",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX5085": {
+    "name": "realme GT 7T",
+    "regions": []
+  },
+  "RMX5090": {
+    "name": "realme GT7 Pro 竞速版",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX5100": {
+    "name": "realme 15 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX5101": {
+    "name": "realme 15 Pro 5G",
+    "regions": []
+  },
+  "RMX5105": {
+    "name": "realme 15",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX5106": {
+    "name": "realme 15 5G",
+    "regions": []
+  },
+  "RMX5107": {
+    "name": "realme P4 Power",
+    "regions": []
+  },
+  "RMX5108": {
+    "name": "realme P4x",
+    "regions": []
+  },
+  "RMX5110": {
+    "name": "realme P4",
+    "regions": []
+  },
+  "RMX5111": {
+    "name": "realme 15T 5G",
+    "regions": []
+  },
+  "RMX5112": {
+    "name": "realme 15T",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX5116": {
+    "name": "realme P4 Pro",
+    "regions": []
+  },
+  "RMX5120": {
+    "name": "realme 16 Pro 5G",
+    "regions": []
+  },
+  "RMX5121": {
+    "name": "realme 16 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX5130": {
+    "name": "realme 16 Pro+",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX5131": {
+    "name": "realme 16 Pro+ 5G",
+    "regions": []
+  },
+  "RMX5170": {
+    "name": "realme 16",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX5171": {
+    "name": "realme 16 5G",
+    "regions": []
+  },
+  "RMX5200": {
+    "name": "realme GT8 Pro",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX5210": {
+    "name": "realme GT 8 Pro",
+    "regions": [
+      "EU",
+      "IN"
+    ]
+  },
+  "RMX5250": {
+    "name": "realme 15x 5G",
+    "regions": []
+  },
+  "RMX5253": {
+    "name": "realme C85",
+    "regions": []
+  },
+  "RMX5256": {
+    "name": "realme C83",
+    "regions": []
+  },
+  "RMX5258": {
+    "name": "realme C100",
+    "regions": []
+  },
+  "RMX5261": {
+    "name": "realme P4 Lite 5G",
+    "regions": []
+  },
+  "RMX5264": {
+    "name": "realme NARZO 90x",
+    "regions": []
+  },
+  "RMX5303": {
+    "name": "realme C71",
+    "regions": []
+  },
+  "RMX5313": {
+    "name": "realme Note 70 / realme Note 70T",
+    "regions": []
+  },
+  "RMX5377": {
+    "name": "realme C100i",
+    "regions": []
+  },
+  "RMX5388": {
+    "name": "realme Note 80",
+    "regions": []
+  },
+  "RMX5555": {
+    "name": "realme C85 Pro",
+    "regions": []
+  },
+  "RMX5566": {
+    "name": "realme C85",
+    "regions": []
+  },
+  "RMX6688": {
+    "name": "realme GT7",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX6699": {
+    "name": "realme GT8",
+    "regions": [
+      "CN"
+    ]
+  },
+  "RMX8899": {
+    "name": "realme Neo8",
+    "regions": [
+      "CN"
+    ]
+  },
+  "W101IN": {
+    "name": "OnePlus Band",
+    "regions": [
+      "IN"
+    ]
+  },
+  "W301CN": {
+    "name": "OnePlus Watch",
+    "regions": [
+      "CN"
+    ]
+  },
+  "W301GB": {
+    "name": "OnePlus Watch",
+    "regions": [
+      "GL"
+    ]
+  },
+  "W501CN": {
+    "name": "OnePlus Watch",
+    "regions": [
+      "CN"
+    ]
+  }
+}

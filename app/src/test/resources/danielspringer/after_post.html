@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OnePlus ROMs & Firmware – Fast Stock ROM & China ↔ Global Conversion</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/base.css?v=1778274847">
+    <link rel="stylesheet" href="/css/layout.css?v=1778274847">
+    <link rel="stylesheet" href="/css/components.css?v=1778274847">
+
+  <link rel="stylesheet" href="/css/pages/ota.css?v=1778274847">
+
+    <!-- AdSense Verification -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8628531066320026"
+            crossorigin="anonymous"></script>
+
+<meta name="google-adsense-account" content="ca-pub-8628531066320026">
+
+</head>
+<body>
+    <h1>📂 Firmware Downloads</h1>
+    <div class="container">
+
+<div class="ota-container">
+
+  <div class="nav-buttons">
+    <a class="nav-btn" href="/">🏠 Home</a>
+    <a class="nav-btn" href="https://roms.danielspringer.at/donation.php">💚 Donate</a>
+  </div>
+
+
+  <div class="ota-header">
+    <div class="ota-header-left">
+      <h2>OTA Downloader</h2>
+      <p class="ota-sub">Select device, region and version.</p>
+    </div>
+  </div>
+
+  <form method="post" action="/index.php?view=ota" id="otaForm" class="ota-row" style="margin-top:8px">
+    <div>
+      <label for="device">Device</label><br>
+      <select id="device" name="device" class="ota-select"
+              data-devices='{&quot;OP 10 PRO&quot;:{&quot;GLO&quot;:[&quot;NE2213_15.0.0.1302(EX01)&quot;,&quot;NE2213_15.0.0.700(EX01)&quot;,&quot;NE2213_14.0.0.940(EX01)&quot;,&quot;NE2213_14.0.0.202(EX01)&quot;,&quot;NE2213_13.1.0.597(EX01)&quot;,&quot;NE2213_11_C.26&quot;,&quot;NE2213_11_A.17&quot;],&quot;EU&quot;:[&quot;NE2213_15.0.0.1302(EX01)&quot;,&quot;NE2213_15.0.0.700(EX01)&quot;,&quot;NE2213_14.0.0.940(EX01)&quot;,&quot;NE2213_14.0.0.202(EX01)&quot;,&quot;NE2213_13.1.0.597(EX01)&quot;,&quot;NE2213_11_C.26&quot;,&quot;NE2213_11_A.17&quot;],&quot;IN&quot;:[&quot;NE2211_16.0.3.500(EX01)&quot;,&quot;NE2211_15.0.0.1302(EX01)&quot;,&quot;NE2211_15.0.0.700(EX01)&quot;,&quot;NE2211_14.0.0.940(EX01)&quot;,&quot;NE2211_14.0.0.300(EX01)&quot;,&quot;NE2211_13.1.0.597(EX01)&quot;,&quot;NE2211_11_C.30&quot;,&quot;NE2213_11_A.18&quot;],&quot;CN&quot;:[&quot;NE2210_15.0.0.1301(CN01)&quot;,&quot;NE2210_15.0.0.1202(CN01)&quot;,&quot;NE2210_15.0.0.700(CN01)&quot;,&quot;NE2210_14.0.0.940(CN01)&quot;,&quot;NE2210_14.0.0.300(CN01)&quot;,&quot;NE2210_13.1.0.196(CN01)&quot;,&quot;NE2210_11_C.26&quot;,&quot;NE2210_11_A.19&quot;]},&quot;OP 11&quot;:{&quot;GLO&quot;:[&quot;CPH2449_16.0.2.400(EX01)&quot;,&quot;CPH2449_15.0.0.862(EX01)&quot;,&quot;CPH2449_15.0.0.600(EX01)&quot;,&quot;CPH2449_14.0.0.833(EX01)&quot;,&quot;CPH2449_14.0.0.304(EX01)&quot;,&quot;CPH2449_13.1.0.596(EX01)&quot;],&quot;EU&quot;:[&quot;CPH2449_16.0.2.400(EX01)&quot;,&quot;CPH2449_15.0.0.862(EX01)&quot;,&quot;CPH2449_15.0.0.600(EX01)&quot;,&quot;CPH2449_14.0.0.833(EX01)&quot;,&quot;CPH2449_14.0.0.304(EX01)&quot;,&quot;CPH2449_13.1.0.596(EX01)&quot;],&quot;IN&quot;:[&quot;CPH2447_16.0.1.300(EX01)&quot;,&quot;CPH2447_15.0.0.862(EX01)&quot;,&quot;CPH2447_15.0.0.600(EX01)&quot;,&quot;CPH2447_14.0.0.833(EX01)&quot;,&quot;CPH2447_14.0.0.304(EX01)&quot;,&quot;CPH2447_13.1.0.596(EX01)&quot;]},&quot;OP 11R&quot;:{&quot;IN&quot;:[&quot;CPH2487_15.0.0.870(EX01)&quot;,&quot;CPH2487_15.0.0.601(EX01)&quot;,&quot;CPH2487_14.0.0.810(EX01)&quot;,&quot;CPH2487_14.0.0.300(EX01)&quot;,&quot;CPH2487_13.1.0.583(EX01)&quot;]},&quot;OP 12&quot;:{&quot;GLO&quot;:[&quot;CPH2581_16.0.3.500(EX01)&quot;,&quot;CPH2581_16.0.0.201(EX01)&quot;,&quot;CPH2581_15.0.0.863(EX01)&quot;,&quot;CPH2581_15.0.0.204(EX01)&quot;,&quot;CPH2581_14.0.0.850(EX01)&quot;],&quot;EU&quot;:[&quot;CPH2581_16.0.3.500(EX01)&quot;,&quot;CPH2581_16.0.0.201(EX01)&quot;,&quot;CPH2581_15.0.0.863(EX01)&quot;,&quot;CPH2581_15.0.0.204(EX01)&quot;,&quot;CPH2581_14.0.0.850(EX01)&quot;],&quot;IN&quot;:[&quot;CPH2573_16.0.3.500(EX01)&quot;,&quot;CPH2573_16.0.2.400(EX01)&quot;,&quot;CPH2573_16.0.1.300(EX01)&quot;,&quot;CPH2573_16.0.0.201(EX01)&quot;,&quot;CPH2573_15.0.0.860(EX01)&quot;,&quot;CPH2573_15.0.0.501(EX01)&quot;,&quot;CPH2573_14.0.0.850(EX01)&quot;],&quot;CN&quot;:[&quot;PJD110_16.0.3.500(CN01)&quot;,&quot;PJD110_16.0.1.300(CN01)&quot;,&quot;PJD110_16.0.0.201(CN01)&quot;,&quot;PJD110_15.0.0.860(CN01)&quot;,&quot;PJD110_15.0.0.502(CN01)&quot;,&quot;PJD110_14.0.0.860(CN01)&quot;]},&quot;OP 12R&quot;:{&quot;GLO&quot;:[&quot;CPH2609_15.0.0.870(EX01)&quot;,&quot;CPH2609_15.0.0.600(EX01)&quot;,&quot;CPH2609_14.0.0.832(EX01)&quot;],&quot;EU&quot;:[&quot;CPH2609_15.0.0.870(EX01)&quot;,&quot;CPH2609_15.0.0.600(EX01)&quot;,&quot;CPH2609_14.0.0.832(EX01)&quot;],&quot;IN&quot;:[&quot;CPH2585_16.0.2.400(EX01)&quot;,&quot;CPH2585_16.0.1.300(EX01)&quot;,&quot;CPH2585_15.0.0.870(EX01)&quot;,&quot;CPH2585_15.0.0.600(EX01)&quot;,&quot;CPH2585_14.0.0.832(EX01)&quot;]},&quot;OP 13&quot;:{&quot;GLO&quot;:[&quot;CPH2653_16.0.5.703(EX01)&quot;,&quot;CPH2653_16.0.5.701(EX01)&quot;,&quot;CPH2653_16.0.3.501(EX01)&quot;,&quot;CPH2653_16.0.2.402(EX01)&quot;,&quot;CPH2653_16.0.1.304(EX01)&quot;,&quot;CPH2653_16.0.0.210(EX01)&quot;,&quot;CPH2653_15.0.0.864(EX01)&quot;,&quot;CPH2653_15.0.0.860(EX01)&quot;,&quot;CPH2653_15.0.0.850(EX01)&quot;,&quot;CPH2653_15.0.0.840(EX01)&quot;],&quot;EU&quot;:[&quot;CPH2653_16.0.5.703(EX01)&quot;,&quot;CPH2653_16.0.5.701(EX01)&quot;,&quot;CPH2653_16.0.3.501(EX01)&quot;,&quot;CPH2653_16.0.2.402(EX01)&quot;,&quot;CPH2653_16.0.1.304(EX01)&quot;,&quot;CPH2653_15.0.0.864(EX01)&quot;,&quot;CPH2653_15.0.0.860(EX01)&quot;,&quot;CPH2653_15.0.0.850(EX01)&quot;,&quot;CPH2653_15.0.0.840(EX01)&quot;],&quot;NA&quot;:[&quot;CPH2655_15.0.0.832(EX01)&quot;,&quot;CPH2655_15.0.0.405(EX01)&quot;],&quot;IN&quot;:[&quot;CPH2649_16.0.5.703(EX01)&quot;,&quot;CPH2649_16.0.5.701(EX01)&quot;,&quot;CPH2649_16.0.3.501(EX01)&quot;,&quot;CPH2649_16.0.2.402(EX01)&quot;,&quot;CPH2649_16.0.1.304(EX01)&quot;,&quot;CPH2649_16.0.0.210(EX01)&quot;,&quot;CPH2649_15.0.0.860(EX01)&quot;,&quot;CPH2649_15.0.0.850(EX01)&quot;,&quot;CPH2649_15.0.0.840(EX01)&quot;],&quot;CN&quot;:[&quot;PJZ110_16.0.5.703(CN01)&quot;,&quot;PJZ110_16.0.5.702(CN01)&quot;,&quot;PJZ110_16.0.5.701(CN01)&quot;,&quot;PJZ110_16.0.3.502(CN01)&quot;,&quot;PJZ110_16.0.3.501(CN01)&quot;,&quot;PJZ110_16.0.2.403(CN01)&quot;,&quot;PJZ110_16.0.1.303(CN01)&quot;,&quot;PJZ110_16.0.0.212(EX01)&quot;,&quot;PJZ110_15.0.0.861(CN01)&quot;,&quot;PJZ110_15.0.0.860(CN01)&quot;,&quot;PJZ110_15.0.0.851(CN01)&quot;,&quot;PJZ110_15.0.0.840(CN01)&quot;]},&quot;OP 13R&quot;:{&quot;GLO&quot;:[&quot;CPH2645_16.0.5.701(EX01)&quot;,&quot;CPH2645_16.0.3.500(EX01)&quot;,&quot;CPH2645_16.0.0.205(EX01)&quot;,&quot;CPH2645_15.0.0.871(EX01)&quot;,&quot;CPH2645_15.0.0.860(EX01)&quot;,&quot;CPH2645_15.0.0.850(EX01)&quot;,&quot;CPH2645_15.0.0.840(EX01)&quot;],&quot;EU&quot;:[&quot;CPH2645_16.0.5.701(EX01)&quot;,&quot;CPH2645_16.0.3.500(EX01)&quot;,&quot;CPH2645_16.0.0.205(EX01)&quot;,&quot;CPH2645_15.0.0.860(EX01)&quot;,&quot;CPH2645_15.0.0.871(EX01)&quot;,&quot;CPH2645_15.0.0.850(EX01)&quot;,&quot;CPH2645_15.0.0.840(EX01)&quot;,&quot;CPH2645_15.0.0.840(EX01)&quot;],&quot;IN&quot;:[&quot;CPH2691_16.0.5.701(EX01)&quot;,&quot;CPH2691_16.0.3.500(EX01)&quot;,&quot;CPH2691_16.0.2.400(EX01)&quot;,&quot;CPH2691_16.0.1.302(EX01)&quot;,&quot;CPH2691_16.0.0.205(EX01)&quot;,&quot;CPH2691_15.0.0.860(EX01)&quot;,&quot;CPH2691_15.0.0.850(EX01)&quot;,&quot;CPH2691_15.0.0.840(EX01)&quot;],&quot;NA&quot;:[]},&quot;OP 13S&quot;:{&quot;IN&quot;:[&quot;CPH2723_16.0.5.700(EX01)&quot;,&quot;CPH2723_16.0.3.501(EX01)&quot;,&quot;CPH2723_16.0.2.400(EX01)&quot;,&quot;CPH2723_16.0.1.303(EX01)&quot;,&quot;CPH2723_16.0.0.211(EX01)&quot;,&quot;CPH2723_15.0.2.601(EX01)&quot;]},&quot;OP 13T&quot;:{&quot;CN&quot;:[&quot;PKX110_16.0.5.701(CN01)&quot;,&quot;PKX110_16.0.3.502(CN01)&quot;,&quot;PKX110_16.0.3.501(CN01)&quot;,&quot;PKX110_16.0.2.400(CN01)&quot;,&quot;PKX110_16.0.1.301(CN01)&quot;,&quot;PKX110_16.0.0.213(CN01)&quot;,&quot;PKX110_16.0.0.212(CN01)&quot;,&quot;PPKX110_15.0.2.603(CN01)&quot;,&quot;PKX110_15.0.2.601(CN01)&quot;,&quot;PKX110_15.0.2.500(CN01)&quot;,&quot;PKX110_15.0.2.401(CN01)&quot;]},&quot;OP 15&quot;:{&quot;GLO&quot;:[&quot;CPH2747_16.0.5.703(EX01)&quot;,&quot;CPH2747_16.0.5.700(EX01)&quot;,&quot;CPH2747_16.0.3.503(EX01)&quot;,&quot;CPH2747_16.0.3.501(EX01)&quot;,&quot;CPH2747_16.0.2.401(EX01)&quot;,&quot;CPH2747_16.0.1.303(EX01)&quot;],&quot;EU&quot;:[&quot;CPH2747_16.0.5.703(EX01)&quot;,&quot;CPH2747_16.0.5.700(EX01)&quot;,&quot;CPH2747_16.0.3.503(EX01)&quot;,&quot;CPH2747_16.0.3.501(EX01)&quot;,&quot;CPH2747_16.0.2.401(EX01)&quot;,&quot;CPH2747_16.0.1.303(EX01)&quot;],&quot;IN&quot;:[&quot;CPH2745_16.0.5.703(EX01)&quot;,&quot;CPH2745_16.0.5.702(EX01)&quot;,&quot;CPH2745_16.0.5.700(EX01)&quot;,&quot;CPH2745_16.0.3.503(EX01)&quot;,&quot;CPH2745_16.0.3.501(EX01)&quot;,&quot;CPH2745_16.0.2.401(EX01)&quot;,&quot;CPH2745_16.0.1.305(EX01)&quot;,&quot;CPH2745_16.0.1.303(EX01)&quot;],&quot;CN&quot;:[&quot;PLK110_16.0.7.206(CN01)&quot;,&quot;PLK110_16.0.5.702(CN01)&quot;,&quot;PLK110_16.0.5.701(CN01)&quot;,&quot;PLK110_16.0.3.503(CN01)&quot;,&quot;PLK110_16.0.3.502(CN01)&quot;,&quot;PLK110_16.0.2.402(CN01)&quot;,&quot;PLK110_16.0.2.401(CN01)&quot;,&quot;PLK110_16.0.1.301(CN01)&quot;,&quot;PLK110_16.0.0.211(CN01)&quot;,&quot;PLK110_16.0.0.210(CN01)&quot;,&quot;PLK110_16.0.0.208(CN01)&quot;]},&quot;OP 15R&quot;:{&quot;GLO&quot;:[&quot;CPH2769_16.0.5.701(EX01)&quot;,&quot;CPH2769_16.0.3.503(EX01)&quot;,&quot;CPH2769_16.0.3.501(EX01)&quot;,&quot;CPH2769_16.0.2.401(EX01)&quot;],&quot;EU&quot;:[&quot;CPH2769_16.0.3.501(EX01)&quot;,&quot;CPH2769_16.0.2.401(EX01)&quot;],&quot;IN&quot;:[&quot;CPH2767_16.0.5.701(EX01)&quot;,&quot;CPH2767_16.0.3.503(EX01)&quot;,&quot;CPH2767_16.0.3.501(EX01)&quot;,&quot;CPH2767_16.0.2.401(EX01)&quot;,&quot;CPH2767_16.0.1.305(EX01)&quot;]},&quot;OP 15T&quot;:{&quot;CN&quot;:[&quot;PLZ110_16.0.7.200(CN01)&quot;,&quot;PLZ110_16.0.5.703(CN01)&quot;,&quot;PLZ110_16.0.5.701(CN01)&quot;]},&quot;OP ACE 3&quot;:{&quot;CN&quot;:[&quot;PJE110_16.0.1.300(CN01)&quot;,&quot;PJE110_15.0.0.870(CN01)&quot;,&quot;PJE110_15.0.0.600(CN01)&quot;,&quot;PJE110_14.0.0.817(CN01)&quot;]},&quot;OP ACE 3 PRO&quot;:{&quot;CN&quot;:[&quot;PJX110_16.0.1.301(CN01)&quot;,&quot;PJX110_15.0.0.861(CN01)&quot;,&quot;PJX110_15.0.0.500(CN01)&quot;,&quot;PJX110_14.1.0.510(CN01)&quot;]},&quot;OP ACE 3V&quot;:{&quot;CN&quot;:[&quot;PJF110_16.0.1.301(CN01)&quot;,&quot;PJF110_15.0.0.500(CN01)&quot;,&quot;PJF110_14.0.1.720(CN01)&quot;]},&quot;OP ACE 5&quot;:{&quot;CN&quot;:[&quot;PKG110_16.0.5.702(CN01)&quot;,&quot;PKG110_16.0.5.701(CN01)&quot;,&quot;PKG110_16.0.3.500(CN01)&quot;,&quot;PKG110_16.0.2.400(CN01)&quot;,&quot;PKG110_16.0.1.302(CN01)&quot;,&quot;PKG110_16.0.0.205(CN01)&quot;,&quot;PKG110_15.0.0.860(CN01)&quot;,&quot;PKG110_15.0.0.850(CN01)&quot;,&quot;PKG110_15.0.0.840(CN01)&quot;]},&quot;OP ACE 5 PRO&quot;:{&quot;CN&quot;:[&quot;PKR110_16.0.5.701(CN01)&quot;,&quot;PKR110_16.0.5.700(CN01)&quot;,&quot;PKR110_16.0.3.500(CN01)&quot;,&quot;PKR110_16.0.2.400(CN01)&quot;,&quot;PKR110_16.0.1.300(CN01)&quot;,&quot;PKR110_16.0.0.204(CN01)&quot;,&quot;PKR110_15.0.0.871(CN01)&quot;,&quot;PKR110_15.0.0.870(CN01)&quot;,&quot;PKR110_15.0.0.861(CN01)&quot;]},&quot;OP ACE 5 ULTRA&quot;:{&quot;CN&quot;:[&quot;PLC110_16.0.3.501(CN01)&quot;,&quot;PLC110_16.0.2.400(CN01)&quot;,&quot;PLC110_16.0.1.300(CN01)&quot;,&quot;PLC110_16.0.0.205(CN01)&quot;,&quot;PLC110_15.0.2.610(CN01)&quot;]},&quot;OP ACE 5 RACING&quot;:{&quot;CN&quot;:[&quot;PLF110_16.0.2.401(CN01)&quot;,&quot;PLF110_16.0.1.300(CN01)&quot;,&quot;PLF110_16.0.0.203(CN01)&quot;,&quot;PLF110_15.0.2.600(CN01)&quot;]},&quot;OP ACE 6&quot;:{&quot;CN&quot;:[&quot;PLQ110_16.0.5.702(CN01)&quot;,&quot;PLQ110_16.0.5.701(CN01)&quot;,&quot;PLQ110_16.0.5.700(CN01)&quot;,&quot;PLQ110_16.0.3.502(CN01)&quot;,&quot;PLQ110_16.0.2.403(CN01)&quot;,&quot;PLQ110_16.0.2.402(CN01)&quot;,&quot;PLQ110_16.0.1.302(CN01)&quot;,&quot;PLQ110_16.0.0.207(CN01)&quot;,&quot;PLQ110_16.0.0.205(CN01)&quot;]},&quot;OP ACE 6T&quot;:{&quot;CN&quot;:[&quot;PLR110_16.0.5.702(CN01)&quot;,&quot;PLR110_16.0.3.503(CN01)&quot;,&quot;PLR110_16.0.3.501(CN01)&quot;,&quot;PLR110_16.0.2.403(CN01)&quot;,&quot;PLR110_16.0.2.402(CN01)&quot;,&quot;PLR110_16.0.1.308(CN01)&quot;,&quot;PLR110_16.0.1.306(CN01)&quot;]},&quot;OP TURBO 6&quot;:{&quot;CN&quot;:[&quot;PLU110_16.0.2.407(CN01)&quot;]},&quot;OP TURBO 6V&quot;:{&quot;CN&quot;:[&quot;PLY110_16.0.2.412(CN01)&quot;]},&quot;OP NORD 4&quot;:{&quot;GLO&quot;:[&quot;CPH2663_16.0.2.401(EX01)&quot;,&quot;CPH2663_16.0.1.301(EX01)&quot;,&quot;CPH2663_15.0.0.401(EX01)&quot;,&quot;CPH2663_14.1.0.605(EX01)&quot;],&quot;EU&quot;:[&quot;CPH2663_16.0.2.401(EX01)&quot;,&quot;CPH2663_16.0.1.301(EX01)&quot;,&quot;CPH2663_15.0.0.1301(EX01)&quot;,&quot;CPH2663_15.0.0.401(EX01)&quot;,&quot;CPH2663_14.1.0.605(EX01)&quot;],&quot;IN&quot;:[&quot;CPH2661_16.0.2.401(EX01)&quot;,&quot;CPH2661_16.0.1.301(EX01)&quot;,&quot;CPH2661_15.0.0.401(EX01)&quot;,&quot;CPH2661_14.1.0.603(EX01)&quot;]},&quot;OP NORD CE4&quot;:{&quot;IN&quot;:[&quot;CPH2613_16.0.3.500(EX01)&quot;,&quot;CPH2613_15.0.0.1301(EX01)&quot;,&quot;CPH2613_15.0.0.600(EX01)&quot;,&quot;CPH2613_14.0.1.708(EX01)&quot;]},&quot;OP NORD 5&quot;:{&quot;GLO&quot;:[&quot;CPH2709_15.0.2.604(EX01)&quot;],&quot;EU&quot;:[&quot;CPH2709_16.0.1.300(EX01)&quot;,&quot;CPH2709_15.0.2.604(EX01)&quot;]},&quot;OP NORD CE5&quot;:{&quot;GLO&quot;:[&quot;CPH2719_15.0.2.602(EX01)&quot;],&quot;EU&quot;:[&quot;CPH2719_16.0.1.300(EX01)&quot;,&quot;CPH2719_15.0.2.602(EX01)&quot;]},&quot;OP NORD 6&quot;:{&quot;GLO&quot;:[&quot;CPH2795_16.0.5.701(EX01)&quot;],&quot;IN&quot;:[&quot;CPH2793_16.0.5.701(EX01)&quot;]},&quot;OP PAD&quot;:{&quot;CN&quot;:[&quot;OPD2407_15.0.0.1351(CN01)&quot;]},&quot;OP PAD LITE&quot;:{&quot;GLO&quot;:[&quot;OPD2480_15.0.1.812(EX01)&quot;],&quot;EU&quot;:[&quot;OPD2480_15.0.1.812(EX01)&quot;]},&quot;OP PAD2&quot;:{&quot;EU&quot;:[&quot;OPD2403_16.0.3.501(EX01)&quot;,&quot;OPD2403_16.0.0.202(EX01)&quot;],&quot;IN&quot;:[&quot;OPD2403_16.0.3.501(EX01)&quot;,&quot;OPD2403_16.0.1.301(EX01)&quot;,&quot;OPD2403_16.0.0.202(EX01)&quot;]},&quot;OP PAD2 PRO&quot;:{&quot;CN&quot;:[&quot;OPD2413_16.0.3.501(CN01)&quot;,&quot;OPD2413_16.0.2.400(CN01)&quot;,&quot;OPD2413_16.0.1.301(CN01)&quot;,&quot;OPD2413_15.0.1.801(CN01)&quot;]},&quot;OP PAD3&quot;:{&quot;GLO&quot;:[&quot;OPD2415_16.0.1.302(EX01)&quot;,&quot;OPD2415_16.0.0.211(EX01)&quot;],&quot;EU&quot;:[&quot;OPD2415_16.0.1.302(EX01)&quot;,&quot;OPD2415_16.0.0.211(EX01)&quot;],&quot;IN&quot;:[&quot;OPD2415_16.0.3.500(EX01)&quot;,&quot;OPD2415_16.0.1.302(EX01)&quot;,&quot;OPD2415_16.0.0.211(EX01)&quot;]},&quot;OP PAD GO 2&quot;:{&quot;GLO&quot;:[&quot;OPD2504_16.0.2.402(EX01)&quot;],&quot;EU&quot;:[&quot;OPD2504_16.0.2.402(EX01)&quot;]},&quot;OP OPEN&quot;:{&quot;EU&quot;:[&quot;CPH2551_16.0.1.300(EX01)&quot;,&quot;CPH2551_16.0.0.201(EX01)&quot;,&quot;CPH2551_15.0.0.863(EX01)&quot;,&quot;CPH2551_15.0.0.610(EX01)&quot;,&quot;CPH2551_14.0.0.850(EX01)&quot;,&quot;CPH2551_14.0.0.501(EX01)&quot;,&quot;CPH2551_13.2.0.301(EX01)&quot;],&quot;IN&quot;:[&quot;CPH2551_16.0.2.400(EX01)&quot;,&quot;CPH2551_16.0.1.300(EX01)&quot;,&quot;CPH2551_16.0.0.201(EX01)&quot;]},&quot;OPPO FIND N5&quot;:{&quot;CN&quot;:[&quot;PKH110_16.0.3.500(CN01)&quot;,&quot;PKH110_16.0.2.401(CN01)&quot;,&quot;PKH110_16.0.1.302(CN01)&quot;,&quot;PKH110_16.0.0.208(CN01)&quot;,&quot;PKH110_15.0.1.860(CN01)&quot;,&quot;PKH120_16.0.2.401(CN01)&quot;,&quot;PKH120_16.0.1.302(CN01)&quot;,&quot;PKH120_16.0.0.208(CN01)&quot;,&quot;PKH120_15.0.1.860(CN01)&quot;]},&quot;OPPO FIND X8&quot;:{&quot;IN&quot;:[&quot;CPH2651_16.0.2.403(EX01)&quot;,&quot;CPH2651_16.0.1.304(EX01)&quot;,&quot;CPH2651_16.0.0.211(EX01)&quot;,&quot;CPH2651_15.0.0.860(EX01)&quot;],&quot;CN&quot;:[&quot;PKB110_16.0.3.500(CN01)&quot;,&quot;PKB110_16.0.2.403(CN01)&quot;,&quot;PKB110_16.0.1.305(CN01)&quot;,&quot;PKB110_16.0.0.213(CN01)&quot;,&quot;PKB110_15.0.0.860(CN01)&quot;]},&quot;OPPO FIND X8 PRO&quot;:{&quot;EU&quot;:[&quot;CPH2659_16.0.1.301(EX01)&quot;,&quot;CPH2659_16.0.0.204(EX01)&quot;,&quot;CPH2659_15.0.0.863(EX01)&quot;],&quot;IN&quot;:[&quot;CPH2659_16.0.3.500(EX01)&quot;,&quot;CPH2659_16.0.2.400(EX01)&quot;,&quot;CPH2659_16.0.1.301(EX01)&quot;,&quot;CPH2659_16.0.0.204(EX01)&quot;,&quot;CPH2659_15.0.0.860(EX01)&quot;],&quot;CN&quot;:[&quot;PKC110_16.0.3.501(CN01)&quot;,&quot;PKC110_16.0.2.400(CN01)&quot;,&quot;PKC110_16.0.1.301(CN01)&quot;,&quot;PKC110_16.0.0.205(CN01)&quot;,&quot;PKC110_15.0.0.860(CN01)&quot;]},&quot;OPPO FIND X8 ULTRA&quot;:{&quot;CN&quot;:[&quot;PKJ110_16.0.3.500(CN01)&quot;,&quot;PKJ110_16.0.2.400(CN01)&quot;,&quot;PKJ110_16.0.1.301(CN01)&quot;,&quot;PKJ110_16.0.0.212(CN01)&quot;,&quot;PKJ110_15.0.1.622(CN01)&quot;,&quot;PKU110_16.0.3.500(CN01)&quot;,&quot;PKU110_16.0.2.400(CN01)&quot;,&quot;PKU110_16.0.1.301(CN01)&quot;,&quot;PKU110_16.0.0.212(CN01)&quot;,&quot;PKU110_15.0.1.622(CN01)&quot;]},&quot;OPPO FIND X9&quot;:{&quot;EU&quot;:[&quot;CPH2797_16.0.3.504(EX01)&quot;,&quot;CPH2797_16.0.2.401(EX01)&quot;],&quot;IN&quot;:[&quot;CPH2797_16.0.3.504(EX01)&quot;,&quot;CPH2797_16.0.2.401(EX01)&quot;],&quot;CN&quot;:[&quot;PLJ110_16.0.5.701(CN01)&quot;,&quot;PLJ110_16.0.3.502(CN01)&quot;,&quot;PLJ110_16.0.2.405(CN01)&quot;]},&quot;OPPO FIND X9 PRO&quot;:{&quot;EU&quot;:[&quot;CPH2791_16.0.3.504(EX01)&quot;,&quot;CPH2791_16.0.2.401(EX01)&quot;,&quot;CPH2791_16.0.1.302(EX01)&quot;],&quot;IN&quot;:[&quot;CPH2791_16.0.3.504(EX01)&quot;,&quot;CPH2791_16.0.2.401(EX01)&quot;,&quot;CPH2791_16.0.1.302(EX01)&quot;,&quot;PLG110_16.0.1.305(CN01)&quot;],&quot;CN&quot;:[&quot;PLG110_16.0.5.701(CN01)&quot;,&quot;PLG110_16.0.3.502(CN01)&quot;,&quot;PLG110_16.0.2.405(CN01)&quot;,&quot;PLG110_16.0.2.401(CN01)&quot;,&quot;PLG110_16.0.1.305(CN01)&quot;]},&quot;OPPO RENO 15 PRO&quot;:{&quot;CN&quot;:[&quot;PLV110_16.0.3.502(CN01)&quot;,&quot;PLV110_16.0.2.406(CN01)&quot;,&quot;PLV110_16.0.2.403(CN01)&quot;]},&quot;Realme GT5 PRO&quot;:{&quot;CN&quot;:[&quot;RMX3888_16.0.2.400(CN01)&quot;]},&quot;Realme GT7 PRO&quot;:{&quot;EU&quot;:[&quot;RMX5011_16.0.0.223(EX01)&quot;,&quot;RMX5011_15.0.0.1170(EX01)&quot;,&quot;RMX5011_15.0.0.270(EX01)&quot;],&quot;IN&quot;:[&quot;RMX5011_16.0.2.400(EX01)&quot;,&quot;RMX5011_16.0.0.223(EX01)&quot;,&quot;RMX5011_16.0.0.212(EX01)&quot;,&quot;RMX5011_15.0.0.1150(EX01)&quot;,&quot;RMX5011_15.0.0.270(EX01)&quot;],&quot;CN&quot;:[&quot;RMX5010_16.0.2.400(CN01)&quot;,&quot;RMX5010_16.0.0.231(CN01)&quot;,&quot;RMX5010_15.0.0.660(CN01)&quot;]},&quot;Realme GT8 PRO&quot;:{&quot;EU&quot;:[&quot;RMX5210_16.0.2.402(EX01)&quot;,&quot;RMX5210_16.0.0.298(EX01)&quot;,&quot;RMX5210_16.0.0.296(EX01)&quot;],&quot;IN&quot;:[&quot;RMX5210_16.0.2.402(EX01)&quot;,&quot;RMX5210_16.0.0.298(EX01)&quot;,&quot;RMX5210_16.0.0.296(EX01)&quot;],&quot;CN&quot;:[&quot;RMX5200_16.0.2.401(CN01)&quot;,&quot;RMX5200_16.0.0.296(CN01)&quot;,&quot;RMX5200_16.0.0.295(CN01)&quot;]}}'>
+                  <option value="OP 10 PRO" >
+            OP 10 PRO          </option>
+                  <option value="OP 11" >
+            OP 11          </option>
+                  <option value="OP 11R" >
+            OP 11R          </option>
+                  <option value="OP 12" >
+            OP 12          </option>
+                  <option value="OP 12R" >
+            OP 12R          </option>
+                  <option value="OP 13" >
+            OP 13          </option>
+                  <option value="OP 13R" >
+            OP 13R          </option>
+                  <option value="OP 13S" >
+            OP 13S          </option>
+                  <option value="OP 13T" >
+            OP 13T          </option>
+                  <option value="OP 15" selected>
+            OP 15          </option>
+                  <option value="OP 15R" >
+            OP 15R          </option>
+                  <option value="OP 15T" >
+            OP 15T          </option>
+                  <option value="OP ACE 3" >
+            OP ACE 3          </option>
+                  <option value="OP ACE 3 PRO" >
+            OP ACE 3 PRO          </option>
+                  <option value="OP ACE 3V" >
+            OP ACE 3V          </option>
+                  <option value="OP ACE 5" >
+            OP ACE 5          </option>
+                  <option value="OP ACE 5 PRO" >
+            OP ACE 5 PRO          </option>
+                  <option value="OP ACE 5 ULTRA" >
+            OP ACE 5 ULTRA          </option>
+                  <option value="OP ACE 5 RACING" >
+            OP ACE 5 RACING          </option>
+                  <option value="OP ACE 6" >
+            OP ACE 6          </option>
+                  <option value="OP ACE 6T" >
+            OP ACE 6T          </option>
+                  <option value="OP TURBO 6" >
+            OP TURBO 6          </option>
+                  <option value="OP TURBO 6V" >
+            OP TURBO 6V          </option>
+                  <option value="OP NORD 4" >
+            OP NORD 4          </option>
+                  <option value="OP NORD CE4" >
+            OP NORD CE4          </option>
+                  <option value="OP NORD 5" >
+            OP NORD 5          </option>
+                  <option value="OP NORD CE5" >
+            OP NORD CE5          </option>
+                  <option value="OP NORD 6" >
+            OP NORD 6          </option>
+                  <option value="OP PAD" >
+            OP PAD          </option>
+                  <option value="OP PAD LITE" >
+            OP PAD LITE          </option>
+                  <option value="OP PAD2" >
+            OP PAD2          </option>
+                  <option value="OP PAD2 PRO" >
+            OP PAD2 PRO          </option>
+                  <option value="OP PAD3" >
+            OP PAD3          </option>
+                  <option value="OP PAD GO 2" >
+            OP PAD GO 2          </option>
+                  <option value="OP OPEN" >
+            OP OPEN          </option>
+                  <option value="OPPO FIND N5" >
+            OPPO FIND N5          </option>
+                  <option value="OPPO FIND X8" >
+            OPPO FIND X8          </option>
+                  <option value="OPPO FIND X8 PRO" >
+            OPPO FIND X8 PRO          </option>
+                  <option value="OPPO FIND X8 ULTRA" >
+            OPPO FIND X8 ULTRA          </option>
+                  <option value="OPPO FIND X9" >
+            OPPO FIND X9          </option>
+                  <option value="OPPO FIND X9 PRO" >
+            OPPO FIND X9 PRO          </option>
+                  <option value="OPPO RENO 15 PRO" >
+            OPPO RENO 15 PRO          </option>
+                  <option value="Realme GT5 PRO" >
+            Realme GT5 PRO          </option>
+                  <option value="Realme GT7 PRO" >
+            Realme GT7 PRO          </option>
+                  <option value="Realme GT8 PRO" >
+            Realme GT8 PRO          </option>
+              </select>
+    </div>
+
+    <div>
+      <label for="region">Region</label><br>
+      <select id="region" name="region" class="ota-select" data-selected="CN">
+        <option value="GLO" >GLO</option><option value="EU" >EU</option><option value="IN" >IN</option><option value="CN" selected>CN</option>      </select>
+    </div>
+
+    <div>
+      <label for="version">Version</label><br>
+      <select id="version" name="version_index" class="ota-select" data-selected="0">
+        <option value="0" selected>PLK110_16.0.7.206(CN01)</option><option value="1" >PLK110_16.0.5.702(CN01)</option><option value="2" >PLK110_16.0.5.701(CN01)</option><option value="3" >PLK110_16.0.3.503(CN01)</option><option value="4" >PLK110_16.0.3.502(CN01)</option><option value="5" >PLK110_16.0.2.402(CN01)</option><option value="6" >PLK110_16.0.2.401(CN01)</option><option value="7" >PLK110_16.0.1.301(CN01)</option><option value="8" >PLK110_16.0.0.211(CN01)</option><option value="9" >PLK110_16.0.0.210(CN01)</option><option value="10" >PLK110_16.0.0.208(CN01)</option>      </select>
+    </div>
+
+    <div style="display:flex; gap:8px;">
+      <button type="submit" class="ota-btn primary">Get final link</button>
+      <button type="submit" name="reset" value="1" class="ota-btn ghost" id="resetBtn">Reset</button>
+    </div>
+  </form>
+
+          <div class="ota-result" id="resultBox"
+         data-url="https://gauss-compotaauto-c-cn.allawnfs.com/remove-ad7493c57bc4557a56ffbc1dd33f47f7/g-10eab6008d5642cf42abd2aa41f847cb/component-ota/26/05/06/b8b4c122e5dd4419a46f575cf43f689f.zip?sign=376898fd9073c2c88c7fa86252629805&amp;t=69fe4d68&amp;AWSAccessKeyId=ayjy7KyLVHvDqDax6_KqJgtBeORTJARg9MSGiL66&amp;Expires=1778275440&amp;Signature=h8WmgHpPCdTJ%2FF6OBJ71DUEet0U%3D"
+         data-manual="0">
+
+      <div style="margin-top:6px;">
+                  <span class="ota-chip">PLK110_11.A.63_0630_202605061316</span>
+                          <span class="ota-chip">Sec. Patch: 2026-05-01</span>
+                      </div>
+
+      <div class="ota-actions">
+                  <a class="ota-btn" id="downloadBtn"
+             href="https://gauss-compotaauto-c-cn.allawnfs.com/remove-ad7493c57bc4557a56ffbc1dd33f47f7/g-10eab6008d5642cf42abd2aa41f847cb/component-ota/26/05/06/b8b4c122e5dd4419a46f575cf43f689f.zip?sign=376898fd9073c2c88c7fa86252629805&amp;t=69fe4d68&amp;AWSAccessKeyId=ayjy7KyLVHvDqDax6_KqJgtBeORTJARg9MSGiL66&amp;Expires=1778275440&amp;Signature=h8WmgHpPCdTJ%2FF6OBJ71DUEet0U%3D"
+             target="_blank" rel="noopener">Download</a>
+                <button type="button" class="ota-btn ghost" id="copyBtn">Copy link</button>
+
+                  <a class="ota-btn ghost"
+             id="changelogBtn"
+             href="https://gauss--compotacostauto--cn-allawnfs-com.translate.goog/remove-ad7493c57bc4557a56ffbc1dd33f47f7/component-ota/26/05/08/d541d713b2fc49bfaf09f51fe51b4cc8.html?_x_tr_sl=auto&amp;_x_tr_tl=en&amp;_x_tr_hl=en&amp;_x_tr_pto=wapp"
+             target="_blank" rel="noopener">
+             Changelog
+          </a>
+              </div>
+
+              <div class="ota-timer" id="timerInfo">
+          Link expires in 9 minutes. (ongoing downloads will continue normally)
+        </div>
+      
+      <div class="ota-help">
+        <h4>Command-line (optional)</h4>
+
+        
+        <div>
+          <strong>Windows (CMD):</strong>
+          <div class="ota-code" id="codeCurl">
+<span id="codeCurlStr">curl -O "https://gauss-compotaauto-c-cn.allawnfs.com/remove-ad7493c57bc4557a56ffbc1dd33f47f7/g-10eab6008d5642cf42abd2aa41f847cb/component-ota/26/05/06/b8b4c122e5dd4419a46f575cf43f689f.zip?sign=376898fd9073c2c88c7fa86252629805&amp;t=69fe4d68&amp;AWSAccessKeyId=ayjy7KyLVHvDqDax6_KqJgtBeORTJARg9MSGiL66&amp;Expires=1778275440&amp;Signature=h8WmgHpPCdTJ%2FF6OBJ71DUEet0U%3D"</span>
+            <button type="button" class="ota-mini-btn" data-copy="#codeCurlStr">Copy</button>
+          </div>
+        </div>
+
+        <div>
+          <strong>macOS / Linux (Terminal):</strong>
+          <div class="ota-code" id="codeWget">
+<span id="codeWgetStr">wget "https://gauss-compotaauto-c-cn.allawnfs.com/remove-ad7493c57bc4557a56ffbc1dd33f47f7/g-10eab6008d5642cf42abd2aa41f847cb/component-ota/26/05/06/b8b4c122e5dd4419a46f575cf43f689f.zip?sign=376898fd9073c2c88c7fa86252629805&amp;t=69fe4d68&amp;AWSAccessKeyId=ayjy7KyLVHvDqDax6_KqJgtBeORTJARg9MSGiL66&amp;Expires=1778275440&amp;Signature=h8WmgHpPCdTJ%2FF6OBJ71DUEet0U%3D"</span>
+            <button type="button" class="ota-mini-btn" data-copy="#codeWgetStr">Copy</button>
+          </div>
+        </div>
+
+        <div class="ota-note">
+          Tip: On slow networks, <em>aria2c</em> can speed things up:
+        </div>
+        <div class="ota-code" id="codeAria2">
+<span id="codeAria2Str">aria2c -x8 -s8 "https://gauss-compotaauto-c-cn.allawnfs.com/remove-ad7493c57bc4557a56ffbc1dd33f47f7/g-10eab6008d5642cf42abd2aa41f847cb/component-ota/26/05/06/b8b4c122e5dd4419a46f575cf43f689f.zip?sign=376898fd9073c2c88c7fa86252629805&amp;t=69fe4d68&amp;AWSAccessKeyId=ayjy7KyLVHvDqDax6_KqJgtBeORTJARg9MSGiL66&amp;Expires=1778275440&amp;Signature=h8WmgHpPCdTJ%2FF6OBJ71DUEet0U%3D"</span>
+          <button type="button" class="ota-mini-btn" data-copy="#codeAria2Str">Copy</button>
+        </div>
+      </div> <!-- /.ota-help -->
+
+    </div> <!-- /.ota-result -->
+  
+</div> <!-- /.ota-container -->
+<script src="/js/ota.js?v=1778274847" defer></script>
+<script src="/js/ota_ui.js?v=1778274847" defer></script><div class="footer">
+  <div class="support-links">
+    <div class="support-links-inner">
+      <p class="donation-note">
+        <span class="wiggle-beer">🍺</span>
+        If you enjoy this server and want to support my work, feel free to
+        <a href="https://roms.danielspringer.at/donation.php" target="_blank" rel="noopener noreferrer">buy me a beer</a><br>
+	<!-- Running this setup isn’t exactly cheap, but I love keeping it fast and available for everyone.<br> -->
+      </p>
+    </div>
+  </div>
+
+<!-- <p class="edl-contact">
+  
+    Need EDL? <a href="https://t.me/BalsasLT" target="_blank" rel="noopener noreferrer">@BalsasLT</a> on Telegram can assist you.<br>
+  </s>&nbsp;
+  <span style="color:green; font-weight:bold;">EDL servers are back online :)</span><br><br> </p>-->
+  Due to storage constraints, I can’t keep all old builds. If you need an older build of a flasher, please try <a href="https://sourceforge.net/projects/oneplus13flashers" target="_blank" rel="noopener noreferrer">here</a>.
+</p>
+
+
+  <div id="traffic-info" class="traffic-stats">
+    <p class="traffic-row"><br>
+      📶 Live Upload:
+      <span class="traffic-main">
+      <span id="uploadSpeed">–</span>
+      </span>
+      <span class="traffic-mirror">
+        <span class="traffic-sep">·</span>
+        Mirror <span id="uploadSpeedMirror">–</span>
+      </span>
+    </p>
+    <p class="traffic-row">
+      📈 Today:
+      <span class="traffic-main">
+       <span id="todayTraffic">–</span>
+      </span>
+      <span class="traffic-mirror">
+        <span class="traffic-sep">·</span>
+        Mirror <span id="todayTrafficMirror">–</span>
+      </span>
+    </p>
+    <p class="traffic-row">
+      🕓 Last 24h:
+      <span class="traffic-main">
+       <span id="last24Traffic">–</span>
+      </span>
+      <span class="traffic-mirror">
+        <span class="traffic-sep">·</span>
+        Mirror <span id="last24TrafficMirror">–</span>
+      </span>
+    </p>
+    <p class="traffic-row">
+      📊 This Month:
+      <span class="traffic-main">
+       <span id="monthTraffic">–</span>
+      </span>
+      <span class="traffic-mirror">
+        <span class="traffic-sep">·</span>
+        Mirror <span id="monthTrafficMirror">–</span>
+      </span>
+    </p>
+    <p class="traffic-row">
+      📆 This Year:
+      <span class="traffic-main">
+       <span id="yearTraffic">–</span>
+      </span>
+      <span class="traffic-mirror">
+        <span class="traffic-sep">·</span>
+        Mirror <span id="yearTrafficMirror">–</span>
+      </span>
+    </p>
+
+    <p class="traffic-note">
+      ⚠️ Note: If outbound traffic goes over 3 TB within 24 hours, the main server may slow down. To keep speeds high, large files are automatically served from a mirror once usage hits 2.7 TB.
+    </p>
+  </div>
+
+
+  <!--<div class="disclaimer">
+    <p>🚀 Powered by Speed Daddy</p>
+  </div>-->
+
+<a href="https://tradingshenzhen.com/de/?refs=220422" target="_blank" rel="noopener noreferrer">
+    <img src="/img/ts.jpg" />
+</a><br>
+
+<a href="https://www.netcup.com/en/?ref=263369" target="_blank" rel="noopener noreferrer">
+    <img src="/img/netcup2.png" />
+</a>
+
+
+  <p class="impressum-link">
+    <a href="/index.php?dir=EDL">EDL</a>
+  </p>
+
+  <p class="impressum-link">
+    <a href="/index.php?stats=true">Stats</a>
+  </p>
+
+
+  <p class="impressum-link">
+    <a href="/impressum.html" target="_blank" rel="noopener noreferrer">Impressum & Privacy</a>
+  </p>
+
+
+<a class="support-btn" href="https://t.me/op13chat" target="_blank" rel="noopener noreferrer">
+  <img src="/img/telegram.svg" alt="" class="btn-icon">
+   13 Series General Support
+</a><br><br>
+
+<a class="support-btn" href="https://t.me/OP13CustomRoms" target="_blank" rel="noopener noreferrer">
+  <img src="/img/telegram.svg" alt="" class="btn-icon">
+   OnePlus 13 Custom ROMs Support
+</a><br><br>
+
+<a class="support-btn" href="https://t.me/op15chat" target="_blank" rel="noopener noreferrer">
+  <img src="/img/telegram.svg" alt="" class="btn-icon">
+   15 Series General Support
+</a>
+
+
+
+<!-- </div>
+<div id="log-display">
+  <canvas id="log-canvas"></canvas>
+</div>
+
+ <script src="/js/terminal.js"></script> -->
+<script src="/js/footer-script.js"></script>
+</body>
+</html>
