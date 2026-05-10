@@ -28,15 +28,15 @@ jobs:
           distribution: temurin
           java-version: "17"
 
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v4
+        with:
+          packages: "tools platform-tools platforms;android-37 build-tools;37.0.0"
+
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v6
         with:
           cache-provider: basic
-
-      - name: Install Android SDK packages
-        shell: bash
-        run: |
-          sdkmanager "platforms;android-37" "build-tools;37.0.0"
 
       - name: Read app version
         id: version
