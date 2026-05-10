@@ -31,7 +31,7 @@ jobs:
       - name: Set up Android SDK
         uses: android-actions/setup-android@v4
         with:
-          packages: "tools platform-tools platforms;android-37 build-tools;37.0.0"
+          packages: "platform-tools platforms;android-36 build-tools;36.0.0"
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v6
@@ -86,7 +86,12 @@ jobs:
           KEYSTORE_PATH: ${{ steps.signing.outputs.keystore }}
         run: |
           set -euo pipefail
-          build_tools="$ANDROID_HOME/build-tools/37.0.0"
+          build_tools_version="$(find "$ANDROID_HOME/build-tools" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort -V | tail -n 1)"
+          if [[ -z "$build_tools_version" ]]; then
+            echo "No Android build-tools installation found" >&2
+            exit 1
+          fi
+          build_tools="$ANDROID_HOME/build-tools/$build_tools_version"
           unsigned_apk="$(find app/build/outputs/apk/release -maxdepth 1 -name '*release-unsigned.apk' | head -n 1)"
           if [[ -z "$unsigned_apk" ]]; then
             echo "Unsigned release APK not found" >&2

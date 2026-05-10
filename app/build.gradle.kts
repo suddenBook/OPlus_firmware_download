@@ -7,7 +7,7 @@ plugins {
 android {
     namespace = "com.desmond.ofd"
     compileSdk {
-        version = release(37)
+        version = release(36)
     }
 
     defaultConfig {
