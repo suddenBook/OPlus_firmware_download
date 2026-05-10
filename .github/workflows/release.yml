@@ -108,7 +108,7 @@ jobs:
           "$build_tools/apksigner" verify --verbose --print-certs app-release.apk
 
       - name: Upload workflow artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: app-release.apk
           path: app-release.apk
