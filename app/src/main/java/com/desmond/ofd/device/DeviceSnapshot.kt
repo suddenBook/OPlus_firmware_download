@@ -32,7 +32,7 @@ data class DeviceSnapshot(
     /** `ro.build.display.id`, e.g. `PLK110_16.0.7.206(CN01)`. */
     val displayId: String? = null,
 ) {
-    /** RealmeUI version (1..7) inferred from props, with sensible fallbacks. */
+    /** ColorOS generation (1..7) inferred from props, with sensible fallbacks. */
     val ruiVersion: Int by lazy { deriveRuiVersion() }
 
     /** Region inferred from `displayId` suffix or model prefix, defaults to GL. */

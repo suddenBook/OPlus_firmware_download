@@ -30,7 +30,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.desmond.ofd.R
 import com.desmond.ofd.catalog.DeviceEntry
 import com.desmond.ofd.device.Brand
 
@@ -64,7 +67,7 @@ fun DevicePickerSheet(
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
             Text(
-                text = "Pick a device",
+                text = stringResource(R.string.pick_device),
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(horizontal = 16.dp),
             )
@@ -72,12 +75,17 @@ fun DevicePickerSheet(
             OutlinedTextField(
                 value = query,
                 onValueChange = { query = it },
-                placeholder = { Text("Search ${catalog.size} devices…") },
+                placeholder = {
+                    Text(pluralStringResource(R.plurals.search_devices, catalog.size, catalog.size))
+                },
                 leadingIcon = { Icon(Icons.Outlined.Search, contentDescription = null) },
                 trailingIcon = if (query.isNotEmpty()) {
                     {
                         IconButton(onClick = { query = "" }) {
-                            Icon(Icons.Outlined.Close, contentDescription = "Clear")
+                            Icon(
+                                Icons.Outlined.Close,
+                                contentDescription = stringResource(R.string.clear),
+                            )
                         }
                     }
                 } else null,
@@ -95,7 +103,7 @@ fun DevicePickerSheet(
                 if (filtered.isEmpty()) {
                     item {
                         Text(
-                            text = "No devices match \"$query\"",
+                            text = stringResource(R.string.no_devices_match, query),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(16.dp),
@@ -134,7 +142,7 @@ fun DevicePickerSheet(
                                 {
                                     Icon(
                                         Icons.Filled.Star,
-                                        contentDescription = "Your device",
+                                        contentDescription = stringResource(R.string.your_device),
                                         tint = MaterialTheme.colorScheme.primary,
                                     )
                                 }
@@ -143,7 +151,7 @@ fun DevicePickerSheet(
                                 {
                                     Icon(
                                         Icons.Outlined.CheckCircle,
-                                        contentDescription = "Selected",
+                                        contentDescription = stringResource(R.string.state_selected),
                                         tint = MaterialTheme.colorScheme.primary,
                                     )
                                 }

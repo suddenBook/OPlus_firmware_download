@@ -18,10 +18,12 @@ import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -33,13 +35,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.desmond.ofd.R
 import com.desmond.ofd.backend.realmeota.data.OtaRequestParams
 import com.desmond.ofd.backend.realmeota.data.Region
 import com.desmond.ofd.catalog.DeviceEntry
@@ -59,15 +64,15 @@ private val ruiOptions: List<RuiOption> = (1..7).map { rui ->
     val colorOs = if (rui == 1) 7 else 11 + rui - 2
     RuiOption(
         value = rui,
-        title = "RealmeUI $rui",
-        subtitle = "Android $android  ·  ColorOS $colorOs",
+        androidVersion = android,
+        colorOsVersion = colorOs,
     )
 }
 
 private data class RuiOption(
     val value: Int,
-    val title: String,
-    val subtitle: String,
+    val androidVersion: Int,
+    val colorOsVersion: Int,
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -84,7 +89,7 @@ fun ManualForm(
 ) {
     var selectedDevice by remember(initialDevice) { mutableStateOf(initialDevice) }
     var otaVersion by remember(initialOtaVersion) { mutableStateOf(initialOtaVersion) }
-    var ruiVersion by remember(initialRuiVersion) { mutableStateOf(initialRuiVersion.coerceIn(1, 7)) }
+    var ruiVersion by remember(initialRuiVersion) { mutableIntStateOf(initialRuiVersion.coerceIn(1, 7)) }
     var region by remember(initialRegion) { mutableStateOf(initialRegion) }
     var nvId by remember(initialNvId) { mutableStateOf(initialNvId) }
     var imei by remember { mutableStateOf("") }
@@ -109,14 +114,14 @@ fun ManualForm(
     ElevatedCard(modifier = Modifier.fillMaxWidth()) {
         Column(Modifier.padding(16.dp)) {
             Text(
-                text = "Manual mode",
+                text = stringResource(R.string.manual_mode),
                 style = MaterialTheme.typography.labelLarge.copy(lineHeight = 22.sp),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Spacer(Modifier.height(12.dp))
 
             DevicePickerField(
-                label = "Device",
+                label = stringResource(R.string.device),
                 selected = selectedDevice,
                 onClick = { showPicker = true },
             )
@@ -125,8 +130,8 @@ fun ManualForm(
             OutlinedTextField(
                 value = otaVersion,
                 onValueChange = { otaVersion = it },
-                label = { Text("OTA version") },
-                supportingText = { Text("Optional. Required for realme-ota.") },
+                label = { Text(stringResource(R.string.ota_version)) },
+                supportingText = { Text(stringResource(R.string.ota_version_help)) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
             )
@@ -139,7 +144,7 @@ fun ManualForm(
 
             Spacer(Modifier.height(12.dp))
             Text(
-                text = "Region",
+                text = stringResource(R.string.region),
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -159,8 +164,8 @@ fun ManualForm(
             OutlinedTextField(
                 value = nvId,
                 onValueChange = { nvId = it },
-                label = { Text("NV ID") },
-                supportingText = { Text("Auto-filled from region default.") },
+                label = { Text(stringResource(R.string.nv_id)) },
+                supportingText = { Text(stringResource(R.string.nv_id_help)) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
             )
@@ -168,8 +173,8 @@ fun ManualForm(
             OutlinedTextField(
                 value = imei,
                 onValueChange = { imei = it },
-                label = { Text("IMEI") },
-                supportingText = { Text("Optional for beta channel.") },
+                label = { Text(stringResource(R.string.imei)) },
+                supportingText = { Text(stringResource(R.string.optional_beta_channel)) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
             )
@@ -199,11 +204,11 @@ fun ManualForm(
                         color = MaterialTheme.colorScheme.onPrimary,
                     )
                     Spacer(Modifier.width(10.dp))
-                    Text("Checking…")
+                    Text(stringResource(R.string.checking))
                 } else {
                     Icon(Icons.Outlined.Refresh, contentDescription = null)
                     Spacer(Modifier.width(8.dp))
-                    Text("Check for firmware")
+                    Text(stringResource(R.string.check_for_firmware))
                 }
             }
         }
@@ -223,6 +228,7 @@ fun ManualForm(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun RuiVersionField(
     value: Int,
@@ -230,55 +236,46 @@ private fun RuiVersionField(
 ) {
     var expanded by remember { mutableStateOf(false) }
     val selected = ruiOptions.firstOrNull { it.value == value } ?: ruiOptions.last()
+    val selectedTitle = stringResource(R.string.rui_option_title, selected.colorOsVersion)
+    val selectedSubtitle = stringResource(
+        R.string.rui_option_subtitle,
+        selected.androidVersion,
+        selected.value,
+    )
 
-    Box(modifier = Modifier.fillMaxWidth()) {
-        Surface(
-            onClick = { expanded = true },
-            shape = RoundedCornerShape(4.dp),
-            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
-            color = MaterialTheme.colorScheme.surface,
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
-            ) {
-                Column(Modifier.weight(1f)) {
-                    Text(
-                        text = "RealmeUI version",
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                    Spacer(Modifier.height(2.dp))
-                    Text(
-                        text = selected.title,
-                        style = MaterialTheme.typography.bodyLarge,
-                    )
-                    Spacer(Modifier.height(2.dp))
-                    Text(
-                        text = selected.subtitle,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                }
-                Icon(
-                    imageVector = Icons.Outlined.ArrowDropDown,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
-        }
-        DropdownMenu(
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = it },
+    ) {
+        OutlinedTextField(
+            value = "$selectedTitle  ·  $selectedSubtitle",
+            onValueChange = {},
+            readOnly = true,
+            label = { Text(stringResource(R.string.realmeui_version)) },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
+            colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
+            modifier = Modifier
+                .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable, enabled = true)
+                .fillMaxWidth(),
+            singleLine = true,
+        )
+        ExposedDropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
         ) {
             ruiOptions.forEach { option ->
+                val title = stringResource(R.string.rui_option_title, option.colorOsVersion)
+                val subtitle = stringResource(
+                    R.string.rui_option_subtitle,
+                    option.androidVersion,
+                    option.value,
+                )
                 DropdownMenuItem(
                     text = {
                         Column {
-                            Text(option.title)
+                            Text(title)
                             Text(
-                                text = option.subtitle,
+                                text = subtitle,
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
@@ -303,7 +300,7 @@ private fun DevicePickerField(
 ) {
     Surface(
         onClick = onClick,
-        shape = RoundedCornerShape(4.dp),
+        shape = MaterialTheme.shapes.extraSmall,
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
         color = MaterialTheme.colorScheme.surface,
         modifier = Modifier.fillMaxWidth(),
@@ -323,7 +320,7 @@ private fun DevicePickerField(
                     val regions = entry.regions.joinToString("/") { it.label }
                     if (regions.isNotEmpty()) "${entry.marketingName}  ·  ${entry.model}  ·  $regions"
                     else "${entry.marketingName}  ·  ${entry.model}"
-                } ?: "Tap to choose"
+                } ?: stringResource(R.string.tap_to_choose)
                 Text(
                     text = display,
                     style = MaterialTheme.typography.bodyLarge,

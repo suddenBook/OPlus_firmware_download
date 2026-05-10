@@ -1,3 +1,126 @@
 <resources>
     <string name="app_name">OPlus Firmware</string>
+
+    <string name="nav_home">Home</string>
+    <string name="nav_downloads">Downloads</string>
+    <string name="nav_manual">Manual</string>
+    <string name="nav_info">Info</string>
+
+    <string name="mode_auto">Auto</string>
+    <string name="mode_manual">Manual</string>
+    <string name="download_started">Download started</string>
+    <string name="download_already_in_progress">This firmware is already being downloaded. Open the Downloads tab to track it.</string>
+    <string name="copied_to_clipboard">%1$s copied</string>
+    <string name="detected_device">Detected device</string>
+    <string name="optional_beta_channel">Optional for beta channel.</string>
+    <string name="checking">Checking…</string>
+    <string name="check_for_firmware">Check for firmware</string>
+    <string name="couldnt_check">Couldn\'t check</string>
+
+    <string name="manual_mode">Manual mode</string>
+    <string name="device">Device</string>
+    <string name="ota_version">OTA version</string>
+    <string name="ota_version_help">Optional. Required for realme-ota.</string>
+    <string name="realmeui_version">ColorOS version</string>
+    <string name="rui_option_title">ColorOS %1$d</string>
+    <string name="rui_option_subtitle">Android %1$d, RealmeUI %2$d</string>
+    <string name="region">Region</string>
+    <string name="nv_id">NV ID</string>
+    <string name="nv_id_help">Auto-filled from region default.</string>
+    <string name="imei">IMEI</string>
+    <string name="tap_to_choose">Tap to choose</string>
+    <string name="pick_device">Pick a device</string>
+    <plurals name="search_devices">
+        <item quantity="one">Search %1$d device…</item>
+        <item quantity="other">Search %1$d devices…</item>
+    </plurals>
+    <string name="clear">Clear</string>
+    <string name="no_devices_match">No devices match "%1$s"</string>
+    <string name="your_device">Your device</string>
+    <string name="state_selected">Selected</string>
+
+    <string name="latest_firmware">Latest firmware</string>
+    <string name="download_with_size">Download (%1$s)</string>
+    <string name="download_url">Download URL</string>
+    <string name="copy_url">Copy URL</string>
+    <string name="size">Size</string>
+    <string name="build_date">Build date</string>
+    <string name="md5">MD5</string>
+    <string name="copy_md5">Copy MD5</string>
+    <string name="url_expired_recheck">URL expired, re-check</string>
+    <string name="url_valid_minutes_seconds">URL valid for %1$dm %2$02ds</string>
+    <string name="url_valid_seconds">URL valid for %1$ds</string>
+    <string name="backend_newest">%1$s, newest</string>
+    <string name="backend_older">%1$s, older</string>
+    <string name="not_run">not run</string>
+    <string name="no_firmware_found">No firmware found from any backend.</string>
+
+    <string name="no_active_downloads">No active downloads</string>
+    <string name="downloading">Downloading</string>
+    <string name="cancel">Cancel</string>
+    <string name="verifying">Verifying</string>
+    <string name="computing_md5">Computing MD5…</string>
+    <string name="download_complete_md5_verified">Download complete. MD5 verified.</string>
+    <string name="download_complete_md5_mismatch">Download complete. MD5 mismatch.</string>
+    <string name="download_complete">Download complete</string>
+    <string name="done">Done</string>
+    <string name="download_failed">Download failed</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="eta_hours_minutes">%1$dh %2$02dm left</string>
+    <string name="eta_minutes_seconds">%1$dm %2$02ds left</string>
+    <string name="eta_seconds">%1$ds left</string>
+
+    <string name="info_language">Language</string>
+    <string name="info_check_for_updates">Check for updates</string>
+    <string name="info_tap_to_check">Tap to check GitHub for a newer release</string>
+    <string name="info_up_to_date">Up to date</string>
+    <string name="info_new_version_short">New version available: %1$s</string>
+    <string name="info_new_version_available">New version available: %1$s</string>
+    <string name="info_check_failed">Failed to check: %1$s</string>
+    <string name="info_open_release_page">Open release page</string>
+    <string name="info_no_release_notes">No release notes provided.</string>
+    <string name="language_system">System default</string>
+    <string name="language_english">English</string>
+    <string name="language_simplified_chinese">Simplified Chinese</string>
+    <string name="language_traditional_chinese">Traditional Chinese</string>
+    <string name="info_backends">Backends</string>
+    <string name="backend_realme_ota_summary">Live OPPO update endpoint. Requires the current OTA version.</string>
+    <string name="backend_danielspringer_summary">Third-party catalog of historical OnePlus firmware.</string>
+    <string name="backend_mobile_models_summary">Bundled device catalog source (KHwang9883/MobileModels).</string>
+    <string name="info_about">About</string>
+    <string name="app_version">App version</string>
+    <string name="source_code">Source code</string>
+    <string name="open_externally">Open externally</string>
+
+    <string name="manual_title">Manual</string>
+    <string name="manual_quick_start_title">Quick start</string>
+    <string name="manual_quick_start_body">Use Auto when the app is running on the phone you want to check. Use Manual to check firmware for another OPPO, realme, or OnePlus device.</string>
+    <string name="manual_auto_title">Auto mode</string>
+    <string name="manual_auto_body">Open Home, keep Auto selected, optionally enter your IMEI to try the beta channel, then tap Check for firmware. The app reads your device model, OTA version, NV ID, ColorOS version, ROM version, and region from system properties.</string>
+    <string name="manual_manual_title">Manual mode</string>
+    <string name="manual_manual_body">Open Home, select Manual, pick the target device, enter its OTA version and ColorOS version, confirm Region and NV ID, then tap Check for firmware. realme-ota needs the OTA version. The danielspringer.at backend only needs device and region.</string>
+    <string name="manual_adb_title">Get info via ADB</string>
+    <string name="manual_adb_body">If the phone you are checking is not the one running this app, connect it via ADB and read these properties:</string>
+    <string name="manual_adb_cmd_product">Device model code</string>
+    <string name="manual_adb_cmd_ota">OTA version (required for realme-ota)</string>
+    <string name="manual_adb_cmd_nv">NV ID (8-digit binary)</string>
+    <string name="manual_adb_cmd_rui">ColorOS integer</string>
+    <string name="manual_adb_cmd_oplusrom">ROM version (e.g. V16.1.0)</string>
+    <string name="manual_adb_cmd_display">Build ID with region suffix</string>
+    <string name="manual_adb_copy_command">Copy command</string>
+    <string name="manual_speed_title">Download speed and limits</string>
+    <string name="manual_speed_body">The downloader opens many parallel HTTP/1.1 connections. Real throughput is bounded by the firmware CDN serving each file. Hosts under the gauss-compotaauto family throttle aggressively per IP. Hosts under the newer gauss-comp family give much higher per-connection bandwidth and can burst near the line rate. realme-ota download URLs are signed and expire after a few minutes. If a download fails with HTTP 403 or 410, run Check for firmware again to mint a fresh URL.</string>
+    <string name="manual_caveat_title">Version coverage since ColorOS 16</string>
+    <string name="manual_caveat_body">Since ColorOS 16, OPPO no longer publishes a full firmware ZIP for every release. Some versions ship as OTA supplements only and are not downloadable from any backend. The newest result here may therefore be older than what your phone offers under Settings, Software update. The app cross-checks both realme-ota (live) and the danielspringer.at archive, and the Latest firmware card shows whichever is newer.</string>
+    <string name="manual_md5_title">MD5 verification</string>
+    <string name="manual_md5_body">When the backend returns an MD5, the app streams the downloaded file through MessageDigest after the download finishes and compares. A mismatch retries the download up to two times before failing. The corrupt file is deleted automatically so you never flash a bad build. Some backends omit MD5. In that case the result is shown as "Download complete" without a check.</string>
+    <string name="manual_errors_title">Common errors</string>
+    <string name="manual_errors_body">If Auto cannot read device properties, switch to Manual. If a download URL expires, run Check for firmware again. If MD5 fails, the app retries and removes the bad file.</string>
+
+    <string name="notification_channel_downloads">Firmware downloads</string>
+    <string name="notification_channel_downloads_desc">Progress and result of firmware downloads.</string>
+    <string name="notification_firmware_download">Firmware download</string>
+    <string name="notification_idle">Idle</string>
+    <string name="notification_n_downloads">%1$d downloads in progress</string>
+    <string name="notification_some_failed">Finished with errors</string>
 </resources>

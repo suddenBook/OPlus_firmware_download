@@ -18,16 +18,16 @@ Website: https://github.com/R0rt1z2/realme-ota
 This backend talks to OPPO's OTA endpoint. The app ports the request logic from
 `realme-ota` into Kotlin:
 
-- build the OTA request from model, current OTA version, RealmeUI version,
+- build the OTA request from model, current OTA version, ColorOS version,
   region, NV ID, and optional IMEI
-- encrypt the request body using the protocol required by the RealmeUI version
+- encrypt the request body using the protocol required by the ColorOS version
 - send the request to OPPO's update endpoint
 - decrypt the response
 - read the download URL, size, and MD5 from the returned component packet
 
-RealmeUI version matters. The upstream CLI requires it explicitly, and this app
+ColorOS version matters. The upstream CLI requires it explicitly, and this app
 does the same in Manual mode. If you select a device that is not the phone
-running the app, choose the RealmeUI generation that matches the OTA version you
+running the app, choose the ColorOS generation that matches the OTA version you
 are checking.
 
 If OPPO rejects the supplied OTA version, the app retries once with the same
@@ -41,7 +41,7 @@ This backend is simpler. It only needs device and region. The app parses the
 site catalog, maps the selected model and region to the site's labels, then asks
 for the latest entry with `version_index=0`.
 
-OTA version, RealmeUI version, NV ID, and IMEI are not used for this backend.
+OTA version, ColorOS version, NV ID, and IMEI are not used for this backend.
 
 ## Auto Mode
 
@@ -66,7 +66,7 @@ Manual mode lets you choose:
 
 - device
 - OTA version
-- RealmeUI version
+- ColorOS version
 - region
 - NV ID
 - optional IMEI
@@ -74,6 +74,28 @@ Manual mode lets you choose:
 The device catalog is bundled in the app. It is based on:
 
 https://github.com/KHwang9883/MobileModels
+
+## Release Automation
+
+GitHub Actions builds and publishes `app-release.apk` on pushes to `main`.
+The workflow signs with repository secrets, so the APK can upgrade older
+installs only when those secrets contain the same keystore used for v1.0.
+
+Required repository secrets:
+
+- `ANDROID_KEYSTORE_BASE64`
+- `ANDROID_KEYSTORE_PASSWORD`
+- `ANDROID_KEY_ALIAS`
+- `ANDROID_KEY_PASSWORD`
+
+For the current local test key used by v1.0, set:
+
+```bash
+base64 -w0 ~/.android/debug.keystore
+```
+
+Use that output as `ANDROID_KEYSTORE_BASE64`, with password `android`, alias
+`androiddebugkey`, and key password `android`.
 
 ## Version Selection
 
@@ -98,7 +120,7 @@ saved.
 The downloader supports:
 
 - foreground-service download notification
-- automatic or manual thread count
+- up to 64 HTTP range connections when supported by the server
 - HTTP range downloads when the server supports `206 Partial Content`
 - single-thread fallback when range requests are not supported
 - MD5 verification when the backend provides an expected MD5
@@ -106,4 +128,3 @@ The downloader supports:
 
 Canceling a download cancels the HTTP calls, removes the download item, removes
 the notification, and deletes the partially written local file.
-

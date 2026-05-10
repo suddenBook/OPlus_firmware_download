@@ -25,8 +25,10 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.desmond.ofd.R
 import com.desmond.ofd.download.DownloadState
 
 /** Single-card download UI bound to [DownloadCoordinator]'s state flow. */
@@ -55,7 +57,7 @@ fun DownloadProgressCard(
 @Composable
 private fun ActiveContent(state: DownloadState.Active, onCancel: () -> Unit) {
     Text(
-        text = "Downloading",
+        text = stringResource(R.string.downloading),
         style = MaterialTheme.typography.labelLarge,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
     )
@@ -93,13 +95,13 @@ private fun ActiveContent(state: DownloadState.Active, onCancel: () -> Unit) {
     OutlinedButton(
         onClick = onCancel,
         modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
-    ) { Text("Cancel") }
+    ) { Text(stringResource(R.string.cancel)) }
 }
 
 @Composable
 private fun VerifyingContent(state: DownloadState.Verifying) {
     Text(
-        text = "Verifying",
+        text = stringResource(R.string.verifying),
         style = MaterialTheme.typography.labelLarge,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
     )
@@ -109,7 +111,7 @@ private fun VerifyingContent(state: DownloadState.Verifying) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         CircularProgressIndicator(modifier = Modifier.size(20.dp), strokeWidth = 2.dp)
         Spacer(Modifier.width(10.dp))
-        Text("Computing MD5…", style = MaterialTheme.typography.bodyMedium)
+        Text(stringResource(R.string.computing_md5), style = MaterialTheme.typography.bodyMedium)
     }
 }
 
@@ -126,9 +128,9 @@ private fun CompletedContent(state: DownloadState.Completed, onDismiss: () -> Un
         Spacer(Modifier.width(8.dp))
         Text(
             text = when {
-                md5Ok -> "Download complete — MD5 verified"
-                md5Bad -> "Download complete — MD5 mismatch!"
-                else -> "Download complete"
+                md5Ok -> stringResource(R.string.download_complete_md5_verified)
+                md5Bad -> stringResource(R.string.download_complete_md5_mismatch)
+                else -> stringResource(R.string.download_complete)
             },
             style = MaterialTheme.typography.titleMedium,
             color = if (md5Bad) MaterialTheme.colorScheme.error
@@ -141,7 +143,7 @@ private fun CompletedContent(state: DownloadState.Completed, onDismiss: () -> Un
     Button(
         onClick = onDismiss,
         modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
-    ) { Text("Done") }
+    ) { Text(stringResource(R.string.done)) }
 }
 
 @Composable
@@ -154,7 +156,7 @@ private fun FailedContent(state: DownloadState.Failed, onDismiss: () -> Unit) {
         )
         Spacer(Modifier.width(8.dp))
         Text(
-            text = "Download failed",
+            text = stringResource(R.string.download_failed),
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.error,
         )
@@ -168,7 +170,9 @@ private fun FailedContent(state: DownloadState.Failed, onDismiss: () -> Unit) {
         color = MaterialTheme.colorScheme.onSurfaceVariant,
     )
     Spacer(Modifier.height(12.dp))
-    TextButton(onClick = onDismiss, modifier = Modifier.fillMaxWidth()) { Text("Dismiss") }
+    TextButton(onClick = onDismiss, modifier = Modifier.fillMaxWidth()) {
+        Text(stringResource(R.string.dismiss))
+    }
 }
 
 private fun formatBytesShort(bytes: Long): String = when {
@@ -186,8 +190,13 @@ private fun formatSpeed(bps: Long): String = when {
     else -> "$bps B/s"
 }
 
+@Composable
 private fun formatEta(seconds: Long): String = when {
-    seconds >= 3600 -> "%dh %02dm left".format(seconds / 3600, (seconds % 3600) / 60)
-    seconds >= 60 -> "%dm %02ds left".format(seconds / 60, seconds % 60)
-    else -> "${seconds}s left"
+    seconds >= 3600 -> stringResource(
+        R.string.eta_hours_minutes,
+        seconds / 3600,
+        (seconds % 3600) / 60,
+    )
+    seconds >= 60 -> stringResource(R.string.eta_minutes_seconds, seconds / 60, seconds % 60)
+    else -> stringResource(R.string.eta_seconds, seconds)
 }

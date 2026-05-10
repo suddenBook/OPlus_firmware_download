@@ -28,6 +28,7 @@ object Aes {
 
     fun encryptEcb(plaintext: String, pseudoKey: String): String {
         val key = KeyDerivation.derive(pseudoKey)
+        @Suppress("GetInstance") // ECB is required by realme-ota wire protocol (RUI 1, req_version 1).
         val cipher = Cipher.getInstance("AES/ECB/PKCS5Padding").apply {
             init(Cipher.ENCRYPT_MODE, SecretKeySpec(key, "AES"))
         }
@@ -40,6 +41,7 @@ object Aes {
         val cipherB64 = payload.dropLast(KeyDerivation.PSEUDO_KEY_LEN)
         val pseudoKey = payload.takeLast(KeyDerivation.PSEUDO_KEY_LEN)
         val key = KeyDerivation.derive(pseudoKey)
+        @Suppress("GetInstance") // ECB is required by realme-ota wire protocol (RUI 1, req_version 1).
         val cipher = Cipher.getInstance("AES/ECB/PKCS5Padding").apply {
             init(Cipher.DECRYPT_MODE, SecretKeySpec(key, "AES"))
         }

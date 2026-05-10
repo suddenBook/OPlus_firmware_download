@@ -2,15 +2,16 @@ package com.desmond.ofd.download
 
 import android.content.ContentResolver
 import android.net.Uri
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.isActive
-import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
@@ -22,10 +23,10 @@ import okhttp3.Response
 import java.io.FileOutputStream
 import java.io.IOException
 import java.security.MessageDigest
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicLong
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
-import kotlin.math.max
 
 /**
  * Multi-threaded HTTP downloader writing to a SAF [Uri] via random-offset writes.
@@ -33,48 +34,58 @@ import kotlin.math.max
  *  Flow:
  *   1. Probe the URL with `Range: bytes=0-0` to learn the total size.
  *   2. Pre-allocate the output file by writing one byte at the last offset.
- *   3. Split the file into N chunks ([autoThreadCount]) and download them concurrently.
+ *   3. Split the file into up to [CHUNKS_PER_DOWNLOAD] chunks and download them concurrently.
  *      Each chunk opens its own [ParcelFileDescriptor], seeks to the chunk's start,
  *      and writes its bytes — Linux/Android FS handles concurrent positional writes fine.
  *   4. A ticker emits aggregated progress every 250 ms.
- *   5. Cancellation: the parent coroutine's [job.invokeOnCompletion] cancels every active
- *      OkHttp [Call], which forces in-flight reads to throw `IOException("Canceled")` →
- *      bubbles up as a [CancellationException] to the orchestrator.
+ *   5. Cancellation: [cancel] closes every active OkHttp [Call] for the download id,
+ *      including calls whose response body is already being read by coroutine workers.
  */
-class DownloadEngine(private val httpClient: OkHttpClient) {
+class DownloadEngine(
+    private val httpClient: OkHttpClient,
+    private val workerDispatcher: CoroutineDispatcher,
+) {
+
+    private val callsByDownload = ConcurrentHashMap<String, MutableSet<Call>>()
+
+    fun cancel(downloadId: String) {
+        callsByDownload[downloadId]?.forEach { call ->
+            runCatching { call.cancel() }
+        }
+    }
 
     suspend fun download(
+        downloadId: String,
         url: String,
         contentResolver: ContentResolver,
         targetUri: Uri,
         expectedSize: Long,
-        threadCountOverride: Int? = null,
         onProgress: suspend (bytesDownloaded: Long, totalBytes: Long, speedBps: Long) -> Unit,
-    ): DownloadOutcome = withContext(Dispatchers.IO) {
-        val probe = probeSize(url)
+    ): DownloadOutcome {
+        val probe = probeSize(downloadId, url)
         val totalSize = probe.totalSize.takeIf { it > 0 } ?: expectedSize
         if (totalSize <= 0) {
-            return@withContext singleThreadedDownload(
-                url, contentResolver, targetUri, onProgress,
+            return singleThreadedDownload(
+                downloadId, url, contentResolver, targetUri, onProgress,
             )
         }
         if (!probe.acceptsRanges) {
-            return@withContext singleThreadedDownload(
-                url, contentResolver, targetUri, onProgress, knownSize = totalSize,
+            return singleThreadedDownload(
+                downloadId, url, contentResolver, targetUri, onProgress, knownSize = totalSize,
             )
         }
 
-        val threadCount = threadCountOverride
-            ?.coerceIn(1, 32)
-            ?: autoThreadCount(totalSize)
+        val threadCount = fixedThreadCount(totalSize)
         if (threadCount <= 1) {
-            return@withContext singleThreadedDownload(
-                url, contentResolver, targetUri, onProgress, knownSize = totalSize,
+            return singleThreadedDownload(
+                downloadId, url, contentResolver, targetUri, onProgress, knownSize = totalSize,
             )
         }
 
         try {
-            preallocate(contentResolver, targetUri, totalSize)
+            withContext(workerDispatcher) {
+                preallocate(contentResolver, targetUri, totalSize)
+            }
         } catch (t: Throwable) {
             // Pre-allocation isn't strictly required; positional writes will extend the file.
         }
@@ -82,17 +93,21 @@ class DownloadEngine(private val httpClient: OkHttpClient) {
         val downloaded = AtomicLong(0L)
         try {
             coroutineScope {
-                val ticker = launch { tickProgress(downloaded, totalSize, onProgress) }
+                // Keep progress reporting independent from the bounded download worker pool.
+                val ticker = launch(Dispatchers.Default) {
+                    tickProgress(downloaded, totalSize, onProgress)
+                }
                 try {
                     val chunks = splitChunks(totalSize, threadCount)
                     chunks.map { chunk ->
-                        async(Dispatchers.IO) {
-                            downloadChunk(
+                        async(workerDispatcher) {
+                            downloadChunkWithRetry(
+                                downloadId = downloadId,
                                 url = url,
                                 contentResolver = contentResolver,
                                 targetUri = targetUri,
                                 chunk = chunk,
-                                onChunkBytes = { delta -> downloaded.addAndGet(delta) },
+                                downloaded = downloaded,
                             )
                         }
                     }.awaitAll()
@@ -103,46 +118,53 @@ class DownloadEngine(private val httpClient: OkHttpClient) {
                 onProgress(downloaded.get(), totalSize, 0L)
             }
         } catch (e: IOException) {
-            return@withContext DownloadOutcome.IoError(e.message ?: "unknown")
+            return DownloadOutcome.IoError(e.message ?: "unknown")
         }
-        DownloadOutcome.Success(totalSize)
+        return DownloadOutcome.Success(totalSize)
     }
 
-    private suspend fun probeSize(url: String): SizeProbe = withContext(Dispatchers.IO) {
+    private suspend fun probeSize(downloadId: String, url: String): SizeProbe = withContext(workerDispatcher) {
         val req = Request.Builder()
             .url(url)
             .header("Range", "bytes=0-0")
+            .tag(downloadId)
             .build()
-        runCatching {
-            httpClient.newCall(req).await().use { resp ->
-                when {
-                    resp.code == 206 -> resp.header("Content-Range")
-                        ?.substringAfter('/')
-                        ?.toLongOrNull()
-                        ?.let { SizeProbe(it, acceptsRanges = true) }
-                        ?: SizeProbe.Unknown
-                    resp.isSuccessful -> SizeProbe(
-                        totalSize = resp.body?.contentLength() ?: -1L,
-                        acceptsRanges = false,
-                    )
-                    else -> SizeProbe.Unknown
+        val call = httpClient.newCall(req)
+        val unregister = registerCall(downloadId, call)
+        try {
+            runCatching {
+                call.await().use { resp ->
+                    when {
+                        resp.code == 206 -> resp.header("Content-Range")
+                            ?.substringAfter('/')
+                            ?.toLongOrNull()
+                            ?.let { SizeProbe(it, acceptsRanges = true) }
+                            ?: SizeProbe.Unknown
+                        resp.isSuccessful -> SizeProbe(
+                            totalSize = resp.body?.contentLength() ?: -1L,
+                            acceptsRanges = false,
+                        )
+                        else -> SizeProbe.Unknown
+                    }
                 }
+            }.getOrElse {
+                if (it is CancellationException) throw it
+                SizeProbe.Unknown
             }
-        }.getOrElse {
-            if (it is CancellationException) throw it
-            SizeProbe.Unknown
+        } finally {
+            unregister()
         }
     }
 
-    private fun autoThreadCount(totalSize: Long): Int {
-        val cores = max(1, Runtime.getRuntime().availableProcessors())
+    private fun fixedThreadCount(totalSize: Long): Int {
         val sizeMb = totalSize / (1L shl 20)
         return when {
-            sizeMb < 16 -> 1               // tiny files: single conn is faster
-            sizeMb < 128 -> minOf(4, cores)
-            sizeMb < 1024 -> minOf(8, cores * 2)
-            else -> minOf(16, cores * 2)   // large files: up to 16 parallel chunks
-        }.coerceAtLeast(1)
+            sizeMb < 16 -> 1
+            sizeMb < 128 -> 4
+            sizeMb < 1024 -> 16
+            else -> CHUNKS_PER_DOWNLOAD
+        }.coerceAtMost(totalSize.coerceAtMost(Int.MAX_VALUE.toLong()).toInt())
+            .coerceAtLeast(1)
     }
 
     private fun splitChunks(totalSize: Long, threadCount: Int): List<Chunk> {
@@ -166,14 +188,20 @@ class DownloadEngine(private val httpClient: OkHttpClient) {
         }
     }
 
-    private suspend fun CoroutineScope.tickProgress(
+    /**
+     * Plain (non-receiver) suspend function so `isActive` unambiguously refers to the calling
+     * coroutine's job, not whichever `CoroutineScope` happens to be in implicit scope.
+     * `delay(...)` itself throws on cancellation, so the loop naturally exits when the
+     * surrounding `launch` is cancelled in the `finally` block of [download].
+     */
+    private suspend fun tickProgress(
         downloaded: AtomicLong,
         totalSize: Long,
         onProgress: suspend (Long, Long, Long) -> Unit,
     ) {
         var lastBytes = 0L
         var lastTimeMs = System.currentTimeMillis()
-        while (isActive) {
+        while (currentCoroutineContext().isActive) {
             delay(250)
             val now = System.currentTimeMillis()
             val current = downloaded.get()
@@ -186,7 +214,64 @@ class DownloadEngine(private val httpClient: OkHttpClient) {
         }
     }
 
+    /**
+     * Wraps [downloadChunk] with retry logic. A single chunk's transient I/O failure (e.g.
+     * intermittent connectivity) no longer aborts the whole download. Cancellation still
+     * propagates because we re-throw `CancellationException` and check `isActive`.
+     */
+    private suspend fun downloadChunkWithRetry(
+        downloadId: String,
+        url: String,
+        contentResolver: ContentResolver,
+        targetUri: Uri,
+        chunk: Chunk,
+        downloaded: AtomicLong,
+        maxAttempts: Int = 3,
+    ) {
+        var attempt = 0
+        var lastError: IOException? = null
+        // Track this chunk's contribution so a retry can rewind the global counter.
+        var contributed = 0L
+        while (attempt < maxAttempts) {
+            // Honour cancellation BEFORE another retry — when the coordinator cancels the
+            // download, we want chunks to bail out instead of opening fresh connections.
+            if (!currentCoroutineContext().isActive) {
+                throw CancellationException("Chunk ${chunk.index} cancelled before retry")
+            }
+            try {
+                downloadChunk(
+                    downloadId = downloadId,
+                    url = url,
+                    contentResolver = contentResolver,
+                    targetUri = targetUri,
+                    chunk = chunk,
+                    onChunkBytes = { delta ->
+                        downloaded.addAndGet(delta)
+                        contributed += delta
+                    },
+                )
+                return
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: IOException) {
+                if (!currentCoroutineContext().isActive) {
+                    // Re-classify socket-closed-from-cancel as cancellation so the parent
+                    // coroutineScope sees a normal cancel, not a child failure.
+                    throw CancellationException("Chunk ${chunk.index} cancelled mid-read").apply { initCause(e) }
+                }
+                // Rewind global counter so the retry doesn't double-count this chunk's bytes.
+                downloaded.addAndGet(-contributed)
+                contributed = 0L
+                lastError = e
+                attempt += 1
+                if (attempt < maxAttempts) delay(500L * attempt) // 500 ms, 1000 ms
+            }
+        }
+        throw lastError ?: IOException("Chunk ${chunk.index} failed without exception")
+    }
+
     private suspend fun downloadChunk(
+        downloadId: String,
         url: String,
         contentResolver: ContentResolver,
         targetUri: Uri,
@@ -196,14 +281,10 @@ class DownloadEngine(private val httpClient: OkHttpClient) {
         val request = Request.Builder()
             .url(url)
             .header("Range", "bytes=${chunk.start}-${chunk.end}")
+            .tag(downloadId)
             .build()
         val call = httpClient.newCall(request)
-
-        // Whenever the surrounding coroutine is canceled, force-cancel the OkHttp call so
-        // any in-flight blocking read throws IOException and unblocks the chunk worker.
-        val onCompletion = kotlin.coroutines.coroutineContext.job.invokeOnCompletion {
-            if (it != null) runCatching { call.cancel() }
-        }
+        val unregister = registerCall(downloadId, call)
         try {
             call.await().use { resp ->
                 if (resp.code != 206) {
@@ -217,6 +298,7 @@ class DownloadEngine(private val httpClient: OkHttpClient) {
                         val buf = ByteArray(BUFFER_SIZE)
                         resp.body!!.byteStream().use { input ->
                             while (true) {
+                                currentCoroutineContext().ensureActive()
                                 val n = input.read(buf)
                                 if (n == -1) break
                                 fos.write(buf, 0, n)
@@ -231,31 +313,33 @@ class DownloadEngine(private val httpClient: OkHttpClient) {
             if (call.isCanceled()) throw downloadCanceled(e)
             throw e
         } finally {
-            onCompletion.dispose()
+            unregister()
         }
     }
 
     private suspend fun singleThreadedDownload(
+        downloadId: String,
         url: String,
         contentResolver: ContentResolver,
         targetUri: Uri,
         onProgress: suspend (Long, Long, Long) -> Unit,
         knownSize: Long = -1L,
-    ): DownloadOutcome {
-        val request = Request.Builder().url(url).build()
+    ): DownloadOutcome = withContext(workerDispatcher) {
+        val request = Request.Builder()
+            .url(url)
+            .tag(downloadId)
+            .build()
         val call = httpClient.newCall(request)
-        val onCompletion = kotlin.coroutines.coroutineContext.job.invokeOnCompletion {
-            if (it != null) runCatching { call.cancel() }
-        }
-        return try {
+        val unregister = registerCall(downloadId, call)
+        try {
             call.await().use { resp ->
                 if (!resp.isSuccessful) {
-                    return DownloadOutcome.HttpError(resp.code, resp.message)
+                    return@withContext DownloadOutcome.HttpError(resp.code, resp.message)
                 }
                 val total = if (knownSize > 0) knownSize
                 else resp.body?.contentLength()?.takeIf { it > 0 } ?: -1L
                 val pfd = contentResolver.openFileDescriptor(targetUri, "rw")
-                    ?: return DownloadOutcome.IoError("cannot open Uri")
+                    ?: return@withContext DownloadOutcome.IoError("cannot open Uri")
                 pfd.use { fd ->
                     FileOutputStream(fd.fileDescriptor).use { fos ->
                         fos.channel.position(0)
@@ -265,6 +349,7 @@ class DownloadEngine(private val httpClient: OkHttpClient) {
                         var lastReportTime = System.currentTimeMillis()
                         resp.body!!.byteStream().use { input ->
                             while (true) {
+                                currentCoroutineContext().ensureActive()
                                 val n = input.read(buf)
                                 if (n == -1) break
                                 fos.write(buf, 0, n)
@@ -283,24 +368,25 @@ class DownloadEngine(private val httpClient: OkHttpClient) {
                         fos.fd.sync()
                     }
                 }
-                DownloadOutcome.Success(knownSize)
+                DownloadOutcome.Success(total)
             }
         } catch (e: IOException) {
             if (call.isCanceled()) throw downloadCanceled(e)
             DownloadOutcome.IoError(e.message ?: "unknown")
         } finally {
-            onCompletion.dispose()
+            unregister()
         }
     }
 
     /** Stream-hash the target file with MD5 (lower-case hex). Null on failure. */
     suspend fun computeMd5(contentResolver: ContentResolver, uri: Uri): String? =
-        withContext(Dispatchers.IO) {
+        withContext(workerDispatcher) {
             runCatching {
                 val md = MessageDigest.getInstance("MD5")
                 contentResolver.openInputStream(uri)?.use { input ->
                     val buf = ByteArray(BUFFER_SIZE)
                     while (true) {
+                        currentCoroutineContext().ensureActive()
                         val n = input.read(buf)
                         if (n == -1) break
                         md.update(buf, 0, n)
@@ -309,6 +395,19 @@ class DownloadEngine(private val httpClient: OkHttpClient) {
                 md.digest().joinToString("") { "%02x".format(it) }
             }.getOrNull()
         }
+
+    private fun registerCall(downloadId: String, call: Call): () -> Unit {
+        val calls = callsByDownload.computeIfAbsent(downloadId) {
+            ConcurrentHashMap.newKeySet()
+        }
+        calls += call
+        return {
+            calls -= call
+            if (calls.isEmpty()) {
+                callsByDownload.remove(downloadId, calls)
+            }
+        }
+    }
 
     sealed interface DownloadOutcome {
         data class Success(val totalSize: Long) : DownloadOutcome
@@ -327,7 +426,11 @@ class DownloadEngine(private val httpClient: OkHttpClient) {
     }
 
     companion object {
-        private const val BUFFER_SIZE = 64 * 1024
+        // 64 chunks per large download, with enough download-only workers for two full-speed
+        // downloads at once. Extra downloads queue/share this pool without starving app IO.
+        const val CHUNKS_PER_DOWNLOAD = 64
+        const val MAX_CONCURRENT_CALLS = CHUNKS_PER_DOWNLOAD * 2
+        private const val BUFFER_SIZE = 256 * 1024
     }
 }
 
@@ -342,7 +445,11 @@ private suspend fun Call.await(): Response = suspendCancellableCoroutine { cont 
             }
         }
         override fun onResponse(call: Call, response: Response) {
-            if (cont.isActive) cont.resume(response)
+            if (cont.isActive) {
+                cont.resume(response)
+            } else {
+                response.close()
+            }
         }
     })
     cont.invokeOnCancellation { runCatching { cancel() } }

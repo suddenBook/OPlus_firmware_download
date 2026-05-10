@@ -1,0 +1,125 @@
+<resources>
+    <string name="app_name">OPlus 韌體</string>
+
+    <string name="nav_home">首頁</string>
+    <string name="nav_downloads">下載</string>
+    <string name="nav_manual">手冊</string>
+    <string name="nav_info">資訊</string>
+
+    <string name="mode_auto">自動</string>
+    <string name="mode_manual">手動</string>
+    <string name="download_started">已開始下載</string>
+    <string name="download_already_in_progress">此韌體已在下載中。請開啟「下載」分頁查看進度。</string>
+    <string name="copied_to_clipboard">已複製 %1$s</string>
+    <string name="detected_device">偵測到的裝置</string>
+    <string name="optional_beta_channel">可選，用於嘗試 Beta 通道。</string>
+    <string name="checking">正在檢查…</string>
+    <string name="check_for_firmware">檢查韌體</string>
+    <string name="couldnt_check">無法檢查</string>
+
+    <string name="manual_mode">手動模式</string>
+    <string name="device">裝置</string>
+    <string name="ota_version">OTA 版本</string>
+    <string name="ota_version_help">可選。realme-ota 需要此項。</string>
+    <string name="realmeui_version">ColorOS 版本</string>
+    <string name="rui_option_title">ColorOS %1$d</string>
+    <string name="rui_option_subtitle">Android %1$d，RealmeUI %2$d</string>
+    <string name="region">地區</string>
+    <string name="nv_id">NV ID</string>
+    <string name="nv_id_help">根據地區預設值自動填入。</string>
+    <string name="imei">IMEI</string>
+    <string name="tap_to_choose">點按選擇</string>
+    <string name="pick_device">選擇裝置</string>
+    <plurals name="search_devices">
+        <item quantity="other">搜尋 %1$d 台裝置…</item>
+    </plurals>
+    <string name="clear">清除</string>
+    <string name="no_devices_match">沒有裝置符合「%1$s」</string>
+    <string name="your_device">你的裝置</string>
+    <string name="state_selected">已選擇</string>
+
+    <string name="latest_firmware">最新韌體</string>
+    <string name="download_with_size">下載（%1$s）</string>
+    <string name="download_url">下載連結</string>
+    <string name="copy_url">複製連結</string>
+    <string name="size">大小</string>
+    <string name="build_date">建置日期</string>
+    <string name="md5">MD5</string>
+    <string name="copy_md5">複製 MD5</string>
+    <string name="url_expired_recheck">連結已過期，請重新檢查</string>
+    <string name="url_valid_minutes_seconds">連結有效期 %1$d 分 %2$02d 秒</string>
+    <string name="url_valid_seconds">連結有效期 %1$d 秒</string>
+    <string name="backend_newest">%1$s，最新</string>
+    <string name="backend_older">%1$s，較舊</string>
+    <string name="not_run">未執行</string>
+    <string name="no_firmware_found">所有後端均未找到韌體。</string>
+
+    <string name="no_active_downloads">沒有進行中的下載</string>
+    <string name="downloading">正在下載</string>
+    <string name="cancel">取消</string>
+    <string name="verifying">正在驗證</string>
+    <string name="computing_md5">正在計算 MD5…</string>
+    <string name="download_complete_md5_verified">下載完成。MD5 已驗證。</string>
+    <string name="download_complete_md5_mismatch">下載完成。MD5 不相符。</string>
+    <string name="download_complete">下載完成</string>
+    <string name="done">完成</string>
+    <string name="download_failed">下載失敗</string>
+    <string name="dismiss">關閉</string>
+    <string name="eta_hours_minutes">剩餘 %1$d 小時 %2$02d 分</string>
+    <string name="eta_minutes_seconds">剩餘 %1$d 分 %2$02d 秒</string>
+    <string name="eta_seconds">剩餘 %1$d 秒</string>
+
+    <string name="info_language">語言</string>
+    <string name="info_check_for_updates">檢查更新</string>
+    <string name="info_tap_to_check">點按從 GitHub 檢查更新</string>
+    <string name="info_up_to_date">已是最新版本</string>
+    <string name="info_new_version_short">有新版本：%1$s</string>
+    <string name="info_new_version_available">有新版本：%1$s</string>
+    <string name="info_check_failed">檢查失敗：%1$s</string>
+    <string name="info_open_release_page">開啟發布頁</string>
+    <string name="info_no_release_notes">未提供發布說明。</string>
+    <string name="language_system">跟隨系統</string>
+    <string name="language_english">英文</string>
+    <string name="language_simplified_chinese">簡體中文</string>
+    <string name="language_traditional_chinese">繁體中文</string>
+    <string name="info_backends">後端</string>
+    <string name="backend_realme_ota_summary">OPPO 線上更新介面。需要目前 OTA 版本。</string>
+    <string name="backend_danielspringer_summary">第三方 OnePlus 歷史韌體目錄。</string>
+    <string name="backend_mobile_models_summary">內建裝置目錄來源（KHwang9883/MobileModels）。</string>
+    <string name="info_about">關於</string>
+    <string name="app_version">應用程式版本</string>
+    <string name="source_code">原始碼</string>
+    <string name="open_externally">在外部開啟</string>
+
+    <string name="manual_title">手冊</string>
+    <string name="manual_quick_start_title">快速開始</string>
+    <string name="manual_quick_start_body">如果本應用程式執行在要檢查的手機上，請使用自動模式。檢查另一台 OPPO、realme 或 OnePlus 裝置時，請使用手動模式。</string>
+    <string name="manual_auto_title">自動模式</string>
+    <string name="manual_auto_body">開啟首頁，保持選擇自動模式，可選填寫 IMEI 以嘗試 Beta 通道，然後點按檢查韌體。應用程式會從系統屬性讀取裝置型號、OTA 版本、NV ID、ColorOS 版本、ROM 版本與地區。</string>
+    <string name="manual_manual_title">手動模式</string>
+    <string name="manual_manual_body">開啟首頁，選擇手動模式，選取目標裝置，填寫其 OTA 版本和 ColorOS 版本，確認地區和 NV ID，然後點按檢查韌體。realme-ota 需要 OTA 版本。danielspringer.at 後端僅需裝置和地區。</string>
+    <string name="manual_adb_title">透過 ADB 取得資訊</string>
+    <string name="manual_adb_body">如果要檢查的手機不是目前執行本應用程式的手機，請用 ADB 連接並讀取以下屬性：</string>
+    <string name="manual_adb_cmd_product">裝置型號代碼</string>
+    <string name="manual_adb_cmd_ota">OTA 版本（realme-ota 必需）</string>
+    <string name="manual_adb_cmd_nv">NV ID（8 位二進位）</string>
+    <string name="manual_adb_cmd_rui">ColorOS 整數版本</string>
+    <string name="manual_adb_cmd_oplusrom">ROM 版本（如 V16.1.0）</string>
+    <string name="manual_adb_cmd_display">含地區後綴的版本 ID</string>
+    <string name="manual_adb_copy_command">複製指令</string>
+    <string name="manual_speed_title">下載速度與限制</string>
+    <string name="manual_speed_body">下載器會開啟多條並行 HTTP/1.1 連線。實際速度由提供該韌體的 CDN 決定。gauss-compotaauto 系列主機會按 IP 強力限速。較新的 gauss-comp 系列主機給出更高的單連線頻寬，可以接近線路速率。realme-ota 的下載連結是簽署過的，幾分鐘後會過期。若下載因 HTTP 403 或 410 失敗，重新點按檢查韌體即可產生新連結。</string>
+    <string name="manual_caveat_title">ColorOS 16 起的版本涵蓋</string>
+    <string name="manual_caveat_body">從 ColorOS 16 開始，OPPO 不再為每個版本發佈完整韌體 ZIP。部分版本僅以 OTA 增量包形式推送，任何後端都無法下載到。因此這裡顯示的最新結果可能比你手機裡 設定，系統更新 提供的版本舊。應用程式同時查詢 realme-ota（線上）與 danielspringer.at（歷史歸檔），最新韌體卡片會顯示兩者中較新的那個。</string>
+    <string name="manual_md5_title">MD5 驗證</string>
+    <string name="manual_md5_body">如果後端回傳了 MD5，應用程式會在下載完成後用 MessageDigest 串流計算並比對。不相符時會重試兩次，仍失敗則停止下載並自動刪除損壞檔案，避免你刷入壞包。部分後端不提供 MD5。此時結果顯示為「下載完成」而不進行驗證。</string>
+    <string name="manual_errors_title">常見錯誤</string>
+    <string name="manual_errors_body">如果自動模式無法讀取裝置屬性，請切換到手動模式。如果下載連結過期，請重新執行檢查韌體。如果 MD5 驗證失敗，應用程式會重試並刪除錯誤檔案。</string>
+
+    <string name="notification_channel_downloads">韌體下載</string>
+    <string name="notification_channel_downloads_desc">韌體下載的進度和結果。</string>
+    <string name="notification_firmware_download">韌體下載</string>
+    <string name="notification_idle">閒置</string>
+    <string name="notification_n_downloads">%1$d 個下載進行中</string>
+    <string name="notification_some_failed">完成時發生錯誤</string>
+</resources>

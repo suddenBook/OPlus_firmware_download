@@ -3,120 +3,202 @@ package com.desmond.ofd.download
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.provider.DocumentsContract
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.asCoroutineDispatcher
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import okhttp3.ConnectionPool
+import okhttp3.Dispatcher
 import okhttp3.OkHttpClient
+import okhttp3.Protocol
+import java.util.UUID
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicInteger
 
 /**
- * Singleton orchestrating the active download. Decides thread count from [DownloadPrefs],
- * spawns a foreground [DownloadService] so backgrounding doesn't kill connections, and
- * handles MD5-mismatch retries + cleanup on failure or cancel.
+ * Singleton orchestrating concurrent downloads. Each call to [start] returns a unique id;
+ * the user-visible state is exposed as [jobs] (a list of `DownloadJob` items) so the UI can
+ * show one card per active download.
+ *
+ * Concurrency rules:
+ *  - Multiple distinct files may download concurrently, each with its own chunk pool.
+ *  - A second download is rejected only when an active download already targets the same
+ *    SAF Uri — that's the case where the original "permission denied" race appeared.
+ *
+ * Per-download lifecycle: Active → Verifying → Completed/Failed. Cancelling moves the entry
+ * to Idle which removes it from [jobs]; dismissing a terminal state also removes it.
  */
 object DownloadCoordinator {
 
     private const val MAX_MD5_RETRIES = 2
+    private const val MAX_NETWORK_RETRIES = 2
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+    private val workerThreadId = AtomicInteger()
+    private val downloadDispatcher = Executors.newFixedThreadPool(DownloadEngine.MAX_CONCURRENT_CALLS) { runnable ->
+        Thread(runnable, "OFD-download-${workerThreadId.incrementAndGet()}").apply {
+            isDaemon = true
+        }
+    }.asCoroutineDispatcher()
+    private val dispatcher: Dispatcher = Dispatcher().apply {
+        // Bound global download concurrency. Extra downloads queue here instead of
+        // consuming app-wide IO resources or opening unlimited sockets.
+        maxRequests = DownloadEngine.MAX_CONCURRENT_CALLS
+        maxRequestsPerHost = DownloadEngine.MAX_CONCURRENT_CALLS
+    }
     private val httpClient: OkHttpClient = OkHttpClient.Builder()
-        .connectTimeout(30, TimeUnit.SECONDS)
-        .readTimeout(120, TimeUnit.SECONDS)
+        .dispatcher(dispatcher)
+        // Force HTTP/1.1: under HTTP/2, all chunk requests multiplex over one TCP connection,
+        // sharing one congestion window. HTTP/1.1 gives one TCP per request — OPPO CDN throttles
+        // ~0.5 MiB/s per connection, so per-chunk parallelism scales aggregate throughput.
+        .protocols(listOf(Protocol.HTTP_1_1))
+        .connectionPool(ConnectionPool(DownloadEngine.MAX_CONCURRENT_CALLS * 2, 5, TimeUnit.MINUTES))
+        .connectTimeout(15, TimeUnit.SECONDS)
+        // Short read timeout so stalled chunks fail fast and trigger the per-chunk retry,
+        // freeing OkHttp Dispatcher slots for healthy connections instead of holding them
+        // for two minutes against an unresponsive CDN.
+        .readTimeout(30, TimeUnit.SECONDS)
         .build()
-    private val engine = DownloadEngine(httpClient)
+    private val engine = DownloadEngine(httpClient, downloadDispatcher)
 
-    private val _state = MutableStateFlow<DownloadState>(DownloadState.Idle)
-    val state: StateFlow<DownloadState> = _state.asStateFlow()
+    data class DownloadJob(val id: String, val state: DownloadState)
 
-    private var currentJob: Job? = null
+    private val _jobs = MutableStateFlow<Map<String, DownloadJob>>(emptyMap())
+    val jobs: StateFlow<Map<String, DownloadJob>> = _jobs.asStateFlow()
+
+    private val coroutineJobs = ConcurrentHashMap<String, Job>()
+    private val activeParams = ConcurrentHashMap<String, DownloadParams>()
+    private val cancelledIds = ConcurrentHashMap.newKeySet<String>()
     private var appContext: Context? = null
-    @Volatile private var activeRunId = 0L
 
-    fun start(context: Context, params: DownloadParams) {
+    /**
+     * Schedule a new download. Returns the new id, or `null` when an existing active download
+     * is for the same firmware (matching MD5 when both provide it, otherwise matching
+     * `displayName + expectedSize`) or targets the same SAF Uri (race-safety net).
+     *
+     * The signed download URL changes on every check, so URL-based dedup is useless — we key
+     * on firmware identity instead.
+     */
+    fun start(context: Context, params: DownloadParams): String? {
+        val collidingId = activeParams.entries.firstOrNull { (_, active) ->
+            sameFirmware(active, params) || active.targetUri == params.targetUri
+        }
+        if (collidingId != null) return null
+
         val app = context.applicationContext
-        val oldParams = cancellableParamsOf(_state.value)
-        val runId = nextRunId()
-        currentJob?.cancel()
-        currentJob = null
-        oldParams?.let { deletePartialFile(app, it.targetUri) }
-
         appContext = app
-        publish(runId, DownloadState.Active(params, 0L, params.expectedSize, 0L))
+        val id = UUID.randomUUID().toString()
+        // TEMP diagnostic: capture which CDN host serves which firmware so we can document
+        // the speed-by-host pattern. Remove once Manual page copy is finalised.
+        val host = runCatching { java.net.URI(params.url).host }.getOrNull()
+        android.util.Log.d("OFD-DL", "host=$host file=${params.displayName}")
+        cancelledIds.remove(id)
+        activeParams[id] = params
+        update(id, DownloadState.Active(params, 0L, params.expectedSize, 0L))
         startService(app)
 
-        val job = scope.launch(start = CoroutineStart.LAZY) {
+        coroutineJobs[id] = scope.launch {
             try {
-                runWithRetries(app, params, retriesLeft = MAX_MD5_RETRIES, runId = runId)
+                runWithRetries(
+                    context = app,
+                    id = id,
+                    params = params,
+                    md5RetriesLeft = MAX_MD5_RETRIES,
+                    networkRetriesLeft = MAX_NETWORK_RETRIES,
+                )
             } catch (e: CancellationException) {
                 deletePartialFile(app, params.targetUri)
-                publish(runId, DownloadState.Idle)
+                remove(id)
                 throw e
             } catch (t: Throwable) {
                 deletePartialFile(app, params.targetUri)
-                if (isCurrent(runId) && isActive) {
-                    _state.value = DownloadState.Failed(
-                        params,
-                        t.message ?: t::class.simpleName ?: "unknown",
-                    )
+                if (isActive) {
+                    update(id, DownloadState.Failed(params, t.message ?: t::class.simpleName ?: "unknown"))
                 }
             } finally {
-                if (isCurrent(runId)) currentJob = null
+                coroutineJobs.remove(id)
+                activeParams.remove(id)
+                cancelledIds.remove(id)
             }
         }
-        currentJob = job
-        job.start()
+        return id
+    }
+
+    /** Cancel an in-flight download by id. */
+    fun cancel(id: String) {
+        val job = coroutineJobs[id]
+        val params = activeParams[id] ?: activeParamsOf(_jobs.value[id]?.state)
+        android.util.Log.d("OFD-DL", "cancel id=${id.take(8)} jobActive=${job?.isActive}")
+        cancelledIds += id
+        engine.cancel(id)
+        job?.cancel(CancellationException("User cancelled"))
+        remove(id)
+        // Best-effort: if there are no other active downloads, evict idle pooled sockets
+        // so the OS network indicator clears quickly. Active calls were closed above.
+        if (coroutineJobs.entries.none { (otherId, otherJob) -> otherId != id && otherJob.isActive }) {
+            runCatching { httpClient.connectionPool.evictAll() }
+        }
+        if (job == null) {
+            params?.let { p -> appContext?.let { ctx -> deletePartialFile(ctx, p.targetUri) } }
+            activeParams.remove(id)
+            cancelledIds.remove(id)
+        }
+    }
+
+    /** Remove a terminal (Completed/Failed) entry from the visible list. */
+    fun dismiss(id: String) {
+        val state = _jobs.value[id]?.state ?: return
+        if (state is DownloadState.Completed || state is DownloadState.Failed) {
+            remove(id)
+        }
     }
 
     private suspend fun runWithRetries(
         context: Context,
+        id: String,
         params: DownloadParams,
-        retriesLeft: Int,
-        runId: Long,
+        md5RetriesLeft: Int,
+        networkRetriesLeft: Int,
     ) {
-        val prefs = DownloadPrefs(context)
-        val configured = prefs.threadCount.value
-        val threadOverride = if (configured == DownloadPrefs.AUTO) null else configured
-
         val outcome = engine.download(
+            downloadId = id,
             url = params.url,
             contentResolver = context.contentResolver,
             targetUri = params.targetUri,
             expectedSize = params.expectedSize,
-            threadCountOverride = threadOverride,
             onProgress = { bytes, total, bps ->
                 val effectiveTotal = if (total > 0) total else params.expectedSize
-                publish(runId, DownloadState.Active(params, bytes, effectiveTotal, bps))
+                update(id, DownloadState.Active(params, bytes, effectiveTotal, bps))
             },
         )
         when (outcome) {
             is DownloadEngine.DownloadOutcome.Success -> {
                 if (params.expectedMd5.isNullOrBlank()) {
-                    publish(runId, DownloadState.Completed(params, md5Matches = null))
+                    update(id, DownloadState.Completed(params, md5Matches = null))
                     return
                 }
-                publish(runId, DownloadState.Verifying(params))
+                update(id, DownloadState.Verifying(params))
                 val computed = engine.computeMd5(context.contentResolver, params.targetUri)
-                val matches = computed != null &&
-                    computed.equals(params.expectedMd5, ignoreCase = true)
+                val matches = computed != null && computed.equals(params.expectedMd5, ignoreCase = true)
                 if (matches) {
-                    publish(runId, DownloadState.Completed(params, md5Matches = true))
+                    update(id, DownloadState.Completed(params, md5Matches = true))
                     return
                 }
-                // The retry rewrites the same SAF Uri; deleting it here can invalidate the handle.
-                if (retriesLeft <= 0) {
+                if (md5RetriesLeft <= 0) {
                     deletePartialFile(context, params.targetUri)
-                    publish(
-                        runId,
+                    update(
+                        id,
                         DownloadState.Failed(
                             params,
                             "MD5 mismatch after $MAX_MD5_RETRIES retries (got ${computed ?: "null"}, expected ${params.expectedMd5})",
@@ -124,44 +206,65 @@ object DownloadCoordinator {
                     )
                     return
                 }
-                publish(runId, DownloadState.Active(params, 0L, params.expectedSize, 0L))
-                runWithRetries(context, params, retriesLeft - 1, runId)
-            }
-            is DownloadEngine.DownloadOutcome.HttpError -> {
-                deletePartialFile(context, params.targetUri)
-                publish(runId, DownloadState.Failed(params, "HTTP ${outcome.code}: ${outcome.message}"))
+                update(id, DownloadState.Active(params, 0L, params.expectedSize, 0L))
+                runWithRetries(context, id, params, md5RetriesLeft - 1, networkRetriesLeft)
             }
             is DownloadEngine.DownloadOutcome.IoError -> {
                 deletePartialFile(context, params.targetUri)
-                publish(runId, DownloadState.Failed(params, "I/O: ${outcome.message}"))
+                val active = kotlinx.coroutines.currentCoroutineContext()[kotlinx.coroutines.Job]?.isActive == true
+                android.util.Log.d("OFD-DL", "IoError id=${id.take(8)} retriesLeft=$networkRetriesLeft isActive=$active")
+                if (!active) {
+                    throw CancellationException("Download cancelled")
+                }
+                if (networkRetriesLeft <= 0) {
+                    update(id, DownloadState.Failed(params, "I/O after retries: ${outcome.message}"))
+                    return
+                }
+                val attempt = MAX_NETWORK_RETRIES - networkRetriesLeft + 1
+                delay(1000L * attempt) // 1 s, 2 s
+                update(id, DownloadState.Active(params, 0L, params.expectedSize, 0L))
+                runWithRetries(context, id, params, md5RetriesLeft, networkRetriesLeft - 1)
+            }
+            is DownloadEngine.DownloadOutcome.HttpError -> {
+                deletePartialFile(context, params.targetUri)
+                val transient = outcome.code in 500..599 ||
+                    outcome.code == 408 || outcome.code == 429
+                val active = kotlinx.coroutines.currentCoroutineContext()[kotlinx.coroutines.Job]?.isActive == true
+                if (!active) {
+                    throw CancellationException("Download cancelled")
+                }
+                if (transient && networkRetriesLeft > 0 && active) {
+                    val attempt = MAX_NETWORK_RETRIES - networkRetriesLeft + 1
+                    delay(2000L * attempt) // 2 s, 4 s
+                    update(id, DownloadState.Active(params, 0L, params.expectedSize, 0L))
+                    runWithRetries(context, id, params, md5RetriesLeft, networkRetriesLeft - 1)
+                } else {
+                    val hint = if (outcome.code == 403 || outcome.code == 410) {
+                        " (URL may have expired, re-run Check for firmware)"
+                    } else ""
+                    update(id, DownloadState.Failed(params, "HTTP ${outcome.code}: ${outcome.message}$hint"))
+                }
             }
         }
     }
 
-    fun cancel() {
-        val params = cancellableParamsOf(_state.value)
-        val context = appContext
-        nextRunId()
-        val job = currentJob
-        currentJob = null
-        _state.value = DownloadState.Idle
-        job?.cancel()
-        params?.let { p -> context?.let { ctx -> deletePartialFile(ctx, p.targetUri) } }
+    private fun update(id: String, state: DownloadState) {
+        if (id in cancelledIds) return
+        _jobs.update { current ->
+            current + (id to DownloadJob(id, state))
+        }
+        if (state !is DownloadState.Active) {
+            android.util.Log.d("OFD-DL", "transition id=${id.take(8)} state=${state::class.simpleName}")
+        }
     }
 
-    fun dismiss() {
-        if (_state.value is DownloadState.Completed || _state.value is DownloadState.Failed) {
-            _state.value = DownloadState.Idle
-        }
+    private fun remove(id: String) {
+        _jobs.update { it - id }
     }
 
     private fun startService(context: Context) {
-        val intent = Intent(context, DownloadService::class.java)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            context.startForegroundService(intent)
-        } else {
-            context.startService(intent)
-        }
+        // minSdk = 33; startForegroundService is required.
+        context.startForegroundService(Intent(context, DownloadService::class.java))
     }
 
     private fun deletePartialFile(context: Context, uri: Uri) {
@@ -172,21 +275,27 @@ object DownloadCoordinator {
         }
     }
 
-    @Synchronized
-    private fun nextRunId(): Long {
-        activeRunId += 1
-        return activeRunId
-    }
-
-    private fun isCurrent(runId: Long): Boolean = activeRunId == runId
-
-    private fun publish(runId: Long, state: DownloadState) {
-        if (isCurrent(runId)) _state.value = state
-    }
-
-    private fun cancellableParamsOf(state: DownloadState): DownloadParams? = when (state) {
+    private fun activeParamsOf(state: DownloadState?): DownloadParams? = when (state) {
         is DownloadState.Active -> state.params
         is DownloadState.Verifying -> state.params
         else -> null
+    }
+
+    private fun sameFirmware(a: DownloadParams, b: DownloadParams): Boolean {
+        // Strongest signal: matching server-supplied MD5.
+        if (!a.expectedMd5.isNullOrBlank() && !b.expectedMd5.isNullOrBlank()) {
+            return a.expectedMd5.equals(b.expectedMd5, ignoreCase = true)
+        }
+        // Fallback: matching display name (model + version) and expected file size.
+        return a.displayName == b.displayName && a.expectedSize == b.expectedSize
+    }
+
+    // Tiny inline util because kotlinx.coroutines.flow.update isn't imported above; we want
+    // the same atomic semantics without bringing in the full imports.
+    private inline fun <T> MutableStateFlow<T>.update(block: (T) -> T) {
+        while (true) {
+            val current = value
+            if (compareAndSet(current, block(current))) return
+        }
     }
 }

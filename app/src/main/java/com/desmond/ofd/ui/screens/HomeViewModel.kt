@@ -13,11 +13,14 @@ import com.desmond.ofd.backend.realmeota.data.OtaRequestParams
 import android.net.Uri
 import com.desmond.ofd.backend.realmeota.network.OtaResult
 import com.desmond.ofd.backend.realmeota.network.RealmeOtaClient
+import com.desmond.ofd.catalog.CatalogRepository
 import com.desmond.ofd.catalog.DeviceCatalog
+import com.desmond.ofd.catalog.DeviceEntry
 import com.desmond.ofd.device.DeviceProps
 import com.desmond.ofd.device.DeviceSnapshot
 import com.desmond.ofd.download.DownloadCoordinator
 import com.desmond.ofd.download.DownloadParams
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -78,9 +81,24 @@ class HomeViewModel(
     private val _state = MutableStateFlow<HomeUiState>(HomeUiState.Idle)
     val state: StateFlow<HomeUiState> = _state.asStateFlow()
 
-    fun checkAuto(imei: String? = null) {
-        if (_state.value is HomeUiState.Loading) return
+    private val _catalog = MutableStateFlow<List<DeviceEntry>>(emptyList())
+    val catalog: StateFlow<List<DeviceEntry>> = _catalog.asStateFlow()
+
+    /**
+     * Tracks the in-flight check coroutine so [reset] (e.g. on Auto/Manual tab switch) can
+     * cancel it before it overwrites the freshly-cleared state with a stale Result.
+     */
+    private var checkJob: Job? = null
+
+    init {
         viewModelScope.launch {
+            _catalog.value = CatalogRepository(getApplication()).allDevices()
+        }
+    }
+
+    fun checkAuto(imei: String? = null) {
+        checkJob?.cancel()
+        checkJob = viewModelScope.launch {
             _state.value = HomeUiState.Loading
             val snapshot = runCatching { getSnapshot() }.getOrNull()
                 ?: return@launch fail("Couldn't read device properties.")
@@ -99,29 +117,37 @@ class HomeViewModel(
     }
 
     fun checkManual(params: OtaRequestParams) {
-        if (_state.value is HomeUiState.Loading) return
-        viewModelScope.launch {
+        checkJob?.cancel()
+        checkJob = viewModelScope.launch {
             _state.value = HomeUiState.Loading
             runCheck(params)
         }
     }
 
     fun reset() {
+        checkJob?.cancel()
+        checkJob = null
         _state.value = HomeUiState.Idle
     }
 
-    fun startDownload(targetUri: Uri, outcome: BackendOutcome.Success, displayName: String) {
-        DownloadCoordinator.start(
-            context = getApplication(),
-            params = DownloadParams(
-                url = outcome.downloadUrl,
-                targetUri = targetUri,
-                displayName = displayName,
-                expectedSize = outcome.sizeBytes,
-                expectedMd5 = outcome.md5,
-            ),
-        )
-    }
+    /**
+     * Returns the new download id when scheduled, or `null` when an active download already
+     * matches this firmware (same MD5, or same `displayName + size` when MD5 is unavailable).
+     */
+    fun startDownload(
+        targetUri: Uri,
+        outcome: BackendOutcome.Success,
+        displayName: String,
+    ): String? = DownloadCoordinator.start(
+        context = getApplication(),
+        params = DownloadParams(
+            url = outcome.downloadUrl,
+            targetUri = targetUri,
+            displayName = displayName,
+            expectedSize = outcome.sizeBytes,
+            expectedMd5 = outcome.md5,
+        ),
+    )
 
     private suspend fun runCheck(params: OtaRequestParams) {
         val (stable, beta, springer) = coroutineScope {

@@ -1,5 +1,6 @@
 package com.desmond.ofd.ui.screens
 
+import android.content.ClipData
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,18 +25,24 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalClipboardManager
-import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.platform.ClipEntry
+import androidx.compose.ui.platform.LocalClipboard
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.desmond.ofd.R
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun ResultCard(
@@ -45,11 +52,13 @@ fun ResultCard(
     modifier: Modifier = Modifier,
 ) {
     val winnerOutcome = state.winnerOutcome
+    val md5Label = stringResource(R.string.md5)
+    val downloadUrlLabel = stringResource(R.string.download_url)
 
     ElevatedCard(modifier = modifier.fillMaxWidth()) {
         Column(Modifier.padding(16.dp)) {
             Text(
-                text = "Latest firmware",
+                text = stringResource(R.string.latest_firmware),
                 style = MaterialTheme.typography.labelLarge.copy(lineHeight = 22.sp),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -73,7 +82,7 @@ fun ResultCard(
                 HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
                 Md5Row(
                     md5 = winnerOutcome.md5,
-                    onCopy = { onCopied("MD5") },
+                    onCopy = { onCopied(md5Label) },
                 )
                 HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
 
@@ -86,26 +95,31 @@ fun ResultCard(
                 }
 
                 Spacer(Modifier.height(12.dp))
-                val clipboard = LocalClipboardManager.current
+                val clipboard = LocalClipboard.current
+                val scope = rememberCoroutineScope()
                 Button(
                     onClick = onDownloadClick,
                     modifier = Modifier.fillMaxWidth().heightIn(min = 56.dp),
                 ) {
                     Icon(Icons.Outlined.Download, contentDescription = null)
                     Spacer(Modifier.width(8.dp))
-                    Text("Download  •  ${formatBytes(winnerOutcome.sizeBytes)}")
+                    Text(stringResource(R.string.download_with_size, formatBytes(winnerOutcome.sizeBytes)))
                 }
                 Spacer(Modifier.height(4.dp))
-                androidx.compose.material3.TextButton(
+                TextButton(
                     onClick = {
-                        clipboard.setText(AnnotatedString(winnerOutcome.downloadUrl))
-                        onCopied("Download URL")
+                        scope.launch {
+                            clipboard.setClipEntry(
+                                ClipEntry(ClipData.newPlainText(downloadUrlLabel, winnerOutcome.downloadUrl)),
+                            )
+                            onCopied(downloadUrlLabel)
+                        }
                     },
                     modifier = Modifier.fillMaxWidth(),
                 ) {
                     Icon(Icons.Outlined.ContentCopy, contentDescription = null)
                     Spacer(Modifier.width(8.dp))
-                    Text("Copy URL")
+                    Text(stringResource(R.string.copy_url))
                 }
             }
         }
@@ -116,12 +130,12 @@ fun ResultCard(
 private fun MetadataRow(sizeBytes: Long, buildDate: String?) {
     Row(modifier = Modifier.fillMaxWidth()) {
         MetaCell(
-            label = "Size",
+            label = stringResource(R.string.size),
             value = formatBytes(sizeBytes),
             modifier = Modifier.weight(1f),
         )
         MetaCell(
-            label = "Build date",
+            label = stringResource(R.string.build_date),
             value = buildDate ?: "—",
             modifier = Modifier.weight(1f),
         )
@@ -147,21 +161,27 @@ private fun MetaCell(label: String, value: String, modifier: Modifier = Modifier
 @Composable
 private fun Md5Row(md5: String?, onCopy: (String) -> Unit) {
     if (md5.isNullOrBlank()) return
-    val clipboard = LocalClipboardManager.current
+    val clipboard = LocalClipboard.current
+    val scope = rememberCoroutineScope()
+    val md5Label = stringResource(R.string.md5)
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clip(MaterialTheme.shapes.small)
             .clickable {
-                clipboard.setText(AnnotatedString(md5))
-                onCopy(md5)
+                scope.launch {
+                    clipboard.setClipEntry(
+                        ClipEntry(ClipData.newPlainText(md5Label, md5)),
+                    )
+                    onCopy(md5)
+                }
             }
             .padding(vertical = 10.dp, horizontal = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(Modifier.weight(1f)) {
             Text(
-                text = "MD5",
+                text = stringResource(R.string.md5),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -174,7 +194,7 @@ private fun Md5Row(md5: String?, onCopy: (String) -> Unit) {
         Spacer(Modifier.width(8.dp))
         Icon(
             imageVector = Icons.Outlined.ContentCopy,
-            contentDescription = "Copy MD5",
+            contentDescription = stringResource(R.string.copy_md5),
             tint = MaterialTheme.colorScheme.primary,
             modifier = Modifier.size(20.dp),
         )
@@ -206,9 +226,13 @@ private fun ExpiryRow(expiresAt: Long, modifier: Modifier = Modifier) {
         )
         Spacer(Modifier.width(6.dp))
         val text = when {
-            isExpired -> "URL expired — re-check"
-            secondsLeft >= 60 -> "URL valid for ${secondsLeft / 60}m ${(secondsLeft % 60).toString().padStart(2, '0')}s"
-            else -> "URL valid for ${secondsLeft}s"
+            isExpired -> stringResource(R.string.url_expired_recheck)
+            secondsLeft >= 60 -> stringResource(
+                R.string.url_valid_minutes_seconds,
+                secondsLeft / 60,
+                secondsLeft % 60,
+            )
+            else -> stringResource(R.string.url_valid_seconds, secondsLeft)
         }
         Text(
             text = text,
@@ -272,11 +296,15 @@ private fun BackendRow(label: String, outcome: BackendOutcome, isWinner: Boolean
             val detail = when (outcome) {
                 is BackendOutcome.Success -> {
                     val ver = firmwareVersion(outcome.versionName)
-                    if (isWinner) "$ver  •  newest" else "$ver  •  older"
+                    if (isWinner) {
+                        stringResource(R.string.backend_newest, ver)
+                    } else {
+                        stringResource(R.string.backend_older, ver)
+                    }
                 }
                 is BackendOutcome.Skipped -> outcome.reason
                 is BackendOutcome.Failure -> outcome.message
-                BackendOutcome.NotAttempted -> "not run"
+                BackendOutcome.NotAttempted -> stringResource(R.string.not_run)
             }
             Text(
                 text = detail,
@@ -290,7 +318,7 @@ private fun BackendRow(label: String, outcome: BackendOutcome, isWinner: Boolean
 @Composable
 private fun NoResultsBlock(state: HomeUiState.Result) {
     Text(
-        text = "No firmware found from any backend.",
+        text = stringResource(R.string.no_firmware_found),
         style = MaterialTheme.typography.titleMedium,
         color = MaterialTheme.colorScheme.error,
     )

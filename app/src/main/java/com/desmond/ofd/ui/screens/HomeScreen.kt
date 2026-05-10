@@ -1,6 +1,7 @@
 package com.desmond.ofd.ui.screens
 
-import android.content.Intent
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -39,19 +40,19 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.desmond.ofd.catalog.CatalogRepository
+import com.desmond.ofd.R
 import com.desmond.ofd.catalog.DeviceCatalog
-import com.desmond.ofd.catalog.DeviceEntry
 import com.desmond.ofd.device.DeviceProps
 import com.desmond.ofd.device.DeviceSnapshot
 import kotlinx.coroutines.launch
@@ -67,18 +68,22 @@ fun HomeScreen(modifier: Modifier = Modifier) {
     val ctx = LocalContext.current
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     var mode by remember { mutableIntStateOf(0) }
-    val modes = listOf("Auto", "Manual")
+    val modes = listOf(
+        stringResource(R.string.mode_auto),
+        stringResource(R.string.mode_manual),
+    )
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+    val downloadStartedMessage = stringResource(R.string.download_started)
+    val downloadInProgressMessage = stringResource(R.string.download_already_in_progress)
+    val copiedMessagePattern = stringResource(R.string.copied_to_clipboard, "%s")
 
     val vm: HomeViewModel = viewModel(factory = HomeViewModel.Factory)
     val state by vm.state.collectAsStateWithLifecycle()
+    val catalog by vm.catalog.collectAsStateWithLifecycle()
 
     var autoImei by remember { mutableStateOf("") }
     val snapshot = remember { DeviceProps.snapshot() }
-    val catalog by produceState<List<DeviceEntry>>(initialValue = emptyList(), ctx) {
-        value = CatalogRepository(ctx).allDevices()
-    }
     val autoSuggest = remember(catalog, snapshot) {
         catalog.firstOrNull { it.model == snapshot.productName }
     }
@@ -92,21 +97,43 @@ fun HomeScreen(modifier: Modifier = Modifier) {
         val intent = pending
         pending = null
         if (uri == null || intent == null) return@rememberLauncherForActivityResult
-        runCatching {
-            ctx.contentResolver.takePersistableUriPermission(
-                uri,
-                Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION,
+        val newId = vm.startDownload(uri, intent.outcome, intent.displayName)
+        scope.launch {
+            snackbarHostState.showSnackbar(
+                if (newId != null) downloadStartedMessage else downloadInProgressMessage,
             )
         }
-        vm.startDownload(uri, intent.outcome, intent.displayName)
-        scope.launch { snackbarHostState.showSnackbar("Download started") }
+    }
+
+    // POST_NOTIFICATIONS is needed for the FGS notification on Android 13+. We ask only
+    // when the user kicks off their first download — Google's recommended just-in-time
+    // pattern, not the cold-start prompt.
+    val notificationPermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission(),
+    ) { _ ->
+        // Regardless of grant, proceed to the SAF picker — the download itself doesn't
+        // require notification permission, the user just won't see a system notification.
+        pending?.let { savePicker.launch(it.displayName) }
+    }
+
+    fun launchDownloadFlow(intent: PendingDownload) {
+        pending = intent
+        // minSdk = 33; POST_NOTIFICATIONS is always required.
+        val granted = ContextCompat.checkSelfPermission(
+            ctx, Manifest.permission.POST_NOTIFICATIONS,
+        ) == PackageManager.PERMISSION_GRANTED
+        if (granted) {
+            savePicker.launch(intent.displayName)
+        } else {
+            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
     }
 
     Scaffold(
         modifier = modifier,
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("OPlus Firmware") },
+                title = { Text(stringResource(R.string.app_name)) },
                 scrollBehavior = scrollBehavior,
             )
         },
@@ -120,9 +147,10 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.Top,
         ) {
-            SingleChoiceSegmentedButtonRow {
+            SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
                 modes.forEachIndexed { index, label ->
                     SegmentedButton(
+                        modifier = Modifier.weight(1f),
                         shape = SegmentedButtonDefaults.itemShape(index, modes.size),
                         onClick = { mode = index },
                         selected = mode == index,
@@ -161,11 +189,14 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                         onDownloadClick = {
                             val winner = s.winnerOutcome ?: return@ResultCard
                             val name = suggestedFilename(s.marketingName, winner.versionName)
-                            pending = PendingDownload(winner, name)
-                            savePicker.launch(name)
+                            launchDownloadFlow(PendingDownload(winner, name))
                         },
                         onCopied = { label ->
-                            scope.launch { snackbarHostState.showSnackbar("$label copied") }
+                            scope.launch {
+                                snackbarHostState.showSnackbar(
+                                    copiedMessagePattern.format(label),
+                                )
+                            }
                         },
                     )
                 }
@@ -201,7 +232,7 @@ private fun DetectedDeviceCard(
     ElevatedCard(modifier = Modifier.fillMaxWidth()) {
         Column(Modifier.padding(16.dp)) {
             Text(
-                text = "Detected device",
+                text = stringResource(R.string.detected_device),
                 style = MaterialTheme.typography.labelLarge.copy(lineHeight = 22.sp),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -221,8 +252,8 @@ private fun DetectedDeviceCard(
             OutlinedTextField(
                 value = imei,
                 onValueChange = onImeiChange,
-                label = { Text("IMEI") },
-                supportingText = { Text("Optional for beta channel.") },
+                label = { Text(stringResource(R.string.imei)) },
+                supportingText = { Text(stringResource(R.string.optional_beta_channel)) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
             )
@@ -240,11 +271,11 @@ private fun DetectedDeviceCard(
                         color = MaterialTheme.colorScheme.onPrimary,
                     )
                     Spacer(Modifier.width(10.dp))
-                    Text("Checking…")
+                    Text(stringResource(R.string.checking))
                 } else {
                     Icon(Icons.Outlined.Refresh, contentDescription = null)
                     Spacer(Modifier.width(8.dp))
-                    Text("Check for firmware")
+                    Text(stringResource(R.string.check_for_firmware))
                 }
             }
         }
@@ -256,7 +287,7 @@ private fun ErrorCard(message: String) {
     ElevatedCard(modifier = Modifier.fillMaxWidth()) {
         Column(Modifier.padding(16.dp)) {
             Text(
-                text = "Couldn't check",
+                text = stringResource(R.string.couldnt_check),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.error,
             )

@@ -1,49 +1,42 @@
 package com.desmond.ofd.download
 
-import android.app.Service
 import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.os.Build
-import android.os.IBinder
+import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.ServiceCompat
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import androidx.lifecycle.LifecycleService
+import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 /**
- * Foreground service that pins the process alive while a download runs. The actual download
- * work lives in [DownloadCoordinator]; this service just exists so Android doesn't reap the
- * process when the app is backgrounded.
+ * Foreground service that pins the process alive while at least one download is in flight.
+ * Observes [DownloadCoordinator.jobs] and updates the (single, summary) notification on each
+ * change. When the jobs map empties, releases foreground and self-stops.
  *
- * Lifecycle:
- *  - Coordinator.start() → context.startForegroundService(DownloadService)
- *  - onStartCommand → startForeground(notification) within 5 s
- *  - Observe Coordinator.state → update notification on each tick
- *  - When state becomes Idle → stopForeground + stopSelf
+ * Android 15+ caps `dataSync` foreground services at 6 hours per 24-hour window. When the
+ * timer fires, [onTimeout] is invoked — we cancel all in-flight downloads cleanly rather
+ * than letting the system kill the process mid-flight.
  */
-class DownloadService : Service() {
+class DownloadService : LifecycleService() {
 
-    private val scope: CoroutineScope by lazy {
-        CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
-    }
     private var observerJob: Job? = null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        val initial = DownloadNotifications.build(applicationContext, DownloadCoordinator.state.value)
+        super.onStartCommand(intent, flags, startId)
+        val initial = DownloadNotifications.build(applicationContext, DownloadCoordinator.jobs.value.values)
         startInForeground(initial)
         if (observerJob?.isActive != true) {
-            observerJob = scope.launch {
-                DownloadCoordinator.state.collectLatest { state ->
-                    if (state is DownloadState.Idle) {
+            observerJob = lifecycleScope.launch {
+                DownloadCoordinator.jobs.collectLatest { jobsMap ->
+                    if (jobsMap.isEmpty()) {
                         ServiceCompat.stopForeground(this@DownloadService, ServiceCompat.STOP_FOREGROUND_REMOVE)
                         stopSelf()
                     } else {
-                        val notif = DownloadNotifications.build(applicationContext, state)
+                        val notif = DownloadNotifications.build(applicationContext, jobsMap.values)
                         try {
                             NotificationManagerCompat.from(applicationContext)
                                 .notify(DownloadNotifications.NOTIFICATION_ID, notif)
@@ -57,19 +50,19 @@ class DownloadService : Service() {
         return START_NOT_STICKY
     }
 
-    override fun onBind(intent: Intent?): IBinder? = null
-
-    override fun onDestroy() {
-        super.onDestroy()
-        observerJob?.cancel()
-        scope.cancel()
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+    override fun onTimeout(startId: Int, fgsType: Int) {
+        // Android 15+ enforces a 6h cap on dataSync FGS. Cancel cleanly so partial files are
+        // removed and StateFlow returns to empty, instead of the system killing us hard.
+        DownloadCoordinator.jobs.value.keys.toList().forEach { DownloadCoordinator.cancel(it) }
+        ServiceCompat.stopForeground(this, ServiceCompat.STOP_FOREGROUND_REMOVE)
+        stopSelf()
     }
 
     private fun startInForeground(notif: android.app.Notification) {
-        val type =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
-                ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
-            else 0
+        val type = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+            ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
+        else 0
         ServiceCompat.startForeground(
             this,
             DownloadNotifications.NOTIFICATION_ID,
