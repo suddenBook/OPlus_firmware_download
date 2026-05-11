@@ -65,6 +65,8 @@
     <string name="backend_error_network">网络错误：%1$s</string>
     <string name="backend_error_crypto">加解密错误：%1$s</string>
     <string name="backend_error_content">内容错误：%1$s</string>
+    <string name="backend_error_invalid_firmware_size">下载链接返回了无效的全量包大小：%1$s</string>
+    <string name="backend_error_download_link_unverified">无法验证下载链接：%1$s</string>
     <string name="backend_error_model_not_in_catalog">danielspringer 目录中没有该机型</string>
     <string name="backend_error_no_message">（无消息）</string>
     <string name="backend_error_unknown">未知错误</string>

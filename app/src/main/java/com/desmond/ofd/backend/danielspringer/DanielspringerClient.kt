@@ -1,8 +1,9 @@
 package com.desmond.ofd.backend.danielspringer
 
 import com.desmond.ofd.backend.realmeota.data.Region
-import com.desmond.ofd.firmware.MIN_REASONABLE_FIRMWARE_BYTES
-import com.desmond.ofd.http.parseContentRange
+import com.desmond.ofd.firmware.FirmwareUrlProbe
+import com.desmond.ofd.firmware.FirmwareUrlProbeResult
+import com.desmond.ofd.http.BROWSER_USER_AGENT
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
@@ -38,7 +39,7 @@ class DanielspringerClient {
         val client = newScrapeClient()
         val req = Request.Builder()
             .url(FORM_URL)
-            .header("User-Agent", USER_AGENT)
+            .header("User-Agent", BROWSER_USER_AGENT)
             .build()
         val html = client.newCall(req).await().use { resp ->
             check(resp.isSuccessful) { "GET $FORM_URL returned HTTP ${resp.code}" }
@@ -59,7 +60,7 @@ class DanielspringerClient {
         val client = newScrapeClient()
 
         // 1. seed PHPSESSID
-        client.newCall(Request.Builder().url(FORM_URL).header("User-Agent", USER_AGENT).build())
+        client.newCall(Request.Builder().url(FORM_URL).header("User-Agent", BROWSER_USER_AGENT).build())
             .await().close()
 
         // 2. POST + auto-follow 302 → result page
@@ -71,7 +72,7 @@ class DanielspringerClient {
         val postReq = Request.Builder()
             .url(FORM_URL)
             .post(body)
-            .header("User-Agent", USER_AGENT)
+            .header("User-Agent", BROWSER_USER_AGENT)
             .header("Origin", BASE_URL)
             .header("Referer", FORM_URL)
             .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
@@ -91,24 +92,11 @@ class DanielspringerClient {
         //    only for GET; HEAD then returns 403 with a tiny error-page Content-Length
         //    that gets misread as the real file size. Range bytes=0-0 always yields 206
         //    Partial Content with `Content-Range: bytes 0-0/<TOTAL>`.
-        val sizeReq = Request.Builder()
-            .url(downloadUrl)
-            .header("Range", "bytes=0-0")
-            .header("User-Agent", USER_AGENT)
-            .build()
-        val (size, md5) = client.newCall(sizeReq).await().use { resp ->
-            val total = when {
-                resp.code == 206 ->
-                    parseContentRange(resp.header("Content-Range"))?.totalSize ?: -1L
-                resp.isSuccessful ->
-                    resp.header("Content-Length")?.toLongOrNull() ?: -1L
-                else -> throw IOException("Download URL probe returned HTTP ${resp.code}")
+        val (size, md5) = when (val probe = FirmwareUrlProbe(client).probe(downloadUrl)) {
+            is FirmwareUrlProbeResult.Success -> probe.totalSize to probe.md5
+            is FirmwareUrlProbeResult.Failure -> {
+                throw IOException("Download URL probe failed: ${probe.detail}")
             }
-            if (total in 0 until MIN_REASONABLE_FIRMWARE_BYTES) {
-                throw IOException("Download URL probe returned suspiciously small size: $total bytes")
-            }
-            val md5Hdr = resp.header("x-amz-meta-filemd5")
-            total to md5Hdr
         }
 
         DanielspringerResult(
@@ -146,9 +134,6 @@ class DanielspringerClient {
     companion object {
         const val BASE_URL = "https://roms.danielspringer.at"
         const val FORM_URL = "$BASE_URL/index.php?view=ota"
-        // A real Chromium UA — the site's WAF / nginx logs occasionally flag default OkHttp UA.
-        private const val USER_AGENT =
-            "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36"
     }
 }
 

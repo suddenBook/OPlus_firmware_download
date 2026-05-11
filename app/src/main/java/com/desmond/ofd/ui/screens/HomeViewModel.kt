@@ -1,6 +1,7 @@
 package com.desmond.ofd.ui.screens
 
 import android.app.Application
+import android.net.Uri
 import androidx.annotation.StringRes
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
@@ -12,7 +13,6 @@ import com.desmond.ofd.backend.VersionResolver
 import com.desmond.ofd.backend.danielspringer.DanielspringerCatalog
 import com.desmond.ofd.backend.danielspringer.DanielspringerClient
 import com.desmond.ofd.backend.realmeota.data.OtaRequestParams
-import android.net.Uri
 import com.desmond.ofd.backend.realmeota.network.OtaResult
 import com.desmond.ofd.backend.realmeota.network.RealmeOtaClient
 import com.desmond.ofd.catalog.CatalogRepository
@@ -22,6 +22,9 @@ import com.desmond.ofd.device.DeviceProps
 import com.desmond.ofd.device.DeviceSnapshot
 import com.desmond.ofd.download.DownloadCoordinator
 import com.desmond.ofd.download.DownloadParams
+import com.desmond.ofd.firmware.FirmwareUrlProbe
+import com.desmond.ofd.firmware.FirmwareUrlProbeResult
+import com.desmond.ofd.firmware.formatFirmwareBytes
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -93,6 +96,7 @@ class HomeViewModel(
 
     private val _state = MutableStateFlow<HomeUiState>(HomeUiState.Idle)
     val state: StateFlow<HomeUiState> = _state.asStateFlow()
+    private val firmwareUrlProbe = FirmwareUrlProbe()
 
     private val _catalog = MutableStateFlow<List<DeviceEntry>>(emptyList())
     val catalog: StateFlow<List<DeviceEntry>> = _catalog.asStateFlow()
@@ -222,46 +226,100 @@ class HomeViewModel(
     }
 
     private suspend fun runRealmeOta(params: OtaRequestParams): BackendOutcome {
-        return when (val r = realmeOtaClient.query(params)) {
-            is OtaResult.Success -> {
-                val packet = r.response.components.firstOrNull()?.componentPackets
-                    ?: return BackendOutcome.Failure(backendMessage(R.string.backend_error_no_download_packet))
-                val downloadUrl = packet.url.takeIf { it.isNotBlank() }
-                    ?: packet.manualUrl?.takeIf { it.isNotBlank() }
-                    ?: return BackendOutcome.Failure(backendMessage(R.string.backend_error_no_download_url))
-                BackendOutcome.Success(
-                    versionName = r.response.versionName ?: r.response.realOtaVersion ?: "(unknown)",
-                    realOtaVersion = r.response.realOtaVersion,
-                    downloadUrl = downloadUrl,
-                    sizeBytes = packet.size.toLongOrNull() ?: 0L,
-                    md5 = packet.md5,
-                    securityPatch = r.response.securityPatch,
+        var lastLinkFailure: BackendOutcome.Failure? = null
+        repeat(REALME_OTA_LINK_CHECK_ATTEMPTS) { attempt ->
+            when (val r = realmeOtaClient.query(params)) {
+                is OtaResult.Success -> {
+                    when (val checked = verifyRealmeOtaSuccess(r)) {
+                        is CheckedRealmeOta.Success -> return checked.outcome
+                        is CheckedRealmeOta.Failure -> {
+                            lastLinkFailure = checked.outcome
+                            if (!checked.retryable || attempt == REALME_OTA_LINK_CHECK_ATTEMPTS - 1) {
+                                return checked.outcome
+                            }
+                            delay(REALME_OTA_LINK_CHECK_RETRY_DELAYS_MS[attempt])
+                        }
+                    }
+                }
+                is OtaResult.HttpError -> return BackendOutcome.Failure(
+                    backendMessage(
+                        R.string.backend_error_http,
+                        r.code.toString(),
+                        r.errMsg ?: getApplication<Application>().getString(R.string.backend_error_no_message),
+                    ),
+                )
+                is OtaResult.NetworkError -> return BackendOutcome.Failure(
+                    backendMessage(
+                        R.string.backend_error_network,
+                        r.cause.message ?: r.cause::class.simpleName ?: getApplication<Application>().getString(R.string.backend_error_unknown),
+                    ),
+                )
+                is OtaResult.CryptoError -> return BackendOutcome.Failure(
+                    backendMessage(
+                        R.string.backend_error_crypto,
+                        r.cause.message ?: r.cause::class.simpleName ?: getApplication<Application>().getString(R.string.backend_error_unknown),
+                    ),
+                )
+                is OtaResult.ContentError -> return BackendOutcome.Failure(
+                    backendMessage(R.string.backend_error_content, r.checkFailReason),
                 )
             }
-            is OtaResult.HttpError -> BackendOutcome.Failure(
-                backendMessage(
-                    R.string.backend_error_http,
-                    r.code.toString(),
-                    r.errMsg ?: getApplication<Application>().getString(R.string.backend_error_no_message),
+        }
+        return lastLinkFailure ?: BackendOutcome.Failure(backendMessage(R.string.backend_error_unknown))
+    }
+
+    private suspend fun verifyRealmeOtaSuccess(result: OtaResult.Success): CheckedRealmeOta {
+        val packet = result.response.components.firstOrNull()?.componentPackets
+            ?: return CheckedRealmeOta.Failure(
+                BackendOutcome.Failure(backendMessage(R.string.backend_error_no_download_packet)),
+                retryable = false,
+            )
+        val downloadUrl = packet.url.takeIf { it.isNotBlank() }
+            ?: packet.manualUrl?.takeIf { it.isNotBlank() }
+            ?: return CheckedRealmeOta.Failure(
+                BackendOutcome.Failure(backendMessage(R.string.backend_error_no_download_url)),
+                retryable = false,
+            )
+
+        val apiSize = packet.size.toLongOrNull()?.takeIf { it > 0 } ?: -1L
+
+        return when (val probe = firmwareUrlProbe.probe(downloadUrl, expectedSize = apiSize)) {
+            is FirmwareUrlProbeResult.Success -> CheckedRealmeOta.Success(
+                BackendOutcome.Success(
+                    versionName = result.response.versionName ?: result.response.realOtaVersion ?: "(unknown)",
+                    realOtaVersion = result.response.realOtaVersion,
+                    downloadUrl = downloadUrl,
+                    sizeBytes = probe.totalSize,
+                    md5 = packet.md5.takeIf { it.isNotBlank() } ?: probe.md5,
+                    securityPatch = result.response.securityPatch,
                 ),
             )
-            is OtaResult.NetworkError -> BackendOutcome.Failure(
-                backendMessage(
-                    R.string.backend_error_network,
-                    r.cause.message ?: r.cause::class.simpleName ?: getApplication<Application>().getString(R.string.backend_error_unknown),
+            is FirmwareUrlProbeResult.Failure -> CheckedRealmeOta.Failure(
+                outcome = BackendOutcome.Failure(
+                    if (probe.observedSize != null) {
+                        backendMessage(
+                            R.string.backend_error_invalid_firmware_size,
+                            formatFirmwareBytes(probe.observedSize),
+                        )
+                    } else {
+                        backendMessage(R.string.backend_error_download_link_unverified, probe.detail)
+                    },
                 ),
-            )
-            is OtaResult.CryptoError -> BackendOutcome.Failure(
-                backendMessage(
-                    R.string.backend_error_crypto,
-                    r.cause.message ?: r.cause::class.simpleName ?: getApplication<Application>().getString(R.string.backend_error_unknown),
-                ),
-            )
-            is OtaResult.ContentError -> BackendOutcome.Failure(
-                backendMessage(R.string.backend_error_content, r.checkFailReason),
+                retryable = probe.retryable,
             )
         }
     }
+
+    private fun invalidRealmeSize(sizeBytes: Long, retryable: Boolean): CheckedRealmeOta.Failure =
+        CheckedRealmeOta.Failure(
+            outcome = BackendOutcome.Failure(
+                backendMessage(
+                    R.string.backend_error_invalid_firmware_size,
+                    formatFirmwareBytes(sizeBytes),
+                ),
+            ),
+            retryable = retryable,
+        )
 
     private suspend fun runDanielspringer(params: OtaRequestParams): BackendOutcome {
         return runCatching {
@@ -306,6 +364,8 @@ class HomeViewModel(
     companion object {
         private const val AUTO_SNAPSHOT_ATTEMPTS = 3
         private const val AUTO_SNAPSHOT_RETRY_DELAY_MS = 150L
+        private const val REALME_OTA_LINK_CHECK_ATTEMPTS = 3
+        private val REALME_OTA_LINK_CHECK_RETRY_DELAYS_MS = longArrayOf(500L, 1500L)
 
         private fun backendMessage(@StringRes resId: Int, vararg args: String): BackendMessage =
             BackendMessage.Resource(resId, args.toList())
@@ -319,4 +379,12 @@ class HomeViewModel(
             }
         }
     }
+}
+
+private sealed interface CheckedRealmeOta {
+    data class Success(val outcome: BackendOutcome.Success) : CheckedRealmeOta
+    data class Failure(
+        val outcome: BackendOutcome.Failure,
+        val retryable: Boolean,
+    ) : CheckedRealmeOta
 }

@@ -1,6 +1,6 @@
 package com.desmond.ofd.download
 
-import com.desmond.ofd.firmware.MIN_REASONABLE_FIRMWARE_BYTES
+import com.desmond.ofd.firmware.MIN_FULL_FIRMWARE_BYTES
 import com.desmond.ofd.firmware.validateFirmwareSize
 import com.desmond.ofd.http.ContentRange
 import com.desmond.ofd.http.parseContentRange
@@ -45,10 +45,10 @@ class DownloadEngineTest {
     }
 
     @Test fun validates_firmware_size_against_expected_size() {
-        assertNull(validateFirmwareSize(MIN_REASONABLE_FIRMWARE_BYTES, MIN_REASONABLE_FIRMWARE_BYTES))
-        assertNull(validateFirmwareSize(-1L, MIN_REASONABLE_FIRMWARE_BYTES))
+        assertNull(validateFirmwareSize(MIN_FULL_FIRMWARE_BYTES, MIN_FULL_FIRMWARE_BYTES))
+        assertNull(validateFirmwareSize(-1L, MIN_FULL_FIRMWARE_BYTES))
 
-        val suspicious = validateFirmwareSize(MIN_REASONABLE_FIRMWARE_BYTES - 1, 0L)
+        val suspicious = validateFirmwareSize(MIN_FULL_FIRMWARE_BYTES - 1, 0L)
         assertNotNull(suspicious)
         assertTrue(suspicious!!.contains("Suspiciously small"))
 
@@ -56,7 +56,7 @@ class DownloadEngineTest {
         assertNotNull(zero)
         assertTrue(zero!!.contains("Suspiciously small"))
 
-        val mismatch = validateFirmwareSize(MIN_REASONABLE_FIRMWARE_BYTES + 1, MIN_REASONABLE_FIRMWARE_BYTES)
+        val mismatch = validateFirmwareSize(MIN_FULL_FIRMWARE_BYTES + 1, MIN_FULL_FIRMWARE_BYTES)
         assertNotNull(mismatch)
         assertTrue(mismatch!!.contains("Size mismatch"))
     }

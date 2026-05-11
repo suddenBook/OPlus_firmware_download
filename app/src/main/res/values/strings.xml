@@ -66,6 +66,8 @@
     <string name="backend_error_network">Network: %1$s</string>
     <string name="backend_error_crypto">Crypto: %1$s</string>
     <string name="backend_error_content">Content: %1$s</string>
+    <string name="backend_error_invalid_firmware_size">Download link returned an invalid full-package size: %1$s</string>
+    <string name="backend_error_download_link_unverified">Download link could not be verified: %1$s</string>
     <string name="backend_error_model_not_in_catalog">Model not in danielspringer catalog</string>
     <string name="backend_error_no_message">(no msg)</string>
     <string name="backend_error_unknown">unknown</string>
