@@ -2,6 +2,9 @@ package com.desmond.ofd.download
 
 import android.content.ContentResolver
 import android.net.Uri
+import android.util.Log
+import com.desmond.ofd.firmware.validateFirmwareSize
+import com.desmond.ofd.http.parseContentRange
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -22,6 +25,8 @@ import okhttp3.Request
 import okhttp3.Response
 import java.io.FileOutputStream
 import java.io.IOException
+import java.nio.ByteBuffer
+import java.nio.channels.FileChannel
 import java.security.MessageDigest
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicLong
@@ -35,8 +40,9 @@ import kotlin.coroutines.resumeWithException
  *   1. Probe the URL with `Range: bytes=0-0` to learn the total size.
  *   2. Pre-allocate the output file by writing one byte at the last offset.
  *   3. Split the file into up to [CHUNKS_PER_DOWNLOAD] chunks and download them concurrently.
- *      Each chunk opens its own [ParcelFileDescriptor], seeks to the chunk's start,
- *      and writes its bytes — Linux/Android FS handles concurrent positional writes fine.
+ *      Chunks share one SAF file descriptor and use positional writes. Some providers behave
+ *      poorly when the same document is opened for write many times concurrently; actual write
+ *      throughput can still be provider-limited even while network reads remain parallel.
  *   4. A ticker emits aggregated progress every 250 ms.
  *   5. Cancellation: [cancel] closes every active OkHttp [Call] for the download id,
  *      including calls whose response body is already being read by coroutine workers.
@@ -64,58 +70,76 @@ class DownloadEngine(
     ): DownloadOutcome {
         val probe = probeSize(downloadId, url)
         val totalSize = probe.totalSize.takeIf { it > 0 } ?: expectedSize
+        validateFirmwareSize(totalSize, expectedSize)?.let { problem ->
+            return DownloadOutcome.IoError(formatMessage("download size probe", targetUri, problem))
+        }
         if (totalSize <= 0) {
             return singleThreadedDownload(
-                downloadId, url, contentResolver, targetUri, onProgress,
+                downloadId, url, contentResolver, targetUri, expectedSize, onProgress,
             )
         }
         if (!probe.acceptsRanges) {
             return singleThreadedDownload(
-                downloadId, url, contentResolver, targetUri, onProgress, knownSize = totalSize,
+                downloadId, url, contentResolver, targetUri, expectedSize, onProgress, knownSize = totalSize,
             )
         }
 
         val threadCount = fixedThreadCount(totalSize)
         if (threadCount <= 1) {
             return singleThreadedDownload(
-                downloadId, url, contentResolver, targetUri, onProgress, knownSize = totalSize,
+                downloadId, url, contentResolver, targetUri, expectedSize, onProgress, knownSize = totalSize,
             )
-        }
-
-        try {
-            withContext(workerDispatcher) {
-                preallocate(contentResolver, targetUri, totalSize)
-            }
-        } catch (t: Throwable) {
-            // Pre-allocation isn't strictly required; positional writes will extend the file.
         }
 
         val downloaded = AtomicLong(0L)
         try {
-            coroutineScope {
-                // Keep progress reporting independent from the bounded download worker pool.
-                val ticker = launch(Dispatchers.Default) {
-                    tickProgress(downloaded, totalSize, onProgress)
-                }
-                try {
-                    val chunks = splitChunks(totalSize, threadCount)
-                    chunks.map { chunk ->
-                        async(workerDispatcher) {
-                            downloadChunkWithRetry(
-                                downloadId = downloadId,
-                                url = url,
-                                contentResolver = contentResolver,
-                                targetUri = targetUri,
-                                chunk = chunk,
-                                downloaded = downloaded,
-                            )
+            val pfd = withContext(workerDispatcher) {
+                contentResolver.openFileDescriptor(targetUri, "rw")
+                    ?: throw IOException("cannot open Uri for parallel SAF write")
+            }
+            pfd.use { fd ->
+                FileOutputStream(fd.fileDescriptor).use { output ->
+                    try {
+                        preallocate(output.channel, totalSize)
+                    } catch (e: IOException) {
+                        // Pre-allocation isn't strictly required; positional writes will extend the file.
+                        Log.w(TAG, "Target pre-allocation failed; continuing with positional writes", e)
+                    } catch (e: SecurityException) {
+                        Log.w(TAG, "Target pre-allocation was denied; continuing with positional writes", e)
+                    }
+                    coroutineScope {
+                        // Keep progress reporting independent from the bounded download worker pool.
+                        val ticker = launch(Dispatchers.Default) {
+                            tickProgress(downloaded, totalSize, onProgress)
                         }
-                    }.awaitAll()
-                } finally {
-                    ticker.cancel()
+                        try {
+                            val chunks = splitChunks(totalSize, threadCount)
+                            chunks.map { chunk ->
+                                async(workerDispatcher) {
+                                    downloadChunkWithRetry(
+                                        downloadId = downloadId,
+                                        url = url,
+                                        targetUri = targetUri,
+                                        outputChannel = output.channel,
+                                        chunk = chunk,
+                                        totalSize = totalSize,
+                                        downloaded = downloaded,
+                                    )
+                                }
+                            }.awaitAll()
+                        } finally {
+                            ticker.cancel()
+                        }
+                        val finalBytes = downloaded.get()
+                        // Defensive invariant: every chunk only returns after writing its full range.
+                        if (finalBytes != totalSize) {
+                            throw IOException("Downloaded byte count mismatch: got $finalBytes, expected $totalSize")
+                        }
+                        // Final progress emit so the UI snaps to 100 %.
+                        onProgress(finalBytes, totalSize, 0L)
+                    }
+                    output.fd.sync()
                 }
-                // Final progress emit so the UI snaps to 100 %.
-                onProgress(downloaded.get(), totalSize, 0L)
             }
         } catch (e: IOException) {
             return DownloadOutcome.IoError(formatThrowable("parallel download", targetUri, e))
@@ -137,10 +161,8 @@ class DownloadEngine(
             runCatching {
                 call.await().use { resp ->
                     when {
-                        resp.code == 206 -> resp.header("Content-Range")
-                            ?.substringAfter('/')
-                            ?.toLongOrNull()
-                            ?.let { SizeProbe(it, acceptsRanges = true) }
+                        resp.code == 206 -> parseContentRange(resp.header("Content-Range"))
+                            ?.let { SizeProbe(it.totalSize, acceptsRanges = true) }
                             ?: SizeProbe.Unknown
                         resp.isSuccessful -> SizeProbe(
                             totalSize = resp.body?.contentLength() ?: -1L,
@@ -178,15 +200,10 @@ class DownloadEngine(
         }
     }
 
-    private fun preallocate(contentResolver: ContentResolver, uri: Uri, size: Long) {
-        contentResolver.openFileDescriptor(uri, "rw")?.use { pfd ->
-            FileOutputStream(pfd.fileDescriptor).use { fos ->
-                if (size > 0) {
-                    fos.channel.position(size - 1)
-                    fos.write(0)
-                    fos.fd.sync()
-                }
-            }
+    @Throws(IOException::class)
+    private fun preallocate(channel: FileChannel, size: Long) {
+        if (size > 0) {
+            writeFullyAt(channel, ByteArray(1), length = 1, position = size - 1)
         }
     }
 
@@ -217,41 +234,49 @@ class DownloadEngine(
     }
 
     /**
-     * Wraps [downloadChunk] with retry logic. A single chunk's transient I/O failure (e.g.
-     * intermittent connectivity) no longer aborts the whole download. Cancellation still
-     * propagates because we re-throw `CancellationException` and check `isActive`.
+     * Wraps [downloadChunk] with in-task resume. On transient I/O failure, a chunk keeps the
+     * bytes already written and requests only the remaining range. Only consecutive failures
+     * that make no forward progress count against [maxStalledAttempts].
      */
     private suspend fun downloadChunkWithRetry(
         downloadId: String,
         url: String,
-        contentResolver: ContentResolver,
         targetUri: Uri,
+        outputChannel: FileChannel,
         chunk: Chunk,
+        totalSize: Long,
         downloaded: AtomicLong,
-        maxAttempts: Int = 3,
+        maxStalledAttempts: Int = 3,
     ) {
-        var attempt = 0
+        var bytesDone = 0L
+        var stalledAttempts = 0
         var lastError: IOException? = null
-        // Track this chunk's contribution so a retry can rewind the global counter.
-        var contributed = 0L
-        while (attempt < maxAttempts) {
+        while (bytesDone < chunk.length) {
             // Honour cancellation BEFORE another retry — when the coordinator cancels the
             // download, we want chunks to bail out instead of opening fresh connections.
             if (!currentCoroutineContext().isActive) {
                 throw CancellationException("Chunk ${chunk.index} cancelled before retry")
             }
+            if (stalledAttempts >= maxStalledAttempts) break
+            val attemptStartBytes = bytesDone
             try {
                 downloadChunk(
                     downloadId = downloadId,
                     url = url,
-                    contentResolver = contentResolver,
                     targetUri = targetUri,
+                    outputChannel = outputChannel,
                     chunk = chunk,
+                    startOffset = chunk.start + bytesDone,
+                    totalSize = totalSize,
                     onChunkBytes = { delta ->
+                        bytesDone += delta
                         downloaded.addAndGet(delta)
-                        contributed += delta
                     },
                 )
+                // Defensive invariant: downloadChunk only returns after reading the requested range.
+                if (bytesDone != chunk.length) {
+                    throw IOException("Chunk ${chunk.index} stopped at $bytesDone of ${chunk.length} bytes")
+                }
                 return
             } catch (e: CancellationException) {
                 throw e
@@ -261,28 +286,33 @@ class DownloadEngine(
                     // coroutineScope sees a normal cancel, not a child failure.
                     throw CancellationException("Chunk ${chunk.index} cancelled mid-read").apply { initCause(e) }
                 }
-                // Rewind global counter so the retry doesn't double-count this chunk's bytes.
-                downloaded.addAndGet(-contributed)
-                contributed = 0L
                 lastError = e
-                attempt += 1
-                if (attempt < maxAttempts) delay(500L * attempt) // 500 ms, 1000 ms
+                if (bytesDone > attemptStartBytes) {
+                    stalledAttempts = 0
+                } else {
+                    stalledAttempts += 1
+                    if (stalledAttempts < maxStalledAttempts) {
+                        delay(500L * stalledAttempts) // 500 ms, 1000 ms
+                    }
+                }
             }
         }
-        throw lastError ?: IOException("Chunk ${chunk.index} failed without exception")
+        throw lastError ?: IOException("Chunk ${chunk.index} failed at $bytesDone of ${chunk.length} bytes")
     }
 
     private suspend fun downloadChunk(
         downloadId: String,
         url: String,
-        contentResolver: ContentResolver,
         targetUri: Uri,
+        outputChannel: FileChannel,
         chunk: Chunk,
+        startOffset: Long,
+        totalSize: Long,
         onChunkBytes: (Long) -> Unit,
     ) {
         val request = Request.Builder()
             .url(url)
-            .header("Range", "bytes=${chunk.start}-${chunk.end}")
+            .header("Range", "bytes=$startOffset-${chunk.end}")
             .tag(downloadId)
             .build()
         val call = httpClient.newCall(request)
@@ -292,24 +322,40 @@ class DownloadEngine(
                 if (resp.code != 206) {
                     throw IOException("Chunk ${chunk.index} HTTP ${resp.code}")
                 }
+                val contentRange = parseContentRange(resp.header("Content-Range"))
+                    ?: throw IOException("Chunk ${chunk.index}: missing/invalid Content-Range")
+                if (contentRange.start != startOffset ||
+                    contentRange.end != chunk.end ||
+                    contentRange.totalSize != totalSize
+                ) {
+                    throw IOException(
+                        "Chunk ${chunk.index}: unexpected Content-Range " +
+                            "${resp.header("Content-Range")} for bytes=$startOffset-${chunk.end}/$totalSize",
+                    )
+                }
                 try {
-                    val pfd = contentResolver.openFileDescriptor(targetUri, "rw")
-                        ?: throw IOException("Chunk ${chunk.index}: cannot open Uri")
-                    pfd.use { fd ->
-                        FileOutputStream(fd.fileDescriptor).use { fos ->
-                            fos.channel.position(chunk.start)
-                            val buf = ByteArray(BUFFER_SIZE)
-                            resp.body!!.byteStream().use { input ->
-                                while (true) {
-                                    currentCoroutineContext().ensureActive()
-                                    val n = input.read(buf)
-                                    if (n == -1) break
-                                    fos.write(buf, 0, n)
-                                    onChunkBytes(n.toLong())
-                                }
+                    val expectedBytes = contentRange.length
+                    val buf = ByteArray(BUFFER_SIZE)
+                    var bytesRead = 0L
+                    val body = resp.body ?: throw IOException("Chunk ${chunk.index}: empty response body")
+                    body.byteStream().use { input ->
+                        while (true) {
+                            currentCoroutineContext().ensureActive()
+                            val n = input.read(buf)
+                            if (n == -1) break
+                            if (bytesRead + n > expectedBytes) {
+                                throw IOException(
+                                    "Chunk ${chunk.index} exceeded expected length: " +
+                                        "${bytesRead + n} > $expectedBytes",
+                                )
                             }
-                            fos.fd.sync()
+                            writeFullyAt(outputChannel, buf, n, startOffset + bytesRead)
+                            bytesRead += n
+                            onChunkBytes(n.toLong())
                         }
+                    }
+                    if (bytesRead != expectedBytes) {
+                        throw IOException("Chunk ${chunk.index} incomplete: got $bytesRead, expected $expectedBytes")
                     }
                 } catch (e: SecurityException) {
                     throw IOException(formatThrowable("chunk ${chunk.index} SAF write", targetUri, e), e)
@@ -328,6 +374,7 @@ class DownloadEngine(
         url: String,
         contentResolver: ContentResolver,
         targetUri: Uri,
+        expectedSize: Long,
         onProgress: suspend (Long, Long, Long) -> Unit,
         knownSize: Long = -1L,
     ): DownloadOutcome = withContext(workerDispatcher) {
@@ -343,7 +390,12 @@ class DownloadEngine(
                     return@withContext DownloadOutcome.HttpError(resp.code, resp.message)
                 }
                 val total = if (knownSize > 0) knownSize
-                else resp.body?.contentLength()?.takeIf { it > 0 } ?: -1L
+                else resp.body?.contentLength() ?: -1L
+                validateFirmwareSize(total, expectedSize)?.let { problem ->
+                    return@withContext DownloadOutcome.IoError(
+                        formatMessage("single download size", targetUri, problem),
+                    )
+                }
                 try {
                     val pfd = contentResolver.openFileDescriptor(targetUri, "rw")
                         ?: return@withContext DownloadOutcome.IoError(
@@ -356,7 +408,10 @@ class DownloadEngine(
                             var totalRead = 0L
                             var lastReportBytes = 0L
                             var lastReportTime = System.currentTimeMillis()
-                            resp.body!!.byteStream().use { input ->
+                            val body = resp.body ?: return@withContext DownloadOutcome.IoError(
+                                formatMessage("single download body", targetUri, "empty response body"),
+                            )
+                            body.byteStream().use { input ->
                                 while (true) {
                                     currentCoroutineContext().ensureActive()
                                     val n = input.read(buf)
@@ -372,6 +427,15 @@ class DownloadEngine(
                                         lastReportTime = now
                                     }
                                 }
+                            }
+                            if (total > 0 && totalRead != total) {
+                                return@withContext DownloadOutcome.IoError(
+                                    formatMessage(
+                                        "single download read",
+                                        targetUri,
+                                        "Downloaded byte count mismatch: got $totalRead, expected $total",
+                                    ),
+                                )
                             }
                             onProgress(totalRead, total, 0L)
                             fos.fd.sync()
@@ -423,6 +487,21 @@ class DownloadEngine(
         }
     }
 
+    private fun writeFullyAt(
+        channel: FileChannel,
+        bytes: ByteArray,
+        length: Int,
+        position: Long,
+    ) {
+        val buffer = ByteBuffer.wrap(bytes, 0, length)
+        var offset = position
+        while (buffer.hasRemaining()) {
+            val written = channel.write(buffer, offset)
+            if (written <= 0) throw IOException("FileChannel wrote $written bytes")
+            offset += written
+        }
+    }
+
     sealed interface DownloadOutcome {
         data class Success(val totalSize: Long) : DownloadOutcome
         data class HttpError(val code: Int, val message: String) : DownloadOutcome
@@ -445,6 +524,7 @@ class DownloadEngine(
         const val CHUNKS_PER_DOWNLOAD = 64
         const val MAX_CONCURRENT_CALLS = CHUNKS_PER_DOWNLOAD * 2
         private const val BUFFER_SIZE = 256 * 1024
+        private const val TAG = "OFD-DownloadEngine"
     }
 }
 

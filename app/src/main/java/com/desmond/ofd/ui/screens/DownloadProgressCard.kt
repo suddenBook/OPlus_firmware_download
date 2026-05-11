@@ -1,7 +1,6 @@
 package com.desmond.ofd.ui.screens
 
 import android.content.ClipData
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -31,6 +30,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ClipEntry
 import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.desmond.ofd.R
@@ -84,18 +85,24 @@ private fun ActiveContent(state: DownloadState.Active, onCancel: () -> Unit) {
     )
 
     Spacer(Modifier.height(12.dp))
-    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-        Text(
-            text = "${formatBytesShort(state.bytesDownloaded)} / ${formatBytesShort(state.totalBytes)}",
-            style = MaterialTheme.typography.bodyMedium,
-        )
-        Text(
-            text = formatSpeed(state.speedBps) +
-                if (state.etaSeconds > 0) "  •  " + formatEta(state.etaSeconds) else "",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-    }
+    Text(
+        text = "${formatBytesShort(state.bytesDownloaded)} / ${formatBytesShort(state.totalBytes)}",
+        modifier = Modifier.fillMaxWidth(),
+        style = MaterialTheme.typography.bodyMedium,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+    )
+    Spacer(Modifier.height(2.dp))
+    Text(
+        text = formatSpeed(state.speedBps) +
+            if (state.etaSeconds > 0) "  •  " + formatEta(state.etaSeconds) else "",
+        modifier = Modifier.fillMaxWidth(),
+        style = MaterialTheme.typography.bodyMedium,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        textAlign = TextAlign.End,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+    )
 
     Spacer(Modifier.height(16.dp))
     OutlinedButton(

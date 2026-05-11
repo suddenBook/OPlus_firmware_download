@@ -66,10 +66,10 @@ object DownloadCoordinator {
         .protocols(listOf(Protocol.HTTP_1_1))
         .connectionPool(ConnectionPool(DownloadEngine.MAX_CONCURRENT_CALLS * 2, 5, TimeUnit.MINUTES))
         .connectTimeout(15, TimeUnit.SECONDS)
-        // Short read timeout so stalled chunks fail fast and trigger the per-chunk retry,
-        // freeing OkHttp Dispatcher slots for healthy connections instead of holding them
-        // for two minutes against an unresponsive CDN.
-        .readTimeout(30, TimeUnit.SECONDS)
+        // In-task resume makes retries cheap, but Android can deprioritize background reads
+        // long enough that 30 s produces false stalls. Prefer fewer false retries here; truly
+        // dead connections still fail through the per-chunk stall counter and outer retries.
+        .readTimeout(120, TimeUnit.SECONDS)
         .build()
     private val engine = DownloadEngine(httpClient, downloadDispatcher)
 

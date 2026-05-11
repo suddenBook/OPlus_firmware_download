@@ -1,6 +1,8 @@
 package com.desmond.ofd.backend.danielspringer
 
 import com.desmond.ofd.backend.realmeota.data.Region
+import com.desmond.ofd.firmware.MIN_REASONABLE_FIRMWARE_BYTES
+import com.desmond.ofd.http.parseContentRange
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
@@ -97,12 +99,13 @@ class DanielspringerClient {
         val (size, md5) = client.newCall(sizeReq).await().use { resp ->
             val total = when {
                 resp.code == 206 ->
-                    resp.header("Content-Range")
-                        ?.substringAfter('/')
-                        ?.toLongOrNull() ?: -1L
+                    parseContentRange(resp.header("Content-Range"))?.totalSize ?: -1L
                 resp.isSuccessful ->
                     resp.header("Content-Length")?.toLongOrNull() ?: -1L
-                else -> -1L
+                else -> throw IOException("Download URL probe returned HTTP ${resp.code}")
+            }
+            if (total in 0 until MIN_REASONABLE_FIRMWARE_BYTES) {
+                throw IOException("Download URL probe returned suspiciously small size: $total bytes")
             }
             val md5Hdr = resp.header("x-amz-meta-filemd5")
             total to md5Hdr
