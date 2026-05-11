@@ -20,6 +20,7 @@ import okhttp3.ConnectionPool
 import okhttp3.Dispatcher
 import okhttp3.OkHttpClient
 import okhttp3.Protocol
+import java.io.FileOutputStream
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
@@ -124,7 +125,13 @@ object DownloadCoordinator {
             } catch (t: Throwable) {
                 deletePartialFile(app, params.targetUri)
                 if (isActive) {
-                    update(id, DownloadState.Failed(params, t.message ?: t::class.simpleName ?: "unknown"))
+                    update(
+                        id,
+                        DownloadState.Failed(
+                            params,
+                            formatThrowable("download coordinator", params.targetUri, t),
+                        ),
+                    )
                 }
             } finally {
                 coroutineJobs.remove(id)
@@ -206,18 +213,44 @@ object DownloadCoordinator {
                     )
                     return
                 }
+                val resetError = resetPartialFile(context, params.targetUri, "reset before MD5 retry")
+                if (resetError != null) {
+                    update(
+                        id,
+                        DownloadState.Failed(
+                            params,
+                            "Could not reset target file before MD5 retry.\n" +
+                                resetError +
+                                "\nPrevious MD5 result: got ${computed ?: "null"}, expected ${params.expectedMd5}",
+                        ),
+                    )
+                    return
+                }
                 update(id, DownloadState.Active(params, 0L, params.expectedSize, 0L))
                 runWithRetries(context, id, params, md5RetriesLeft - 1, networkRetriesLeft)
             }
             is DownloadEngine.DownloadOutcome.IoError -> {
-                deletePartialFile(context, params.targetUri)
                 val active = kotlinx.coroutines.currentCoroutineContext()[kotlinx.coroutines.Job]?.isActive == true
                 android.util.Log.d("OFD-DL", "IoError id=${id.take(8)} retriesLeft=$networkRetriesLeft isActive=$active")
                 if (!active) {
                     throw CancellationException("Download cancelled")
                 }
                 if (networkRetriesLeft <= 0) {
+                    deletePartialFile(context, params.targetUri)
                     update(id, DownloadState.Failed(params, "I/O after retries: ${outcome.message}"))
+                    return
+                }
+                val resetError = resetPartialFile(context, params.targetUri, "reset before I/O retry")
+                if (resetError != null) {
+                    update(
+                        id,
+                        DownloadState.Failed(
+                            params,
+                            "Could not reset target file before retry.\n" +
+                                resetError +
+                                "\nPrevious error:\n${outcome.message}",
+                        ),
+                    )
                     return
                 }
                 val attempt = MAX_NETWORK_RETRIES - networkRetriesLeft + 1
@@ -226,7 +259,6 @@ object DownloadCoordinator {
                 runWithRetries(context, id, params, md5RetriesLeft, networkRetriesLeft - 1)
             }
             is DownloadEngine.DownloadOutcome.HttpError -> {
-                deletePartialFile(context, params.targetUri)
                 val transient = outcome.code in 500..599 ||
                     outcome.code == 408 || outcome.code == 429
                 val active = kotlinx.coroutines.currentCoroutineContext()[kotlinx.coroutines.Job]?.isActive == true
@@ -234,11 +266,25 @@ object DownloadCoordinator {
                     throw CancellationException("Download cancelled")
                 }
                 if (transient && networkRetriesLeft > 0 && active) {
+                    val resetError = resetPartialFile(context, params.targetUri, "reset before HTTP retry")
+                    if (resetError != null) {
+                        update(
+                            id,
+                            DownloadState.Failed(
+                                params,
+                                "Could not reset target file before HTTP retry.\n" +
+                                    resetError +
+                                    "\nPrevious HTTP error: ${outcome.code} ${outcome.message}",
+                            ),
+                        )
+                        return
+                    }
                     val attempt = MAX_NETWORK_RETRIES - networkRetriesLeft + 1
                     delay(2000L * attempt) // 2 s, 4 s
                     update(id, DownloadState.Active(params, 0L, params.expectedSize, 0L))
                     runWithRetries(context, id, params, md5RetriesLeft, networkRetriesLeft - 1)
                 } else {
+                    deletePartialFile(context, params.targetUri)
                     val hint = if (outcome.code == 403 || outcome.code == 410) {
                         " (URL may have expired, re-run Check for firmware)"
                     } else ""
@@ -273,6 +319,18 @@ object DownloadCoordinator {
         if (deleted <= 0) {
             runCatching { DocumentsContract.deleteDocument(resolver, uri) }
         }
+    }
+
+    private fun resetPartialFile(context: Context, uri: Uri, stage: String): String? {
+        val resolver = context.contentResolver
+        return runCatching {
+            resolver.openFileDescriptor(uri, "rw")?.use { pfd ->
+                FileOutputStream(pfd.fileDescriptor).use { fos ->
+                    fos.channel.truncate(0)
+                    fos.fd.sync()
+                }
+            } ?: error("No file descriptor")
+        }.exceptionOrNull()?.let { formatThrowable(stage, uri, it) }
     }
 
     private fun activeParamsOf(state: DownloadState?): DownloadParams? = when (state) {

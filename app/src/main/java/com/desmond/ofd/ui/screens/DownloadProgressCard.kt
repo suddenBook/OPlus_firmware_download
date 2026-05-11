@@ -1,5 +1,6 @@
 package com.desmond.ofd.ui.screens
 
+import android.content.ClipData
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CheckCircle
+import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.ErrorOutline
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -23,13 +25,17 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ClipEntry
+import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.desmond.ofd.R
 import com.desmond.ofd.download.DownloadState
+import kotlinx.coroutines.launch
 
 /** Single-card download UI bound to [DownloadCoordinator]'s state flow. */
 @Composable
@@ -148,6 +154,9 @@ private fun CompletedContent(state: DownloadState.Completed, onDismiss: () -> Un
 
 @Composable
 private fun FailedContent(state: DownloadState.Failed, onDismiss: () -> Unit) {
+    val clipboard = LocalClipboard.current
+    val scope = rememberCoroutineScope()
+    val copyErrorDetails = stringResource(R.string.copy_error_details)
     Row(verticalAlignment = Alignment.CenterVertically) {
         Icon(
             imageVector = Icons.Outlined.ErrorOutline,
@@ -170,10 +179,37 @@ private fun FailedContent(state: DownloadState.Failed, onDismiss: () -> Unit) {
         color = MaterialTheme.colorScheme.onSurfaceVariant,
     )
     Spacer(Modifier.height(12.dp))
+    OutlinedButton(
+        onClick = {
+            scope.launch {
+                clipboard.setClipEntry(
+                    ClipEntry(ClipData.newPlainText(copyErrorDetails, state.errorReport())),
+                )
+            }
+        },
+        modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
+    ) {
+        Icon(Icons.Outlined.ContentCopy, contentDescription = null)
+        Spacer(Modifier.width(8.dp))
+        Text(copyErrorDetails)
+    }
+    Spacer(Modifier.height(4.dp))
     TextButton(onClick = onDismiss, modifier = Modifier.fillMaxWidth()) {
         Text(stringResource(R.string.dismiss))
     }
 }
+
+private fun DownloadState.Failed.errorReport(): String =
+    """
+    OPlus Firmware download failure
+    File: ${params.displayName}
+    Target URI: ${params.targetUri}
+    Expected size: ${params.expectedSize}
+    Expected MD5: ${params.expectedMd5 ?: "(none)"}
+
+    Error:
+    $error
+    """.trimIndent()
 
 private fun formatBytesShort(bytes: Long): String = when {
     bytes <= 0 -> "—"

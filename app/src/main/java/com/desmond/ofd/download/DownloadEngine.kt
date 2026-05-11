@@ -118,7 +118,9 @@ class DownloadEngine(
                 onProgress(downloaded.get(), totalSize, 0L)
             }
         } catch (e: IOException) {
-            return DownloadOutcome.IoError(e.message ?: "unknown")
+            return DownloadOutcome.IoError(formatThrowable("parallel download", targetUri, e))
+        } catch (e: SecurityException) {
+            return DownloadOutcome.IoError(formatThrowable("parallel download", targetUri, e))
         }
         return DownloadOutcome.Success(totalSize)
     }
@@ -290,23 +292,27 @@ class DownloadEngine(
                 if (resp.code != 206) {
                     throw IOException("Chunk ${chunk.index} HTTP ${resp.code}")
                 }
-                val pfd = contentResolver.openFileDescriptor(targetUri, "rw")
-                    ?: throw IOException("Chunk ${chunk.index}: cannot open Uri")
-                pfd.use { fd ->
-                    FileOutputStream(fd.fileDescriptor).use { fos ->
-                        fos.channel.position(chunk.start)
-                        val buf = ByteArray(BUFFER_SIZE)
-                        resp.body!!.byteStream().use { input ->
-                            while (true) {
-                                currentCoroutineContext().ensureActive()
-                                val n = input.read(buf)
-                                if (n == -1) break
-                                fos.write(buf, 0, n)
-                                onChunkBytes(n.toLong())
+                try {
+                    val pfd = contentResolver.openFileDescriptor(targetUri, "rw")
+                        ?: throw IOException("Chunk ${chunk.index}: cannot open Uri")
+                    pfd.use { fd ->
+                        FileOutputStream(fd.fileDescriptor).use { fos ->
+                            fos.channel.position(chunk.start)
+                            val buf = ByteArray(BUFFER_SIZE)
+                            resp.body!!.byteStream().use { input ->
+                                while (true) {
+                                    currentCoroutineContext().ensureActive()
+                                    val n = input.read(buf)
+                                    if (n == -1) break
+                                    fos.write(buf, 0, n)
+                                    onChunkBytes(n.toLong())
+                                }
                             }
+                            fos.fd.sync()
                         }
-                        fos.fd.sync()
                     }
+                } catch (e: SecurityException) {
+                    throw IOException(formatThrowable("chunk ${chunk.index} SAF write", targetUri, e), e)
                 }
             }
         } catch (e: IOException) {
@@ -338,41 +344,49 @@ class DownloadEngine(
                 }
                 val total = if (knownSize > 0) knownSize
                 else resp.body?.contentLength()?.takeIf { it > 0 } ?: -1L
-                val pfd = contentResolver.openFileDescriptor(targetUri, "rw")
-                    ?: return@withContext DownloadOutcome.IoError("cannot open Uri")
-                pfd.use { fd ->
-                    FileOutputStream(fd.fileDescriptor).use { fos ->
-                        fos.channel.position(0)
-                        val buf = ByteArray(BUFFER_SIZE)
-                        var totalRead = 0L
-                        var lastReportBytes = 0L
-                        var lastReportTime = System.currentTimeMillis()
-                        resp.body!!.byteStream().use { input ->
-                            while (true) {
-                                currentCoroutineContext().ensureActive()
-                                val n = input.read(buf)
-                                if (n == -1) break
-                                fos.write(buf, 0, n)
-                                totalRead += n
-                                val now = System.currentTimeMillis()
-                                if (now - lastReportTime >= 250) {
-                                    val deltaB = totalRead - lastReportBytes
-                                    val deltaT = (now - lastReportTime).coerceAtLeast(1)
-                                    onProgress(totalRead, total, deltaB * 1000 / deltaT)
-                                    lastReportBytes = totalRead
-                                    lastReportTime = now
+                try {
+                    val pfd = contentResolver.openFileDescriptor(targetUri, "rw")
+                        ?: return@withContext DownloadOutcome.IoError(
+                            formatMessage("single download SAF open", targetUri, "cannot open Uri"),
+                        )
+                    pfd.use { fd ->
+                        FileOutputStream(fd.fileDescriptor).use { fos ->
+                            fos.channel.position(0)
+                            val buf = ByteArray(BUFFER_SIZE)
+                            var totalRead = 0L
+                            var lastReportBytes = 0L
+                            var lastReportTime = System.currentTimeMillis()
+                            resp.body!!.byteStream().use { input ->
+                                while (true) {
+                                    currentCoroutineContext().ensureActive()
+                                    val n = input.read(buf)
+                                    if (n == -1) break
+                                    fos.write(buf, 0, n)
+                                    totalRead += n
+                                    val now = System.currentTimeMillis()
+                                    if (now - lastReportTime >= 250) {
+                                        val deltaB = totalRead - lastReportBytes
+                                        val deltaT = (now - lastReportTime).coerceAtLeast(1)
+                                        onProgress(totalRead, total, deltaB * 1000 / deltaT)
+                                        lastReportBytes = totalRead
+                                        lastReportTime = now
+                                    }
                                 }
                             }
+                            onProgress(totalRead, total, 0L)
+                            fos.fd.sync()
                         }
-                        onProgress(totalRead, total, 0L)
-                        fos.fd.sync()
                     }
+                } catch (e: SecurityException) {
+                    return@withContext DownloadOutcome.IoError(formatThrowable("single download SAF write", targetUri, e))
                 }
                 DownloadOutcome.Success(total)
             }
         } catch (e: IOException) {
             if (call.isCanceled()) throw downloadCanceled(e)
-            DownloadOutcome.IoError(e.message ?: "unknown")
+            DownloadOutcome.IoError(formatThrowable("single download", targetUri, e))
+        } catch (e: SecurityException) {
+            DownloadOutcome.IoError(formatThrowable("single download", targetUri, e))
         } finally {
             unregister()
         }
@@ -433,6 +447,18 @@ class DownloadEngine(
         private const val BUFFER_SIZE = 256 * 1024
     }
 }
+
+internal fun formatThrowable(stage: String, uri: Uri, throwable: Throwable): String =
+    formatMessage(
+        stage = stage,
+        uri = uri,
+        detail = "${throwable::class.simpleName ?: "Throwable"}: ${throwable.message ?: "(no message)"}",
+    )
+
+internal fun formatMessage(stage: String, uri: Uri, detail: String): String =
+    "Stage: $stage\n" +
+        "Uri: ${uri.scheme ?: "unknown"}://${uri.authority ?: "unknown"}\n" +
+        detail
 
 private suspend fun Call.await(): Response = suspendCancellableCoroutine { cont ->
     enqueue(object : Callback {

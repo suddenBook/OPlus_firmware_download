@@ -82,6 +82,7 @@
     <string name="download_complete">Download complete</string>
     <string name="done">Done</string>
     <string name="download_failed">Download failed</string>
+    <string name="copy_error_details">Copy error details</string>
     <string name="dismiss">Dismiss</string>
     <string name="eta_hours_minutes">%1$dh %2$02dm left</string>
     <string name="eta_minutes_seconds">%1$dm %2$02ds left</string>

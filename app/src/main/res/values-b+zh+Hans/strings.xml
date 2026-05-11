@@ -81,6 +81,7 @@
     <string name="download_complete">下载完成</string>
     <string name="done">完成</string>
     <string name="download_failed">下载失败</string>
+    <string name="copy_error_details">复制错误详情</string>
     <string name="dismiss">关闭</string>
     <string name="eta_hours_minutes">剩余 %1$d 小时 %2$02d 分</string>
     <string name="eta_minutes_seconds">剩余 %1$d 分 %2$02d 秒</string>
