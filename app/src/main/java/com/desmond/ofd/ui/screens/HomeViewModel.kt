@@ -1,11 +1,13 @@
 package com.desmond.ofd.ui.screens
 
 import android.app.Application
+import androidx.annotation.StringRes
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
+import com.desmond.ofd.R
 import com.desmond.ofd.backend.VersionResolver
 import com.desmond.ofd.backend.danielspringer.DanielspringerCatalog
 import com.desmond.ofd.backend.danielspringer.DanielspringerClient
@@ -23,10 +25,21 @@ import com.desmond.ofd.download.DownloadParams
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+
+sealed interface BackendMessage {
+    data class Resource(
+        @param:StringRes val resId: Int,
+        val args: List<String> = emptyList(),
+    ) : BackendMessage
+    data class Raw(val value: String) : BackendMessage
+}
 
 sealed interface BackendOutcome {
     data class Success(
@@ -44,9 +57,9 @@ sealed interface BackendOutcome {
          */
         val realOtaVersion: String? = null,
     ) : BackendOutcome
-    data class Failure(val message: String) : BackendOutcome
+    data class Failure(val message: BackendMessage) : BackendOutcome
     /** Backend wasn't called because a prerequisite (OTA version, IMEI, …) was missing. */
-    data class Skipped(val reason: String) : BackendOutcome
+    data class Skipped(val reason: BackendMessage) : BackendOutcome
     data object NotAttempted : BackendOutcome
 }
 
@@ -75,7 +88,7 @@ class HomeViewModel(
     application: Application,
     private val realmeOtaClient: RealmeOtaClient = RealmeOtaClient(),
     private val danielspringerClient: DanielspringerClient = DanielspringerClient(),
-    private val getSnapshot: () -> DeviceSnapshot = { DeviceProps.snapshot() },
+    private val getSnapshot: () -> DeviceSnapshot = { DeviceProps.snapshot(useShellFallback = true) },
 ) : AndroidViewModel(application) {
 
     private val _state = MutableStateFlow<HomeUiState>(HomeUiState.Idle)
@@ -100,13 +113,11 @@ class HomeViewModel(
         checkJob?.cancel()
         checkJob = viewModelScope.launch {
             _state.value = HomeUiState.Loading
-            val snapshot = runCatching { getSnapshot() }.getOrNull()
-                ?: return@launch fail("Couldn't read device properties.")
-            val ota = snapshot.otaVersion
-                ?: return@launch fail("Couldn't read OTA version. Try Manual mode.")
+            val snapshot = readAutoSnapshot()
+                ?: return@launch fail(R.string.error_read_device_properties)
             val params = OtaRequestParams(
                 model = snapshot.productName,
-                otaVersion = ota,
+                otaVersion = snapshot.otaVersion.orEmpty(),
                 ruiVersion = snapshot.ruiVersion,
                 nvIdentifier = snapshot.nvId,
                 region = snapshot.region,
@@ -153,7 +164,7 @@ class HomeViewModel(
         val (stable, beta, springer) = coroutineScope {
             val stableDeferred = async {
                 if (params.otaVersion.isBlank()) {
-                    BackendOutcome.Skipped("OTA version required for realme-ota")
+                    BackendOutcome.Skipped(backendMessage(R.string.backend_skip_ota_required_realme_ota))
                 } else {
                     runRealmeOta(params.copy(beta = false))
                 }
@@ -161,9 +172,9 @@ class HomeViewModel(
             val betaDeferred = async {
                 when {
                     params.imei0.isNullOrBlank() ->
-                        BackendOutcome.Skipped("Add IMEI to try the beta channel")
+                        BackendOutcome.Skipped(backendMessage(R.string.backend_skip_beta_imei_required))
                     params.otaVersion.isBlank() ->
-                        BackendOutcome.Skipped("OTA version required for realme-ota beta")
+                        BackendOutcome.Skipped(backendMessage(R.string.backend_skip_ota_required_realme_ota_beta))
                     else -> runRealmeOta(params.copy(beta = true))
                 }
             }
@@ -189,18 +200,35 @@ class HomeViewModel(
         )
     }
 
-    private fun fail(message: String) {
-        _state.value = HomeUiState.Error(message)
+    private suspend fun readAutoSnapshot(): DeviceSnapshot? {
+        var last: DeviceSnapshot? = null
+        repeat(AUTO_SNAPSHOT_ATTEMPTS) { attempt ->
+            val snapshot = withContext(Dispatchers.IO) {
+                runCatching { getSnapshot() }.getOrNull()
+            }
+            if (snapshot != null) {
+                last = snapshot
+                if (!snapshot.otaVersion.isNullOrBlank()) return snapshot
+            }
+            if (attempt < AUTO_SNAPSHOT_ATTEMPTS - 1) {
+                delay(AUTO_SNAPSHOT_RETRY_DELAY_MS * (attempt + 1))
+            }
+        }
+        return last
+    }
+
+    private fun fail(@StringRes messageResId: Int) {
+        _state.value = HomeUiState.Error(getApplication<Application>().getString(messageResId))
     }
 
     private suspend fun runRealmeOta(params: OtaRequestParams): BackendOutcome {
         return when (val r = realmeOtaClient.query(params)) {
             is OtaResult.Success -> {
                 val packet = r.response.components.firstOrNull()?.componentPackets
-                    ?: return BackendOutcome.Failure("realme-ota returned no download packet")
+                    ?: return BackendOutcome.Failure(backendMessage(R.string.backend_error_no_download_packet))
                 val downloadUrl = packet.url.takeIf { it.isNotBlank() }
                     ?: packet.manualUrl?.takeIf { it.isNotBlank() }
-                    ?: return BackendOutcome.Failure("realme-ota returned no download URL")
+                    ?: return BackendOutcome.Failure(backendMessage(R.string.backend_error_no_download_url))
                 BackendOutcome.Success(
                     versionName = r.response.versionName ?: r.response.realOtaVersion ?: "(unknown)",
                     realOtaVersion = r.response.realOtaVersion,
@@ -210,10 +238,28 @@ class HomeViewModel(
                     securityPatch = r.response.securityPatch,
                 )
             }
-            is OtaResult.HttpError -> BackendOutcome.Failure("HTTP ${r.code}: ${r.errMsg ?: "(no msg)"}")
-            is OtaResult.NetworkError -> BackendOutcome.Failure("Network: ${r.cause.message ?: r.cause::class.simpleName}")
-            is OtaResult.CryptoError -> BackendOutcome.Failure("Crypto: ${r.cause.message ?: r.cause::class.simpleName}")
-            is OtaResult.ContentError -> BackendOutcome.Failure("Content: ${r.checkFailReason}")
+            is OtaResult.HttpError -> BackendOutcome.Failure(
+                backendMessage(
+                    R.string.backend_error_http,
+                    r.code.toString(),
+                    r.errMsg ?: getApplication<Application>().getString(R.string.backend_error_no_message),
+                ),
+            )
+            is OtaResult.NetworkError -> BackendOutcome.Failure(
+                backendMessage(
+                    R.string.backend_error_network,
+                    r.cause.message ?: r.cause::class.simpleName ?: getApplication<Application>().getString(R.string.backend_error_unknown),
+                ),
+            )
+            is OtaResult.CryptoError -> BackendOutcome.Failure(
+                backendMessage(
+                    R.string.backend_error_crypto,
+                    r.cause.message ?: r.cause::class.simpleName ?: getApplication<Application>().getString(R.string.backend_error_unknown),
+                ),
+            )
+            is OtaResult.ContentError -> BackendOutcome.Failure(
+                backendMessage(R.string.backend_error_content, r.checkFailReason),
+            )
         }
     }
 
@@ -224,7 +270,7 @@ class HomeViewModel(
                 catalog,
                 model = params.model,
                 region = params.region,
-            ) ?: return BackendOutcome.Failure("Model not in danielspringer catalog")
+            ) ?: return BackendOutcome.Failure(backendMessage(R.string.backend_error_model_not_in_catalog))
             BackendOutcome.Success(
                 // Use displayName (comparable dotted-numeric format) for VersionResolver.
                 versionName = res.displayName,
@@ -235,7 +281,11 @@ class HomeViewModel(
                 securityPatch = res.securityPatch,
                 expiresAtEpochSeconds = res.expiresAtEpochSeconds.takeIf { it > 0 },
             )
-        }.getOrElse { BackendOutcome.Failure(it.message ?: it::class.simpleName ?: "unknown") }
+        }.getOrElse {
+            BackendOutcome.Failure(
+                BackendMessage.Raw(it.message ?: it::class.simpleName ?: getApplication<Application>().getString(R.string.backend_error_unknown)),
+            )
+        }
     }
 
     private fun pickWinner(
@@ -254,6 +304,12 @@ class HomeViewModel(
     @Volatile private var catalogCache: DanielspringerCatalog? = null
 
     companion object {
+        private const val AUTO_SNAPSHOT_ATTEMPTS = 3
+        private const val AUTO_SNAPSHOT_RETRY_DELAY_MS = 150L
+
+        private fun backendMessage(@StringRes resId: Int, vararg args: String): BackendMessage =
+            BackendMessage.Resource(resId, args.toList())
+
         val Factory: ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {

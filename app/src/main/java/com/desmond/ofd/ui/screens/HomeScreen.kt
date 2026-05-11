@@ -1,7 +1,11 @@
 package com.desmond.ofd.ui.screens
 
 import android.Manifest
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -76,6 +80,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
     val scope = rememberCoroutineScope()
     val downloadStartedMessage = stringResource(R.string.download_started)
     val downloadInProgressMessage = stringResource(R.string.download_already_in_progress)
+    val savePermissionFailedMessage = stringResource(R.string.save_location_permission_failed)
     val copiedMessagePattern = stringResource(R.string.copied_to_clipboard, "%s")
 
     val vm: HomeViewModel = viewModel(factory = HomeViewModel.Factory)
@@ -92,12 +97,20 @@ fun HomeScreen(modifier: Modifier = Modifier) {
 
     var pending by remember { mutableStateOf<PendingDownload?>(null) }
     val savePicker = rememberLauncherForActivityResult(
-        ActivityResultContracts.CreateDocument("application/zip"),
-    ) { uri ->
-        val intent = pending
+        ActivityResultContracts.StartActivityForResult(),
+    ) { result ->
+        val pendingDownload = pending
         pending = null
-        if (uri == null || intent == null) return@rememberLauncherForActivityResult
-        val newId = vm.startDownload(uri, intent.outcome, intent.displayName)
+        if (pendingDownload == null || result.resultCode != Activity.RESULT_OK) {
+            return@rememberLauncherForActivityResult
+        }
+        val uri = result.data?.data ?: return@rememberLauncherForActivityResult
+        val grantFlags = result.data?.flags ?: 0
+        if (!persistAndVerifySaveUri(ctx, uri, grantFlags)) {
+            scope.launch { snackbarHostState.showSnackbar(savePermissionFailedMessage) }
+            return@rememberLauncherForActivityResult
+        }
+        val newId = vm.startDownload(uri, pendingDownload.outcome, pendingDownload.displayName)
         scope.launch {
             snackbarHostState.showSnackbar(
                 if (newId != null) downloadStartedMessage else downloadInProgressMessage,
@@ -113,7 +126,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
     ) { _ ->
         // Regardless of grant, proceed to the SAF picker — the download itself doesn't
         // require notification permission, the user just won't see a system notification.
-        pending?.let { savePicker.launch(it.displayName) }
+        pending?.let { savePicker.launch(createFirmwareDocumentIntent(it.displayName)) }
     }
 
     fun launchDownloadFlow(intent: PendingDownload) {
@@ -123,7 +136,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
             ctx, Manifest.permission.POST_NOTIFICATIONS,
         ) == PackageManager.PERMISSION_GRANTED
         if (granted) {
-            savePicker.launch(intent.displayName)
+            savePicker.launch(createFirmwareDocumentIntent(intent.displayName))
         } else {
             notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
         }
@@ -214,6 +227,31 @@ private fun suggestedFilename(marketingName: String, versionName: String): Strin
     val core = versionName.substringBefore('(').trim('_')
     val safe = "${marketingName}_$core".replace(Regex("[^A-Za-z0-9._-]"), "_")
     return "$safe.zip"
+}
+
+private fun createFirmwareDocumentIntent(displayName: String): Intent =
+    Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+        addCategory(Intent.CATEGORY_OPENABLE)
+        type = "application/zip"
+        putExtra(Intent.EXTRA_TITLE, displayName)
+        addFlags(
+            Intent.FLAG_GRANT_READ_URI_PERMISSION or
+                Intent.FLAG_GRANT_WRITE_URI_PERMISSION or
+                Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION,
+        )
+    }
+
+private fun persistAndVerifySaveUri(context: Context, uri: Uri, resultFlags: Int): Boolean {
+    val requiredFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION or
+        Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+    val takeFlags = resultFlags and requiredFlags
+    if (takeFlags != requiredFlags) return false
+
+    val resolver = context.applicationContext.contentResolver
+    return runCatching {
+        resolver.takePersistableUriPermission(uri, takeFlags)
+        resolver.openFileDescriptor(uri, "rw")?.use { } ?: error("No file descriptor")
+    }.isSuccess
 }
 
 @Composable

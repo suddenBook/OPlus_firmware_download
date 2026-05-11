@@ -10,12 +10,14 @@
     <string name="mode_manual">手動</string>
     <string name="download_started">已開始下載</string>
     <string name="download_already_in_progress">此韌體已在下載中。請開啟「下載」分頁查看進度。</string>
+    <string name="save_location_permission_failed">無法保留該儲存位置的存取權限。請換一個資料夾或檔案提供程式。</string>
     <string name="copied_to_clipboard">已複製 %1$s</string>
     <string name="detected_device">偵測到的裝置</string>
     <string name="optional_beta_channel">可選，用於嘗試 Beta 通道。</string>
     <string name="checking">正在檢查…</string>
     <string name="check_for_firmware">檢查韌體</string>
     <string name="couldnt_check">無法檢查</string>
+    <string name="error_read_device_properties">無法讀取裝置屬性。</string>
 
     <string name="manual_mode">手動模式</string>
     <string name="device">裝置</string>
@@ -51,6 +53,21 @@
     <string name="url_valid_seconds">連結有效期 %1$d 秒</string>
     <string name="backend_newest">%1$s，最新</string>
     <string name="backend_older">%1$s，較舊</string>
+    <string name="backend_label_danielspringer">danielspringer.at</string>
+    <string name="backend_label_realme_ota_stable">realme-ota（穩定版）</string>
+    <string name="backend_label_realme_ota_beta">realme-ota（Beta）</string>
+    <string name="backend_skip_ota_required_realme_ota">realme-ota 需要 OTA 版本</string>
+    <string name="backend_skip_beta_imei_required">填寫 IMEI 後可嘗試 Beta 通道</string>
+    <string name="backend_skip_ota_required_realme_ota_beta">realme-ota Beta 需要 OTA 版本</string>
+    <string name="backend_error_no_download_packet">realme-ota 未回傳下載包</string>
+    <string name="backend_error_no_download_url">realme-ota 未回傳下載連結</string>
+    <string name="backend_error_http">HTTP %1$s：%2$s</string>
+    <string name="backend_error_network">網路錯誤：%1$s</string>
+    <string name="backend_error_crypto">加解密錯誤：%1$s</string>
+    <string name="backend_error_content">內容錯誤：%1$s</string>
+    <string name="backend_error_model_not_in_catalog">danielspringer 目錄中沒有該機型</string>
+    <string name="backend_error_no_message">（無訊息）</string>
+    <string name="backend_error_unknown">未知錯誤</string>
     <string name="not_run">未執行</string>
     <string name="no_firmware_found">所有後端均未找到韌體。</string>
 

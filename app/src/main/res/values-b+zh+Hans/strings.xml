@@ -10,12 +10,14 @@
     <string name="mode_manual">手动</string>
     <string name="download_started">已开始下载</string>
     <string name="download_already_in_progress">该固件已在下载中。请到“下载”标签查看进度。</string>
+    <string name="save_location_permission_failed">无法保留该保存位置的访问权限。请换一个文件夹或文件提供程序。</string>
     <string name="copied_to_clipboard">已复制 %1$s</string>
     <string name="detected_device">检测到的设备</string>
     <string name="optional_beta_channel">可选，用于尝试 Beta 通道。</string>
     <string name="checking">正在检查…</string>
     <string name="check_for_firmware">检查固件</string>
     <string name="couldnt_check">无法检查</string>
+    <string name="error_read_device_properties">无法读取设备属性。</string>
 
     <string name="manual_mode">手动模式</string>
     <string name="device">设备</string>
@@ -51,6 +53,21 @@
     <string name="url_valid_seconds">链接有效期 %1$d 秒</string>
     <string name="backend_newest">%1$s，最新</string>
     <string name="backend_older">%1$s，较旧</string>
+    <string name="backend_label_danielspringer">danielspringer.at</string>
+    <string name="backend_label_realme_ota_stable">realme-ota（稳定版）</string>
+    <string name="backend_label_realme_ota_beta">realme-ota（Beta）</string>
+    <string name="backend_skip_ota_required_realme_ota">realme-ota 需要 OTA 版本</string>
+    <string name="backend_skip_beta_imei_required">填写 IMEI 后可尝试 Beta 通道</string>
+    <string name="backend_skip_ota_required_realme_ota_beta">realme-ota Beta 需要 OTA 版本</string>
+    <string name="backend_error_no_download_packet">realme-ota 未返回下载包</string>
+    <string name="backend_error_no_download_url">realme-ota 未返回下载链接</string>
+    <string name="backend_error_http">HTTP %1$s：%2$s</string>
+    <string name="backend_error_network">网络错误：%1$s</string>
+    <string name="backend_error_crypto">加解密错误：%1$s</string>
+    <string name="backend_error_content">内容错误：%1$s</string>
+    <string name="backend_error_model_not_in_catalog">danielspringer 目录中没有该机型</string>
+    <string name="backend_error_no_message">（无消息）</string>
+    <string name="backend_error_unknown">未知错误</string>
     <string name="not_run">未运行</string>
     <string name="no_firmware_found">所有后端均未找到固件。</string>
 

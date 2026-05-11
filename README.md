@@ -75,28 +75,6 @@ The device catalog is bundled in the app. It is based on:
 
 https://github.com/KHwang9883/MobileModels
 
-## Release Automation
-
-GitHub Actions builds and publishes `app-release.apk` on pushes to `main`.
-The workflow signs with repository secrets, so the APK can upgrade older
-installs only when those secrets contain the same keystore used for v1.0.
-
-Required repository secrets:
-
-- `ANDROID_KEYSTORE_BASE64`
-- `ANDROID_KEYSTORE_PASSWORD`
-- `ANDROID_KEY_ALIAS`
-- `ANDROID_KEY_PASSWORD`
-
-For the current local test key used by v1.0, set:
-
-```bash
-base64 -w0 ~/.android/debug.keystore
-```
-
-Use that output as `ANDROID_KEYSTORE_BASE64`, with password `android`, alias
-`androiddebugkey`, and key password `android`.
-
 ## Version Selection
 
 When both backends return firmware, the app compares display versions such as:

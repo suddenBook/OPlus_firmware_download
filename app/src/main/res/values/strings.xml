@@ -10,12 +10,14 @@
     <string name="mode_manual">Manual</string>
     <string name="download_started">Download started</string>
     <string name="download_already_in_progress">This firmware is already being downloaded. Open the Downloads tab to track it.</string>
+    <string name="save_location_permission_failed">Couldn\'t keep access to that save location. Choose another folder or file provider.</string>
     <string name="copied_to_clipboard">%1$s copied</string>
     <string name="detected_device">Detected device</string>
     <string name="optional_beta_channel">Optional for beta channel.</string>
     <string name="checking">Checking…</string>
     <string name="check_for_firmware">Check for firmware</string>
     <string name="couldnt_check">Couldn\'t check</string>
+    <string name="error_read_device_properties">Couldn\'t read device properties.</string>
 
     <string name="manual_mode">Manual mode</string>
     <string name="device">Device</string>
@@ -52,6 +54,21 @@
     <string name="url_valid_seconds">URL valid for %1$ds</string>
     <string name="backend_newest">%1$s, newest</string>
     <string name="backend_older">%1$s, older</string>
+    <string name="backend_label_danielspringer">danielspringer.at</string>
+    <string name="backend_label_realme_ota_stable">realme-ota (stable)</string>
+    <string name="backend_label_realme_ota_beta">realme-ota (beta)</string>
+    <string name="backend_skip_ota_required_realme_ota">OTA version required for realme-ota</string>
+    <string name="backend_skip_beta_imei_required">Add IMEI to try the beta channel</string>
+    <string name="backend_skip_ota_required_realme_ota_beta">OTA version required for realme-ota beta</string>
+    <string name="backend_error_no_download_packet">realme-ota returned no download packet</string>
+    <string name="backend_error_no_download_url">realme-ota returned no download URL</string>
+    <string name="backend_error_http">HTTP %1$s: %2$s</string>
+    <string name="backend_error_network">Network: %1$s</string>
+    <string name="backend_error_crypto">Crypto: %1$s</string>
+    <string name="backend_error_content">Content: %1$s</string>
+    <string name="backend_error_model_not_in_catalog">Model not in danielspringer catalog</string>
+    <string name="backend_error_no_message">(no msg)</string>
+    <string name="backend_error_unknown">unknown</string>
     <string name="not_run">not run</string>
     <string name="no_firmware_found">No firmware found from any backend.</string>
 

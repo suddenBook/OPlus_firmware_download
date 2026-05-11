@@ -245,19 +245,19 @@ private fun ExpiryRow(expiresAt: Long, modifier: Modifier = Modifier) {
 @Composable
 private fun BackendsBreakdown(state: HomeUiState.Result) {
     BackendRow(
-        label = BackendLabels.DANIELSPRINGER,
+        label = stringResource(R.string.backend_label_danielspringer),
         outcome = state.danielspringer,
         isWinner = state.winnerLabel == BackendLabels.DANIELSPRINGER,
     )
     Spacer(Modifier.height(6.dp))
     BackendRow(
-        label = BackendLabels.REALME_OTA_STABLE,
+        label = stringResource(R.string.backend_label_realme_ota_stable),
         outcome = state.realmeOtaStable,
         isWinner = state.winnerLabel == BackendLabels.REALME_OTA_STABLE,
     )
     Spacer(Modifier.height(6.dp))
     BackendRow(
-        label = BackendLabels.REALME_OTA_BETA,
+        label = stringResource(R.string.backend_label_realme_ota_beta),
         outcome = state.realmeOtaBeta,
         isWinner = state.winnerLabel == BackendLabels.REALME_OTA_BETA,
     )
@@ -302,8 +302,8 @@ private fun BackendRow(label: String, outcome: BackendOutcome, isWinner: Boolean
                         stringResource(R.string.backend_older, ver)
                     }
                 }
-                is BackendOutcome.Skipped -> outcome.reason
-                is BackendOutcome.Failure -> outcome.message
+                is BackendOutcome.Skipped -> backendMessageText(outcome.reason)
+                is BackendOutcome.Failure -> backendMessageText(outcome.message)
                 BackendOutcome.NotAttempted -> stringResource(R.string.not_run)
             }
             Text(
@@ -313,6 +313,15 @@ private fun BackendRow(label: String, outcome: BackendOutcome, isWinner: Boolean
             )
         }
     }
+}
+
+@Composable
+private fun backendMessageText(message: BackendMessage): String = when (message) {
+    is BackendMessage.Resource -> stringResource(
+        message.resId,
+        *message.args.toTypedArray(),
+    )
+    is BackendMessage.Raw -> message.value
 }
 
 @Composable
