@@ -14,8 +14,8 @@ android {
         applicationId = "com.desmond.ofd"
         minSdk = 33
         targetSdk = 36
-        versionCode = 5
-        versionName = "1.3"
+        versionCode = 6
+        versionName = "1.3.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
