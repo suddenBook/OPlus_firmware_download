@@ -68,6 +68,7 @@
     <string name="backend_error_content">Content: %1$s</string>
     <string name="backend_error_invalid_firmware_size">Download link returned an invalid full-package size: %1$s</string>
     <string name="backend_error_download_link_unverified">Download link could not be verified: %1$s</string>
+    <string name="backend_error_antileech_rejected">Anti-leech gate rejected the download (code %1$s). Try again or use a network in the firmware\'s region.</string>
     <string name="backend_error_model_not_in_catalog">Model not in danielspringer catalog</string>
     <string name="backend_error_no_message">(no msg)</string>
     <string name="backend_error_unknown">unknown</string>

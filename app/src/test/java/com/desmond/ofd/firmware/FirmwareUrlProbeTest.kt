@@ -1,6 +1,6 @@
 package com.desmond.ofd.firmware
 
-import com.desmond.ofd.http.BROWSER_USER_AGENT
+import com.desmond.ofd.http.FIRMWARE_USER_AGENT
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
@@ -35,7 +35,7 @@ class FirmwareUrlProbeTest {
         result as FirmwareUrlProbeResult.Success
         assertEquals(TWO_GIB, result.totalSize)
         assertEquals("abc123", result.md5)
-        assertEquals(BROWSER_USER_AGENT, userAgent)
+        assertEquals(FIRMWARE_USER_AGENT, userAgent)
     }
 
     @Test fun rejects_small_content_range_as_retryable_failure() = runBlocking {
@@ -70,6 +70,29 @@ class FirmwareUrlProbeTest {
         result as FirmwareUrlProbeResult.Failure
         assertEquals(49L, result.observedSize)
         assertTrue(result.retryable)
+        assertEquals(null, result.rejectionCode)
+    }
+
+    @Test fun parses_antileech_response_code_from_small_body() = runBlocking {
+        val rejection = """{"body":null,"errMsg":"2306","responseCode":2306}"""
+        val client = clientReturning { request ->
+            response(
+                request = request,
+                code = 200,
+                headers = mapOf("Content-Length" to rejection.length.toString()),
+                body = rejection,
+                bodyMediaType = "application/json",
+            )
+        }
+
+        val result = FirmwareUrlProbe(client).probe("https://example.com/firmware.zip")
+
+        assertTrue(result is FirmwareUrlProbeResult.Failure)
+        result as FirmwareUrlProbeResult.Failure
+        assertEquals(rejection.length.toLong(), result.observedSize)
+        assertEquals("2306", result.rejectionCode)
+        assertTrue(result.retryable)
+        assertTrue(result.detail.contains("2306"))
     }
 
     @Test fun rejects_invalid_content_range() = runBlocking {
@@ -155,13 +178,15 @@ class FirmwareUrlProbeTest {
         code: Int,
         message: String = "OK",
         headers: Map<String, String> = emptyMap(),
+        body: String = "x",
+        bodyMediaType: String = "text/plain",
     ): Response {
         val builder = Response.Builder()
             .request(request)
             .protocol(Protocol.HTTP_1_1)
             .code(code)
             .message(message)
-            .body("x".toResponseBody("text/plain".toMediaType()))
+            .body(body.toResponseBody(bodyMediaType.toMediaType()))
         headers.forEach { (name, value) -> builder.header(name, value) }
         return builder.build()
     }

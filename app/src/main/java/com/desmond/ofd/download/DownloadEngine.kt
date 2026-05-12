@@ -4,7 +4,7 @@ import android.content.ContentResolver
 import android.net.Uri
 import android.util.Log
 import com.desmond.ofd.firmware.validateFirmwareSize
-import com.desmond.ofd.http.BROWSER_USER_AGENT
+import com.desmond.ofd.http.FIRMWARE_USER_AGENT
 import com.desmond.ofd.http.parseContentRange
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CancellationException
@@ -154,7 +154,8 @@ class DownloadEngine(
         val req = Request.Builder()
             .url(url)
             .header("Range", "bytes=0-0")
-            .header("User-Agent", BROWSER_USER_AGENT)
+            .header("User-Agent", FIRMWARE_USER_AGENT)
+            .header("Accept", "*/*")
             .tag(downloadId)
             .build()
         val call = httpClient.newCall(req)
@@ -315,7 +316,8 @@ class DownloadEngine(
         val request = Request.Builder()
             .url(url)
             .header("Range", "bytes=$startOffset-${chunk.end}")
-            .header("User-Agent", BROWSER_USER_AGENT)
+            .header("User-Agent", FIRMWARE_USER_AGENT)
+            .header("Accept", "*/*")
             .tag(downloadId)
             .build()
         val call = httpClient.newCall(request)
@@ -383,7 +385,8 @@ class DownloadEngine(
     ): DownloadOutcome = withContext(workerDispatcher) {
         val request = Request.Builder()
             .url(url)
-            .header("User-Agent", BROWSER_USER_AGENT)
+            .header("User-Agent", FIRMWARE_USER_AGENT)
+            .header("Accept", "*/*")
             .tag(downloadId)
             .build()
         val call = httpClient.newCall(request)

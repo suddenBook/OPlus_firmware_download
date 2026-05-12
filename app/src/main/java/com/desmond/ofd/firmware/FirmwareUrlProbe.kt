@@ -1,6 +1,6 @@
 package com.desmond.ofd.firmware
 
-import com.desmond.ofd.http.BROWSER_USER_AGENT
+import com.desmond.ofd.http.FIRMWARE_USER_AGENT
 import com.desmond.ofd.http.parseContentRange
 import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.Call
@@ -25,7 +25,8 @@ internal class FirmwareUrlProbe(
             val builder = Request.Builder()
                 .url(url)
                 .header("Range", "bytes=0-0")
-                .header("User-Agent", BROWSER_USER_AGENT)
+                .header("User-Agent", FIRMWARE_USER_AGENT)
+                .header("Accept", "*/*")
             if (tag != null) builder.tag(tag)
 
             val call = httpClient.newCall(builder.build())
@@ -46,15 +47,23 @@ internal class FirmwareUrlProbe(
     }
 
     private fun parseResponse(resp: Response, expectedSize: Long): FirmwareUrlProbeResult {
+        var rejectionCode: String? = null
         val totalSize = when {
             resp.code == 206 -> {
                 parseContentRange(resp.header("Content-Range"))?.totalSize
                     ?: return failure("Invalid Content-Range: ${resp.header("Content-Range") ?: "(missing)"}")
             }
             resp.isSuccessful -> {
-                resp.header("Content-Length")?.toLongOrNull()
+                val cl = resp.header("Content-Length")?.toLongOrNull()
                     ?: resp.body?.contentLength()?.takeIf { it >= 0 }
                     ?: return failure("Missing Content-Length")
+                // OPPO's downloadCheck gate returns HTTP 200 with a tiny JSON body
+                // (~49 B) like {"body":null,"errMsg":"2306","responseCode":2306} when
+                // it rejects a request. Peek the body so we can surface the real cause.
+                if (cl in 1..MAX_REJECTION_BODY_BYTES) {
+                    rejectionCode = decodeRejectionCode(resp)
+                }
+                cl
             }
             else -> {
                 return FirmwareUrlProbeResult.Failure(
@@ -71,9 +80,10 @@ internal class FirmwareUrlProbe(
 
         validateFirmwareSize(totalSize, expectedSize)?.let { problem ->
             return FirmwareUrlProbeResult.Failure(
-                detail = problem,
+                detail = rejectionCode?.let { "Anti-leech rejection (responseCode: $it)" } ?: problem,
                 retryable = true,
                 observedSize = totalSize,
+                rejectionCode = rejectionCode,
             )
         }
 
@@ -84,10 +94,18 @@ internal class FirmwareUrlProbe(
         )
     }
 
+    private fun decodeRejectionCode(resp: Response): String? = runCatching {
+        val text = resp.peekBody(MAX_REJECTION_BODY_BYTES).string()
+        REJECTION_CODE_RE.find(text)?.groupValues?.get(1)
+    }.getOrNull()
+
     private fun failure(detail: String): FirmwareUrlProbeResult.Failure =
         FirmwareUrlProbeResult.Failure(detail = detail, retryable = true)
 
     private companion object {
+        const val MAX_REJECTION_BODY_BYTES = 2048L
+        val REJECTION_CODE_RE = Regex(""""responseCode"\s*:\s*"?(\d+)"?""")
+
         fun defaultHttpClient(): OkHttpClient = OkHttpClient.Builder()
             .connectTimeout(15, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
@@ -107,6 +125,8 @@ internal sealed interface FirmwareUrlProbeResult {
         val retryable: Boolean,
         val observedSize: Long? = null,
         val httpCode: Int? = null,
+        /** OPPO `downloadCheck` `responseCode` when the body looks like an anti-leech rejection. */
+        val rejectionCode: String? = null,
     ) : FirmwareUrlProbeResult
 }
 

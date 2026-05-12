@@ -274,40 +274,58 @@ class HomeViewModel(
                 BackendOutcome.Failure(backendMessage(R.string.backend_error_no_download_packet)),
                 retryable = false,
             )
-        val downloadUrl = packet.url.takeIf { it.isNotBlank() }
-            ?: packet.manualUrl?.takeIf { it.isNotBlank() }
-            ?: return CheckedRealmeOta.Failure(
+        // Prefer manualUrl (tr=manual): the auto variant is intended for the device's
+        // OTA daemon and tends to reject third-party callers with the 2306 anti-leech
+        // gate, returning a 49 B JSON body instead of redirecting to the CDN.
+        val candidateUrls = listOfNotNull(
+            packet.manualUrl?.takeIf { it.isNotBlank() },
+            packet.url.takeIf { it.isNotBlank() },
+        ).distinct()
+        if (candidateUrls.isEmpty()) {
+            return CheckedRealmeOta.Failure(
                 BackendOutcome.Failure(backendMessage(R.string.backend_error_no_download_url)),
                 retryable = false,
             )
+        }
 
         val apiSize = packet.size.toLongOrNull()?.takeIf { it > 0 } ?: -1L
 
-        return when (val probe = firmwareUrlProbe.probe(downloadUrl, expectedSize = apiSize)) {
-            is FirmwareUrlProbeResult.Success -> CheckedRealmeOta.Success(
-                BackendOutcome.Success(
-                    versionName = result.response.versionName ?: result.response.realOtaVersion ?: "(unknown)",
-                    realOtaVersion = result.response.realOtaVersion,
-                    downloadUrl = downloadUrl,
-                    sizeBytes = probe.totalSize,
-                    md5 = packet.md5.takeIf { it.isNotBlank() } ?: probe.md5,
-                    securityPatch = result.response.securityPatch,
-                ),
-            )
-            is FirmwareUrlProbeResult.Failure -> CheckedRealmeOta.Failure(
-                outcome = BackendOutcome.Failure(
-                    if (probe.observedSize != null) {
-                        backendMessage(
-                            R.string.backend_error_invalid_firmware_size,
-                            formatFirmwareBytes(probe.observedSize),
-                        )
-                    } else {
-                        backendMessage(R.string.backend_error_download_link_unverified, probe.detail)
-                    },
-                ),
-                retryable = probe.retryable,
-            )
+        var lastFailure: FirmwareUrlProbeResult.Failure? = null
+        for (url in candidateUrls) {
+            when (val probe = firmwareUrlProbe.probe(url, expectedSize = apiSize)) {
+                is FirmwareUrlProbeResult.Success -> return CheckedRealmeOta.Success(
+                    BackendOutcome.Success(
+                        versionName = result.response.versionName ?: result.response.realOtaVersion ?: "(unknown)",
+                        realOtaVersion = result.response.realOtaVersion,
+                        downloadUrl = url,
+                        sizeBytes = probe.totalSize,
+                        md5 = packet.md5.takeIf { it.isNotBlank() } ?: probe.md5,
+                        securityPatch = result.response.securityPatch,
+                    ),
+                )
+                is FirmwareUrlProbeResult.Failure -> lastFailure = probe
+            }
         }
+        val failure = lastFailure!!
+        return CheckedRealmeOta.Failure(
+            outcome = BackendOutcome.Failure(
+                when {
+                    failure.rejectionCode != null -> backendMessage(
+                        R.string.backend_error_antileech_rejected,
+                        failure.rejectionCode,
+                    )
+                    failure.observedSize != null -> backendMessage(
+                        R.string.backend_error_invalid_firmware_size,
+                        formatFirmwareBytes(failure.observedSize),
+                    )
+                    else -> backendMessage(
+                        R.string.backend_error_download_link_unverified,
+                        failure.detail,
+                    )
+                },
+            ),
+            retryable = failure.retryable,
+        )
     }
 
     private fun invalidRealmeSize(sizeBytes: Long, retryable: Boolean): CheckedRealmeOta.Failure =
