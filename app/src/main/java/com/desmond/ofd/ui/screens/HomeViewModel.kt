@@ -14,6 +14,10 @@ import com.desmond.ofd.backend.danielspringer.DanielspringerCatalog
 import com.desmond.ofd.backend.danielspringer.DanielspringerClient
 import com.desmond.ofd.backend.realmeota.data.OtaRequestParams
 import com.desmond.ofd.backend.realmeota.network.OtaResult
+import com.desmond.ofd.backend.realmeota.network.RealmeOtaDownloadFailure
+import com.desmond.ofd.backend.realmeota.network.RealmeOtaDownloadSelection
+import com.desmond.ofd.backend.realmeota.network.RealmeOtaDownloadSelector
+import com.desmond.ofd.backend.realmeota.network.RealmeOtaVersionCandidates
 import com.desmond.ofd.backend.realmeota.network.RealmeOtaClient
 import com.desmond.ofd.catalog.CatalogRepository
 import com.desmond.ofd.catalog.DeviceCatalog
@@ -25,6 +29,7 @@ import com.desmond.ofd.download.DownloadParams
 import com.desmond.ofd.firmware.FirmwareUrlProbe
 import com.desmond.ofd.firmware.FirmwareUrlProbeResult
 import com.desmond.ofd.firmware.formatFirmwareBytes
+import com.desmond.ofd.firmware.parseFirmwareUrlExpiresEpochSeconds
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -167,18 +172,12 @@ class HomeViewModel(
     private suspend fun runCheck(params: OtaRequestParams) {
         val (stable, beta, springer) = coroutineScope {
             val stableDeferred = async {
-                if (params.otaVersion.isBlank()) {
-                    BackendOutcome.Skipped(backendMessage(R.string.backend_skip_ota_required_realme_ota))
-                } else {
-                    runRealmeOta(params.copy(beta = false))
-                }
+                runRealmeOta(params.copy(beta = false))
             }
             val betaDeferred = async {
                 when {
                     params.imei0.isNullOrBlank() ->
                         BackendOutcome.Skipped(backendMessage(R.string.backend_skip_beta_imei_required))
-                    params.otaVersion.isBlank() ->
-                        BackendOutcome.Skipped(backendMessage(R.string.backend_skip_ota_required_realme_ota_beta))
                     else -> runRealmeOta(params.copy(beta = true))
                 }
             }
@@ -226,118 +225,134 @@ class HomeViewModel(
     }
 
     private suspend fun runRealmeOta(params: OtaRequestParams): BackendOutcome {
-        var lastLinkFailure: BackendOutcome.Failure? = null
-        repeat(REALME_OTA_LINK_CHECK_ATTEMPTS) { attempt ->
-            when (val r = realmeOtaClient.query(params)) {
-                is OtaResult.Success -> {
-                    when (val checked = verifyRealmeOtaSuccess(r)) {
-                        is CheckedRealmeOta.Success -> return checked.outcome
-                        is CheckedRealmeOta.Failure -> {
-                            lastLinkFailure = checked.outcome
-                            if (!checked.retryable || attempt == REALME_OTA_LINK_CHECK_ATTEMPTS - 1) {
-                                return checked.outcome
-                            }
-                            delay(REALME_OTA_LINK_CHECK_RETRY_DELAYS_MS[attempt])
-                        }
-                    }
-                }
-                is OtaResult.HttpError -> return BackendOutcome.Failure(
-                    backendMessage(
-                        R.string.backend_error_http,
-                        r.code.toString(),
-                        r.errMsg ?: getApplication<Application>().getString(R.string.backend_error_no_message),
-                    ),
-                )
-                is OtaResult.NetworkError -> return BackendOutcome.Failure(
-                    backendMessage(
-                        R.string.backend_error_network,
-                        r.cause.message ?: r.cause::class.simpleName ?: getApplication<Application>().getString(R.string.backend_error_unknown),
-                    ),
-                )
-                is OtaResult.CryptoError -> return BackendOutcome.Failure(
-                    backendMessage(
-                        R.string.backend_error_crypto,
-                        r.cause.message ?: r.cause::class.simpleName ?: getApplication<Application>().getString(R.string.backend_error_unknown),
-                    ),
-                )
-                is OtaResult.ContentError -> return BackendOutcome.Failure(
-                    backendMessage(R.string.backend_error_content, r.checkFailReason),
-                )
-            }
+        var bestOutcome: BackendOutcome? = null
+        for (candidate in realmeOtaQueryCandidates(params)) {
+            val outcome = runRealmeOtaOnce(candidate)
+            if (outcome is BackendOutcome.Success) return outcome
+            bestOutcome = preferRealmeFailure(bestOutcome, outcome)
         }
-        return lastLinkFailure ?: BackendOutcome.Failure(backendMessage(R.string.backend_error_unknown))
+        return bestOutcome ?: BackendOutcome.Failure(backendMessage(R.string.backend_error_unknown))
     }
 
-    private suspend fun verifyRealmeOtaSuccess(result: OtaResult.Success): CheckedRealmeOta {
-        val packet = result.response.components.firstOrNull()?.componentPackets
-            ?: return CheckedRealmeOta.Failure(
-                BackendOutcome.Failure(backendMessage(R.string.backend_error_no_download_packet)),
-                retryable = false,
+    private suspend fun runRealmeOtaOnce(params: OtaRequestParams): BackendOutcome =
+        when (val r = realmeOtaClient.query(params)) {
+            is OtaResult.Success -> preflightRealmeOtaSuccess(r)
+            is OtaResult.HttpError -> BackendOutcome.Failure(
+                backendMessage(
+                    R.string.backend_error_http,
+                    r.code.toString(),
+                    r.errMsg ?: getApplication<Application>().getString(R.string.backend_error_no_message),
+                ),
             )
-        // Prefer manualUrl (tr=manual): the auto variant is intended for the device's
-        // OTA daemon and tends to reject third-party callers with the 2306 anti-leech
-        // gate, returning a 49 B JSON body instead of redirecting to the CDN.
-        val candidateUrls = listOfNotNull(
-            packet.manualUrl?.takeIf { it.isNotBlank() },
-            packet.url.takeIf { it.isNotBlank() },
-        ).distinct()
-        if (candidateUrls.isEmpty()) {
-            return CheckedRealmeOta.Failure(
-                BackendOutcome.Failure(backendMessage(R.string.backend_error_no_download_url)),
-                retryable = false,
+            is OtaResult.NetworkError -> BackendOutcome.Failure(
+                backendMessage(
+                    R.string.backend_error_network,
+                    r.cause.message ?: r.cause::class.simpleName ?: getApplication<Application>().getString(R.string.backend_error_unknown),
+                ),
+            )
+            is OtaResult.CryptoError -> BackendOutcome.Failure(
+                backendMessage(
+                    R.string.backend_error_crypto,
+                    r.cause.message ?: r.cause::class.simpleName ?: getApplication<Application>().getString(R.string.backend_error_unknown),
+                ),
+            )
+            is OtaResult.ContentError -> BackendOutcome.Failure(
+                backendMessage(R.string.backend_error_content, r.checkFailReason),
             )
         }
 
-        val apiSize = packet.size.toLongOrNull()?.takeIf { it > 0 } ?: -1L
+    private suspend fun preflightRealmeOtaSuccess(result: OtaResult.Success): BackendOutcome {
+        return when (val selected = RealmeOtaDownloadSelector.select(result.response)) {
+            is RealmeOtaDownloadSelection.Success -> preflightSelectedRealmeOta(selected)
+            is RealmeOtaDownloadSelection.Failure -> mapRealmeSelectionFailure(selected)
+        }
+    }
 
+    private suspend fun preflightSelectedRealmeOta(selected: RealmeOtaDownloadSelection.Success): BackendOutcome {
         var lastFailure: FirmwareUrlProbeResult.Failure? = null
-        for (url in candidateUrls) {
-            when (val probe = firmwareUrlProbe.probe(url, expectedSize = apiSize)) {
-                is FirmwareUrlProbeResult.Success -> return CheckedRealmeOta.Success(
-                    BackendOutcome.Success(
-                        versionName = result.response.versionName ?: result.response.realOtaVersion ?: "(unknown)",
-                        realOtaVersion = result.response.realOtaVersion,
-                        downloadUrl = url,
-                        sizeBytes = probe.totalSize,
-                        md5 = packet.md5.takeIf { it.isNotBlank() } ?: probe.md5,
-                        securityPatch = result.response.securityPatch,
-                    ),
+        for (url in selected.downloadUrls) {
+            when (val probe = firmwareUrlProbe.probe(url, expectedSize = selected.sizeBytes)) {
+                is FirmwareUrlProbeResult.Success -> return BackendOutcome.Success(
+                    versionName = selected.versionName,
+                    realOtaVersion = selected.realOtaVersion,
+                    downloadUrl = probe.resolvedUrl,
+                    sizeBytes = probe.totalSize,
+                    md5 = selected.md5 ?: probe.md5,
+                    securityPatch = selected.securityPatch,
+                    expiresAtEpochSeconds = parseFirmwareUrlExpiresEpochSeconds(probe.resolvedUrl),
                 )
                 is FirmwareUrlProbeResult.Failure -> lastFailure = probe
             }
         }
-        val failure = lastFailure!!
-        return CheckedRealmeOta.Failure(
-            outcome = BackendOutcome.Failure(
-                when {
-                    failure.rejectionCode != null -> backendMessage(
-                        R.string.backend_error_antileech_rejected,
-                        failure.rejectionCode,
-                    )
-                    failure.observedSize != null -> backendMessage(
-                        R.string.backend_error_invalid_firmware_size,
-                        formatFirmwareBytes(failure.observedSize),
-                    )
-                    else -> backendMessage(
-                        R.string.backend_error_download_link_unverified,
-                        failure.detail,
-                    )
-                },
-            ),
-            retryable = failure.retryable,
+        val failure = lastFailure
+            ?: return BackendOutcome.Failure(backendMessage(R.string.backend_error_no_download_url))
+        return BackendOutcome.Failure(
+            when {
+                failure.rejectionCode != null -> backendMessage(
+                    R.string.backend_error_antileech_rejected,
+                    failure.rejectionCode,
+                )
+                failure.observedSize != null -> backendMessage(
+                    R.string.backend_error_invalid_firmware_size,
+                    formatFirmwareBytes(failure.observedSize),
+                )
+                else -> backendMessage(
+                    R.string.backend_error_download_link_unverified,
+                    failure.detail,
+                )
+            },
         )
     }
 
-    private fun invalidRealmeSize(sizeBytes: Long, retryable: Boolean): CheckedRealmeOta.Failure =
-        CheckedRealmeOta.Failure(
-            outcome = BackendOutcome.Failure(
-                backendMessage(
-                    R.string.backend_error_invalid_firmware_size,
-                    formatFirmwareBytes(sizeBytes),
-                ),
-            ),
-            retryable = retryable,
+    private fun mapRealmeSelectionFailure(selected: RealmeOtaDownloadSelection.Failure): BackendOutcome.Failure =
+        BackendOutcome.Failure(
+            when (selected.reason) {
+                RealmeOtaDownloadFailure.NO_DOWNLOAD_PACKET ->
+                    backendMessage(R.string.backend_error_no_download_packet)
+                RealmeOtaDownloadFailure.NO_DOWNLOAD_URL ->
+                    backendMessage(R.string.backend_error_no_download_url)
+                RealmeOtaDownloadFailure.INVALID_FIRMWARE_SIZE ->
+                    backendMessage(
+                        R.string.backend_error_invalid_firmware_size,
+                        formatFirmwareBytes(selected.observedSize ?: -1L),
+                    )
+            },
         )
+
+    private fun realmeOtaQueryCandidates(params: OtaRequestParams): List<OtaRequestParams> {
+        return RealmeOtaVersionCandidates.versions(params.model, params.otaVersion)
+            .map { params.copy(otaVersion = it) }
+    }
+
+    private fun preferRealmeFailure(current: BackendOutcome?, candidate: BackendOutcome): BackendOutcome {
+        if (current !is BackendOutcome.Failure) return candidate
+        if (candidate !is BackendOutcome.Failure) return current
+        return if (realmeFailurePriority(candidate) > realmeFailurePriority(current)) candidate else current
+    }
+
+    private fun realmeFailurePriority(outcome: BackendOutcome.Failure): Int {
+        val message = outcome.message
+        if (message is BackendMessage.Resource) {
+            return when (message.resId) {
+                R.string.backend_error_antileech_rejected -> 60
+                R.string.backend_error_download_link_unverified -> 50
+                R.string.backend_error_invalid_firmware_size -> 45
+                R.string.backend_error_network -> 40
+                R.string.backend_error_crypto -> 35
+                R.string.backend_error_no_download_packet,
+                R.string.backend_error_no_download_url
+                -> 30
+                R.string.backend_error_content -> 20
+                R.string.backend_error_http -> {
+                    val code = message.args.firstOrNull()
+                    val detail = message.args.getOrNull(1).orEmpty()
+                    if (code == "2004" && detail.contains("Result is empty", ignoreCase = true)) 10 else 25
+                }
+                else -> 20
+            }
+        }
+        return 20
+    }
 
     private suspend fun runDanielspringer(params: OtaRequestParams): BackendOutcome {
         return runCatching {
@@ -382,8 +397,6 @@ class HomeViewModel(
     companion object {
         private const val AUTO_SNAPSHOT_ATTEMPTS = 3
         private const val AUTO_SNAPSHOT_RETRY_DELAY_MS = 150L
-        private const val REALME_OTA_LINK_CHECK_ATTEMPTS = 3
-        private val REALME_OTA_LINK_CHECK_RETRY_DELAYS_MS = longArrayOf(500L, 1500L)
 
         private fun backendMessage(@StringRes resId: Int, vararg args: String): BackendMessage =
             BackendMessage.Resource(resId, args.toList())
@@ -397,12 +410,4 @@ class HomeViewModel(
             }
         }
     }
-}
-
-private sealed interface CheckedRealmeOta {
-    data class Success(val outcome: BackendOutcome.Success) : CheckedRealmeOta
-    data class Failure(
-        val outcome: BackendOutcome.Failure,
-        val retryable: Boolean,
-    ) : CheckedRealmeOta
 }

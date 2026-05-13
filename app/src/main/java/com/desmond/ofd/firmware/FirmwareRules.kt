@@ -1,5 +1,6 @@
 package com.desmond.ofd.firmware
 
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import java.util.Locale
 
 internal const val MIN_FULL_FIRMWARE_BYTES = 1L shl 30
@@ -21,3 +22,7 @@ internal fun formatFirmwareBytes(bytes: Long): String = when {
     bytes >= 1L shl 10 -> String.format(Locale.US, "%.1f KiB", bytes / (1L shl 10).toDouble())
     else -> "$bytes B"
 }
+
+internal fun parseFirmwareUrlExpiresEpochSeconds(url: String): Long? = runCatching {
+    url.toHttpUrlOrNull()?.queryParameter("Expires")?.toLongOrNull()
+}.getOrNull()

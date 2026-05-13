@@ -3,6 +3,8 @@ package com.desmond.ofd.download
 import android.content.ContentResolver
 import android.net.Uri
 import android.util.Log
+import com.desmond.ofd.firmware.FirmwareDownloadGate
+import com.desmond.ofd.firmware.FirmwareDownloadGateResult
 import com.desmond.ofd.firmware.validateFirmwareSize
 import com.desmond.ofd.http.FIRMWARE_USER_AGENT
 import com.desmond.ofd.http.parseContentRange
@@ -69,26 +71,32 @@ class DownloadEngine(
         expectedSize: Long,
         onProgress: suspend (bytesDownloaded: Long, totalBytes: Long, speedBps: Long) -> Unit,
     ): DownloadOutcome {
-        val probe = probeSize(downloadId, url)
+        val resolvedUrl = when (val resolved = resolveDownloadUrl(downloadId, url)) {
+            is FirmwareDownloadGateResult.Success -> resolved.resolvedUrl
+            is FirmwareDownloadGateResult.Failure -> return DownloadOutcome.IoError(
+                formatMessage("download gate", targetUri, resolved.detail),
+            )
+        }
+        val probe = probeSize(downloadId, resolvedUrl)
         val totalSize = probe.totalSize.takeIf { it > 0 } ?: expectedSize
         validateFirmwareSize(totalSize, expectedSize)?.let { problem ->
             return DownloadOutcome.IoError(formatMessage("download size probe", targetUri, problem))
         }
         if (totalSize <= 0) {
             return singleThreadedDownload(
-                downloadId, url, contentResolver, targetUri, expectedSize, onProgress,
+                downloadId, resolvedUrl, contentResolver, targetUri, expectedSize, onProgress,
             )
         }
         if (!probe.acceptsRanges) {
             return singleThreadedDownload(
-                downloadId, url, contentResolver, targetUri, expectedSize, onProgress, knownSize = totalSize,
+                downloadId, resolvedUrl, contentResolver, targetUri, expectedSize, onProgress, knownSize = totalSize,
             )
         }
 
         val threadCount = fixedThreadCount(totalSize)
         if (threadCount <= 1) {
             return singleThreadedDownload(
-                downloadId, url, contentResolver, targetUri, expectedSize, onProgress, knownSize = totalSize,
+                downloadId, resolvedUrl, contentResolver, targetUri, expectedSize, onProgress, knownSize = totalSize,
             )
         }
 
@@ -119,7 +127,7 @@ class DownloadEngine(
                                 async(workerDispatcher) {
                                     downloadChunkWithRetry(
                                         downloadId = downloadId,
-                                        url = url,
+                                        url = resolvedUrl,
                                         targetUri = targetUri,
                                         outputChannel = output.channel,
                                         chunk = chunk,
@@ -149,6 +157,13 @@ class DownloadEngine(
         }
         return DownloadOutcome.Success(totalSize)
     }
+
+    private suspend fun resolveDownloadUrl(downloadId: String, url: String): FirmwareDownloadGateResult =
+        if (FirmwareDownloadGate.isOplusDownloadGate(url)) {
+            FirmwareDownloadGate.resolve(url, httpClient, downloadId)
+        } else {
+            FirmwareDownloadGateResult.Success(url)
+        }
 
     private suspend fun probeSize(downloadId: String, url: String): SizeProbe = withContext(workerDispatcher) {
         val req = Request.Builder()

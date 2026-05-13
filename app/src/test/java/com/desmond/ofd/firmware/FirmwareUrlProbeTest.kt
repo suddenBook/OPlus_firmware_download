@@ -95,6 +95,64 @@ class FirmwareUrlProbeTest {
         assertTrue(result.detail.contains("2306"))
     }
 
+    @Test fun resolves_download_check_gate_before_range_probe() = runBlocking {
+        val finalUrl = "https://gauss-compotaauto-cn.allawnfs.com/component-ota/file.zip"
+        val seen = mutableListOf<Pair<String, String?>>()
+        val client = clientReturning { request ->
+            seen += request.url.encodedPath to request.header("Range")
+            when (request.url.encodedPath) {
+                "/downloadCheck" -> response(
+                    request = request,
+                    code = 302,
+                    message = "Found",
+                    headers = mapOf("Location" to finalUrl),
+                    body = "",
+                )
+                "/component-ota/file.zip" -> response(
+                    request = request,
+                    code = 206,
+                    headers = mapOf("Content-Range" to "bytes 0-0/$TWO_GIB"),
+                )
+                else -> error("Unexpected URL ${request.url}")
+            }
+        }
+
+        val result = FirmwareUrlProbe(client).probe(
+            "https://component-ota-cn.allawntech.com/downloadCheck?id=abc",
+        )
+
+        assertTrue(result is FirmwareUrlProbeResult.Success)
+        result as FirmwareUrlProbeResult.Success
+        assertEquals(finalUrl, result.resolvedUrl)
+        assertEquals(TWO_GIB, result.totalSize)
+        assertEquals(listOf("/downloadCheck" to null, "/component-ota/file.zip" to "bytes=0-0"), seen)
+    }
+
+    @Test fun reports_download_check_antileech_without_range_probe() = runBlocking {
+        val rejection = """{"errMsg":"2306","responseCode":2306}"""
+        var rangeHeader: String? = "not-called"
+        val client = clientReturning { request ->
+            rangeHeader = request.header("Range")
+            response(
+                request = request,
+                code = 200,
+                headers = mapOf("Content-Length" to rejection.length.toString()),
+                body = rejection,
+                bodyMediaType = "application/json",
+            )
+        }
+
+        val result = FirmwareUrlProbe(client).probe(
+            "https://component-ota-cn.allawntech.com/downloadCheck?id=abc",
+        )
+
+        assertTrue(result is FirmwareUrlProbeResult.Failure)
+        result as FirmwareUrlProbeResult.Failure
+        assertEquals(null, rangeHeader)
+        assertEquals("2306", result.rejectionCode)
+        assertTrue(result.detail.contains("2306"))
+    }
+
     @Test fun rejects_invalid_content_range() = runBlocking {
         val client = clientReturning { request ->
             response(

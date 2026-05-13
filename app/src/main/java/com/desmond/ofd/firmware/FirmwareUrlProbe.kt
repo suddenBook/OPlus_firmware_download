@@ -22,8 +22,17 @@ internal class FirmwareUrlProbe(
         tag: Any? = null,
     ): FirmwareUrlProbeResult {
         return try {
+            val resolvedUrl = when (val gate = FirmwareDownloadGate.resolve(url, httpClient, tag)) {
+                is FirmwareDownloadGateResult.Success -> gate.resolvedUrl
+                is FirmwareDownloadGateResult.Failure -> return FirmwareUrlProbeResult.Failure(
+                    detail = gate.detail,
+                    retryable = gate.retryable,
+                    httpCode = gate.httpCode,
+                    rejectionCode = gate.rejectionCode,
+                )
+            }
             val builder = Request.Builder()
-                .url(url)
+                .url(resolvedUrl)
                 .header("Range", "bytes=0-0")
                 .header("User-Agent", FIRMWARE_USER_AGENT)
                 .header("Accept", "*/*")
@@ -31,7 +40,7 @@ internal class FirmwareUrlProbe(
 
             val call = httpClient.newCall(builder.build())
             call.await().use { resp ->
-                parseResponse(resp, expectedSize)
+                parseResponse(resp, expectedSize, resolvedUrl)
             }
         } catch (e: IOException) {
             FirmwareUrlProbeResult.Failure(
@@ -46,7 +55,7 @@ internal class FirmwareUrlProbe(
         }
     }
 
-    private fun parseResponse(resp: Response, expectedSize: Long): FirmwareUrlProbeResult {
+    private fun parseResponse(resp: Response, expectedSize: Long, resolvedUrl: String): FirmwareUrlProbeResult {
         var rejectionCode: String? = null
         val totalSize = when {
             resp.code == 206 -> {
@@ -91,6 +100,7 @@ internal class FirmwareUrlProbe(
             totalSize = totalSize,
             acceptsRanges = resp.code == 206,
             md5 = resp.header("x-amz-meta-filemd5"),
+            resolvedUrl = resolvedUrl,
         )
     }
 
@@ -118,6 +128,7 @@ internal sealed interface FirmwareUrlProbeResult {
         val totalSize: Long,
         val acceptsRanges: Boolean,
         val md5: String?,
+        val resolvedUrl: String,
     ) : FirmwareUrlProbeResult
 
     data class Failure(
